@@ -33,11 +33,23 @@
   \begin{frame}{Alternativ-Methode}
     \begin{columns}[c]
       \column{0.6\textwidth}
-      Wir wollen zwei Architekturen vergleichen, ein CNN ohne Bounding Boxes und zwei
-      CNN, bei welchen das erste die Bounding Boxes predicted und damit dann das zweite
-      CNN ausführt, welches die Klassifizierung vornimmt. Motivation: Es wäre besser
-      für die allgemeine und schnelle Verwendbarkeit, allerdings sollte die Klassifizierung
-      mit Bounding Boxes besser funktionieren, da sie weniger störanfällig ist.
+      \begin{itemize}
+        \item Ziel: Vergleich zweier Architekturen \\
+        \rightarrow \ CNN ohne Bounding Boxes und ein vorgeschaltetes CNN, welches
+        die Bounding Boxes predicted
+        \item Motivation
+        \begin{itemize}
+          \item Ohne Bounding Boxes: besser für allgemeine und schnelle
+          Verwendbarkeit
+          \item Allerdings: Klassifizierung mit Bounding Boxes sollte besser funktionieren,
+          da weniger störanfällig
+        \end{itemize}
+      \end{itemize}
+      % Wir wollen zwei Architekturen vergleichen, ein CNN ohne Bounding Boxes und zwei
+      % CNN, bei welchen das erste die Bounding Boxes predicted und damit dann das zweite
+      % CNN ausführt, welches die Klassifizierung vornimmt. Motivation: Es wäre besser
+      % für die allgemeine und schnelle Verwendbarkeit, allerdings sollte die Klassifizierung
+      % mit Bounding Boxes besser funktionieren, da sie weniger störanfällig ist.
       \column{0.4\textwidth}
       \begin{figure}
         \centering
