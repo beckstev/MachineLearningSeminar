@@ -1,0 +1,84 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\documentclass[aspectratio=1610, professionalfonts, 9pt]{beamer}
+
+\usefonttheme[onlymath]{serif}
+\usetheme[showtotalframes]{tudo}
+\setbeamertemplate{caption}[numbered]
+
+
+\usepackage{polyglossia}
+\setmainlanguage{german}
+\setotherlanguages{english}
+\usepackage{blindtext}
+
+\usepackage{booktabs}
+\usepackage[autostyle]{csquotes}
+
+
+% Mathematik
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{fontspec}
+\usepackage[version=4]{mhchem}
+\usepackage{xparse}
+\usepackage{braket}
+\usepackage{units}
+\usepackage[locale=DE, separate-uncertainty=true, per-mode=reciprocal, decimalsymbol=comma]{siunitx}
+\sisetup{math-micro=\text{µ},text-micro=µ}
+\DeclareSIUnit\px{px}
+\DeclareSIUnit\parsec{pc}
+\usepackage[section]{placeins}
+\usepackage{pdflscape}
+\usepackage{expl3}
+\usepackage{bookmark}
+%Komma als Dezimaltrenner in der mathe Umgebung, um in Umgebungen wie [0, 2] ein Leerzeichen nach dem Komma zu erhalten einfach eins setzen
+\usepackage{icomma}
+\usepackage{cancel}
+\usepackage{tikz}
+% \usepackage{feynman-tikz}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage[format=plain,
+            textfont={it, scriptsize}]{caption}
+%\usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{float}
+\floatplacement{table}{htbp}
+\floatplacement{figure}{htbp}
+% \usepackage[
+%   backend=biber,
+%   autolang=hyphen,
+%   sorting=none,
+% ]{biblatex}
+%\usepackage{atlasbiblatex}
+%\addbibresource{lit.bib}  % die Bibliographie einbinden
+\DefineBibliographyStrings{english}{andothers = {{et\,al\adddot}}}
+\usepackage{xpatch}
+\xapptocmd\citesetup{\tiny}{}{}
+
+\usepackage{mhchem}
+
+%\input{content/note_pages.tex}
+%\usepackage{pgfpages}
+%\setbeameroption{show notes on second screen}
+%\setbeameroption{show only notes}
+
+\newcommand\elec{$\mathrm{e^{-}}$}
+\newcommand\zerfall{$\beta$-Zerfall }
+\newcommand\zerfalls{$\beta$-Zerfalls}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%-------------Hier Titel/Autor/Grafik/Lehrstuhl eintragen--------------%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Titel:
+\title{Präsentation}
+
+%Autor
+\author[F.~Geyer, S.~Becker]{Felix Geyer \and Steven Becker}
+%Lehrstuhl/Fakultät
+\institute[Fakultät Physik]{Seminar: Maschinelles Lernen \\ Fakultät Physik}
