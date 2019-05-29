@@ -7,4 +7,37 @@
     \tableofcontents
   \end{frame}
 
+  \section{Definition und Motivation}
+  \begin{frame}{Definition und Motivation}
+    Fragestellung:
+    \begin{center}
+      \textbf{Wie schnell und präzise kann eine Hunderassen-Klassifizierung mit 120 Klassen
+      durchgeführt werden?}
+    \end{center}
+    Motivation:
+    \begin{itemize}
+      \item Klassifizierung ohne Vorwissen möglich
+      \item Persönliche Defizite ausgleichen
+      \item Hunde sind cooler als Katzen
+    \end{itemize}
+  \end{frame}
+  \section{Datensatz}
+  \begin{frame}{Datensatz}
+    \begin{itemize}
+      \item \href{https://www.kaggle.com/jessicali9530/stanford-dogs-dataset}{Stanford Dogs Dataset}
+      \item Lizenz: ???
+      \item Informationen: Klassifikationen und Bounding Boxes
+      \item Anzahl Einträge: 20.580 auf 120 Klassen verteilt
+      \item Input-Features: Bilder
+      \item Target-Variablen: Klassen und Bounding Boxes
+      \item Bisherige Arbeiten: Kernels bei Kaggle
+    \end{itemize}
+  \end{frame}
+
+  \section{Alternativ-Methode}
+  \begin{frame}{Alternativ-Methode}
+    Wir wollen zwei Architekturen vergleichen, ein CNN ohne Bounding Boxes und zwei
+    CNN, bei welchen das erste die Bounding Boxes predicted und damit dann das zweite
+    CNN ausführt, welches die Klassifizierung vornimmt.
+  \end{frame}
 \end{document}
