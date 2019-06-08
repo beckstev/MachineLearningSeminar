@@ -4,9 +4,11 @@ import os
 import xmltodict
 from sklearn.model_selection import train_test_split
 from pathlib import Path
+import matplotlib.pyplot as plt
 
-def generate_dataset(path_to_labels, train_size, val_size, test_size):
-    rename_label_files(path_to_labels)
+def generate_dataset(path_to_labels,train_size, val_size, test_size, inital_run=False,):
+    if inital_run ==  True:
+        rename_label_files(path_to_labels)
 
     labels = []
 
@@ -26,14 +28,29 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size):
                 path_to_image = path_to_dog_race_labels.replace('Annotation', 'Images')
                 try:
                     race_label = doc['annotation']['object']['name']
+
                     bbox = doc['annotation']['object']['bndbox']
+                    xmin, xmax = int(bbox['xmin']), int(bbox['xmax'])
+                    ymin, ymax = int(bbox['ymin']), int(bbox['ymax'])
 
                 except TypeError:
                     race_label = doc['annotation']['object'][0]['name']
-                    bbox = doc['annotation']['object'][0]['bndbox']
+                    x_cor = []
+                    y_cor = []
 
-                x = [bbox['xmin'], bbox['xmin'], bbox['xmax'], bbox['xmax']]
-                y = [bbox['ymin'], bbox['ymax'], bbox['ymin'], bbox['ymax']]
+                    for label in doc['annotation']['object']:
+                        x_cor.append(int(label['bndbox']['xmin']))
+                        x_cor.append(int(label['bndbox']['xmax']))
+                        y_cor.append(int(label['bndbox']['ymin']))
+                        y_cor.append(int(label['bndbox']['ymax']))
+
+                    xmin, xmax = min(x_cor), max(x_cor)
+                    ymin, ymax = min(y_cor), max(y_cor)
+                    x = [xmin, xmin, xmax, xmax]
+                    y = [ymin, ymax, ymin, ymax]
+
+                x = [xmin, xmin, xmax, xmax]
+                y = [ymin, ymax, ymin, ymax]
 
                 corners = np.array([x, y])
                 corners = sort_corners(corners)
