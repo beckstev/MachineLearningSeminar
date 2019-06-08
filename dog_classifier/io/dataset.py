@@ -6,26 +6,73 @@ from sklearn.model_selection import train_test_split
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-def generate_dataset(path_to_labels,train_size, val_size, test_size, inital_run=False,):
+def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run=False,):
+    ''' This function splits the stanford dataset into a training, validation
+        and testing datset. The size of each dataset is specified by the params
+        train_size, val_size and test_size. Furthermore, this function corrects
+        a uncleanliness of the standford dataset: some of the label files do not
+        have the file binding .xml. Therefore, it uses the function
+        rename_label_files. This function is only required for the first initial
+        call of generate_dataset - inital_run keyargument. Sometimes multiple
+        dogs are in a single image, resulting in multiple boundix boxes (bbox)
+        in a label file. However, the current NN-architecture is not able to
+        handle multiple bboxes per image. Hence, the function creates a new bbox
+        which includes all dogs together.
+
+        :param path_to_labels: Path to label files
+        :param test_size: Percentage of the dataset which will be included into
+                     the test dataset
+        :param val_size: Percentage of the dataset which will be included into
+                    the validation dataset
+        :param test_size: Percentage of the dataset which will be included into
+                     the training dataset
+        :param inital_run: Bollian to indicates if this is the inital run of
+                           generate dataset
+    '''
+
     if inital_run ==  True:
         rename_label_files(path_to_labels)
 
+    # list which will include the label of every image
     labels = []
 
+    # The label of each image is catorgarized into the individual dog races.
+    # Hence, we have to loop over all directories inside the Annotation folder
+
     for dir in os.listdir(path_to_labels):
+
         path_to_dog_race_labels = os.path.join(path_to_labels, dir)
 
+        # Each directories include a variety of label files (.xml) which
+        # includes the dog race and bbox of every image.
         for label_file in os.listdir(path_to_dog_race_labels):
+
+
             path_to_image_label = os.path.join(path_to_dog_race_labels,
                                                label_file)
 
+            # We open .xml file and convert the content into a dict using the
+            # function xmltodict
             with open(path_to_image_label) as fd:
                 doc = xmltodict.parse(fd.read())
+
                 width = doc['annotation']['size']['width']
                 height = doc['annotation']['size']['height']
 
+                # To load the images during the traning we need the image path
+                # Fortunatley, the label and image path only differ in the
+                # file binding and root directory ('Annotation' <-> 'Images')
                 image_file = label_file.replace('.xml', '.jpg')
-                path_to_image = path_to_dog_race_labels.replace('Annotation', 'Images')
+                path_to_image = path_to_dog_race_labels.replace('Annotation',
+                                                                'Images')
+
+                # In the following we wanna extract the dog race and bbox
+                # As mentioned at the top some images include several dogs and
+                # therefore several labels. This leads to an readout error
+                # during the extraction process, beceause the
+                # doc['annotation']['object'] is in this case a list and not a
+                # dict.
+
                 try:
                     race_label = doc['annotation']['object']['name']
 
