@@ -1,5 +1,6 @@
 from keras.datasets import mnist
 import matplotlib.pyplot as plt
+import numpy as np
 # import matplotlib.cm as cm
 import importlib.util
 from sklearn.preprocessing import MinMaxScaler
@@ -7,8 +8,10 @@ from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers.core import Dense
+from sklearn.metrics import confusion_matrix
 
-spec = importlib.util.spec_from_file_location("evaluate", "../dog_classifier/evaluate/evaluate_training.py")
+spec = importlib.util.spec_from_file_location("evaluate", "../dog_classifier" +
+                                              "/evaluate/evaluate_training.py")
 eval = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(eval)
 
@@ -43,10 +46,9 @@ def data_preprocessing(X_train, X_test, Y_train, Y_test):
 # plt.show()
 
 (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
-# print(X_train.shape)
+
 X_train, X_test, Y_train, Y_test = data_preprocessing(X_train,
                                                       X_test, Y_train, Y_test)
-print(X_train.shape)
 # split in training and Validation
 X_train, X_val, Y_train, Y_val = train_test_split(X_train, Y_train,
                                                   test_size=0.3,
@@ -62,7 +64,32 @@ model.add(Dense(10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['accuracy'])
 
+# Neurales Netz trainieren
 history = model.fit(X_train, Y_train, batch_size=512, epochs=15,
                     verbose=1, validation_data=(X_val, Y_val))
 
+# History plotten
 eval.plot_history(history)
+
+# Test predicten
+Y_pred = model.predict(X_test)
+
+# Convert predictions classes to one hot vectors
+Y_cls = np.argmax(Y_pred, axis=1)
+
+# Convert validation observations to one hot vectors
+Y_true = np.argmax(Y_test, axis=1)
+
+# Multiclass-Analyse
+eval.prob_multiclass(Y_pred, Y_test, label=0)
+
+# compute the confusion matrix
+confusion_mtx = confusion_matrix(Y_true, Y_cls)
+
+# plot the confusion matrix
+# Prblem with figure size, still need fixing
+# plt.figure(figsize=(10, 9))
+eval.plot_confusion_matrix(confusion_mtx, classes=range(10), fname='cm_norm')
+# plt.figure(figsize=(10, 9))
+eval.plot_confusion_matrix(confusion_mtx, classes=range(10),
+                           normalize=False, fname='cm')
