@@ -9,6 +9,10 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers.core import Dense
 from sklearn.metrics import confusion_matrix
+# for dropout
+# from keras.layers.core import Dropout
+# from keras.regularizers import l2
+
 
 spec = importlib.util.spec_from_file_location("evaluate", "../dog_classifier" +
                                               "/evaluate/evaluate_training.py")
@@ -20,6 +24,7 @@ plt.rc('font', family='serif')
 
 
 def data_preprocessing(X_train, X_test, Y_train, Y_test):
+    """function for data preprocessing of the mnist data set"""
     # reshape and change dtype
     X_train = X_train.reshape(60000, 784)
     X_test = X_test.reshape(10000, 784)
@@ -37,13 +42,6 @@ def data_preprocessing(X_train, X_test, Y_train, Y_test):
 
     return X_train, X_test, Y_train, Y_test
 
-
-# plt.figure(figsize=(12, 10))
-# x, y = 10, 4
-# for i in range(40):
-#     plt.subplot(y, x, i+1)
-#     plt.imshow(X_train[i], interpolation='nearest', cmap=cm.Greys)
-# plt.show()
 
 (X_train, Y_train), (X_test, Y_test) = mnist.load_data()
 
@@ -69,7 +67,7 @@ history = model.fit(X_train, Y_train, batch_size=512, epochs=15,
                     verbose=1, validation_data=(X_val, Y_val))
 
 # History plotten
-eval.plot_history(history)
+# eval.plot_history(history)
 
 # Test predicten
 Y_pred = model.predict(X_test)
@@ -81,15 +79,71 @@ Y_cls = np.argmax(Y_pred, axis=1)
 Y_true = np.argmax(Y_test, axis=1)
 
 # Multiclass-Analyse
-eval.prob_multiclass(Y_pred, Y_test, label=0)
+# eval.prob_multiclass(Y_pred, Y_test, label=0)
 
 # compute the confusion matrix
 confusion_mtx = confusion_matrix(Y_true, Y_cls)
 
 # plot the confusion matrix
-# Prblem with figure size, still need fixing
-# plt.figure(figsize=(10, 9))
+# Prblem with figure size, still need fixing, some axis is cut off all the time
+plt.figure(figsize=(8, 8))
 eval.plot_confusion_matrix(confusion_mtx, classes=range(10), fname='cm_norm')
-# plt.figure(figsize=(10, 9))
+plt.figure(figsize=(8, 8))
 eval.plot_confusion_matrix(confusion_mtx, classes=range(10),
                            normalize=False, fname='cm')
+
+# claculate errors
+errors = (Y_cls - Y_true != 0)
+
+Y_cls_errors = Y_cls[errors]
+Y_pred_errors = Y_pred[errors]
+Y_true_errors = Y_true[errors]
+X_test_errors = X_test[errors]
+
+# rank errors in probability
+# Probabilities of the wrong predicted numbers
+Y_pred_errors_prob = np.max(Y_pred_errors, axis=1)
+
+# Predicted probabilities of the true values in the error set
+true_prob_errors = np.diagonal(np.take(Y_pred_errors, Y_true_errors, axis=1))
+
+# Difference between the probability of the predicted label and the true label
+delta_pred_true_errors = Y_pred_errors_prob - true_prob_errors
+
+# Sorted list of the delta prob errors
+sorted_dela_errors = np.argsort(delta_pred_true_errors)
+
+# Top 6 errors
+most_important_errors = sorted_dela_errors[-6:]
+
+# Show the top 6 errors
+eval.display_errors(most_important_errors, X_test_errors, Y_cls_errors,
+                    Y_true_errors, height=28, width=28, fname='error_plot')
+
+# model using Dropout
+# dropout = 0.5
+# l2_lambda = 0.0001
+#
+# model_dropout = Sequential()
+# model_dropout.add(Dense(512, activation='relu',
+#                   kernel_regularizer=l2(l2_lambda), input_dim=784))
+# model_dropout.add(Dropout(dropout))
+# model_dropout.add(Dense(256, activation='relu',
+#                   kernel_regularizer=l2(l2_lambda)))
+# model_dropout.add(Dropout(dropout))
+# model_dropout.add(Dense(10, activation='softmax'))
+#
+# train_hist = eval.HistoryEpoch((X_train, Y_train))
+# val_hist = eval.HistoryEpoch((X_val, Y_val))
+# test_hist = eval.HistoryEpoch((X_test, Y_test))
+#
+#
+# model_dropout.compile(loss='categorical_crossentropy',
+#                       optimizer='adam', metrics=['accuracy'])
+#
+# history_dropout = model_dropout.fit(X_train, Y_train,
+#                                     batch_size=512, epochs=15, verbose=1,
+#                                     validation_data=(X_val, Y_val),
+#                                     callbacks=[val_hist,
+#                                                train_hist, test_hist])
+# eval.plot_history_epoch(train_hist, val_hist, test_hist, "history_epoch")

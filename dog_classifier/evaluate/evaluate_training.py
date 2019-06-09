@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import itertools
+from keras.callbacks import Callback
 
 
-def plot_history(network_history):
+def plot_history(network_history, fname):
     """function for plotting the loss and the accuracy"""
     print("plot history")
     plt.figure()
@@ -12,7 +14,7 @@ def plot_history(network_history):
     plt.plot(network_history.history['loss'])
     plt.plot(network_history.history['val_loss'])
     plt.legend([r'Training', r'Validation'])
-    plt.savefig("build/history_loss.pdf")
+    plt.savefig("build/{}_loss.pdf".format(fname))
     plt.clf()
 
     plt.figure()
@@ -21,11 +23,11 @@ def plot_history(network_history):
     plt.plot(network_history.history['acc'])
     plt.plot(network_history.history['val_acc'])
     plt.legend([r'Training', r'Validation'], loc='lower right')
-    plt.savefig("build/history_acc.pdf")
+    plt.savefig("build/{}_acc.pdf".format(fname))
     plt.clf()
 
 
-def prob_multiclass(Y_pred, Y_test, label):
+def prob_multiclass(Y_pred, Y_test, label, fname):
     """defines a multiclass probability in the case that the output of the cnn
     cannot be interpreted as a probability. Also plots for a given label"""
     print("plot multiclass probability")
@@ -56,7 +58,7 @@ def prob_multiclass(Y_pred, Y_test, label):
                r"class {} not matching".format(label)], loc='best')
     plt.xlabel(r'Probability of being class {}'.format(label))
     plt.ylabel(r'Number of entries')
-    plt.savefig("build/multiclass.pdf")
+    plt.savefig("build/{}.pdf".format(fname))
     plt.clf()
 
 
@@ -92,5 +94,72 @@ def plot_confusion_matrix(cm, classes, fname,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
+    plt.savefig("build/{}.pdf".format(fname))
+    plt.clf()
+
+
+def display_errors(errors_index,
+                   img_errors,
+                   pred_errors,
+                   obs_errors,
+                   height,
+                   width,
+                   fname):
+    """ This function shows 6 images with their predicted and real labels"""
+    print("plot errors")
+    n = 0
+    nrows = 2
+    ncols = 3
+    fig, ax = plt.subplots(nrows, ncols, sharex=True, sharey=True)
+    for row in range(nrows):
+        for col in range(ncols):
+            error = errors_index[n]
+            ax[row, col].imshow((img_errors[error]).reshape((height, width)),
+                                cmap=cm.Greys, interpolation='nearest')
+            ax[row, col].set_title("Predicted label:{}\nTrue label :{}".format(
+                                  pred_errors[error], obs_errors[error]))
+            n += 1
+
+    plt.savefig("build/{}.pdf".format(fname))
+    plt.clf()
+
+
+class HistoryEpoch(Callback):
+    """Class for calculating loss and metric after each epoch for
+    any given dataset, because trainings and validation loss are not comparable
+    when using dropout"""
+    def __init__(self, data):
+        self.data = data
+
+    def on_train_begin(self, logs={}):
+        self.loss = []
+        self.acc = []
+
+    def on_epoch_end(self, epoch, logs={}):
+        x, y = self.data
+        l, a = self.model.evaluate(x, y, verbose=0)
+        self.loss.append(l)
+        self.acc.append(a)
+
+
+def plot_history_epoch(train_hist, val_hist, test_hist, fname):
+    """plot train, test and val loss and accuracy for objects of class
+    History Epoch"""
+    print("plot history epoch")
+    plt.figure()
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.plot(train_hist.loss)
+    plt.plot(val_hist.loss)
+    plt.plot(test_hist.loss)
+    plt.legend(['Training', 'Validation', 'Testing'])
+
+    plt.figure()
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.plot(train_hist.acc)
+    plt.plot(val_hist.acc)
+    plt.plot(test_hist.acc)
+    plt.legend(['Training', 'Validation', 'Testing'], loc='lower right')
     plt.savefig("build/{}.pdf".format(fname))
     plt.clf()
