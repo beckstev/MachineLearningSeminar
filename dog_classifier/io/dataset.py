@@ -82,9 +82,13 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run
 
                 except TypeError:
                     race_label = doc['annotation']['object'][0]['name']
+                    # The xmin/xmax and ymin/xmax values of all bounding boxes will
+                    # be saved to the following lists
                     x_cor = []
                     y_cor = []
 
+                    # To get the bbox which surounds all dogs we need the max
+                    # and min value of all possible boundig boxes.
                     for label in doc['annotation']['object']:
                         x_cor.append(int(label['bndbox']['xmin']))
                         x_cor.append(int(label['bndbox']['xmax']))
@@ -93,48 +97,66 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run
 
                     xmin, xmax = min(x_cor), max(x_cor)
                     ymin, ymax = min(y_cor), max(y_cor)
-                    x = [xmin, xmin, xmax, xmax]
-                    y = [ymin, ymax, ymin, ymax]
 
+                # We want to transform the min and max values to
+                # real image coordinates
                 x = [xmin, xmin, xmax, xmax]
                 y = [ymin, ymax, ymin, ymax]
-
                 corners = np.array([x, y])
+
+                # To make sure that we have the same coordinates order for
+                # every bbox we use the function sort_corners. The function
+                # sorts into the following order:
+                # (x1, y1): top left corner
+                # (x2, y2): top right corner
+                # (x3, y3): bottom right corner
+                # (x4, y4): bottom left corner
                 corners = sort_corners(corners)
+                # The NN only can input and output one dim objects, therefore,
+                # we have to flatten our two dim array.
                 dog_labels = corners.flatten().tolist()
 
+                # We add the other lael to the bboox coordinates to
+                # save all of them together into a DataFrame.
                 dog_labels.extend([race_label, width, height,
                                    path_to_image, image_file])
 
+                # We append the label of this specific image to the list with
+                # all the labels
                 labels.append(dog_labels)
+
 
     columns = ["x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4", "race_label",
                "width", "height", "path_to_label", "filename"]
+    # Save all the labels to a Dataframe
+    df_label= pd.DataFrame(data=labels, columns=columns, dtype='uint16')
 
-    X = pd.DataFrame(data=labels, columns=columns, dtype='uint16')
-
-    X_train_val, X_test = train_test_split(X, train_size=train_size + val_size,
+    df_train_val, df_test = train_test_split(df_label, train_size=train_size + val_size,
                                            test_size=test_size,
                                            shuffle=True,
                                            random_state=13)
 
+    # We need to normalize the percentage amount of train and val, because
+    # the parts train_size and val_size are for the whole dataset and not for
+    # the dataset df_train_val (= df_label - df_test).
     norm = (1 - (train_size + val_size)) / 2
     train_new = train_size + norm
     val_new = val_size + norm
 
-    X_train, X_val = train_test_split(X_train_val, train_size=train_new,
+    df_train, df_val = train_test_split(df_train_val, train_size=train_new,
                                       test_size=val_new,
                                       shuffle=True,
                                       random_state=13)
 
     save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                              "labels/")
+
     if not os.path.isdir(save_path):
         os.makedirs(save_path)
 
-    X_train.to_csv(save_path + 'train_labels.csv', index=False)
-    X_val.to_csv(save_path + 'val_labels.csv', index=False)
-    X_test.to_csv(save_path + 'test_labels.csv', index=False)
+    df_train.to_csv(save_path + 'train_labels.csv', index=False)
+    df_val.to_csv(save_path + 'val_labels.csv', index=False)
+    df_test.to_csv(save_path + 'test_labels.csv', index=False)
 
 
 def sort_corners(corners):
