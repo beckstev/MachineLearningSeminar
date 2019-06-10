@@ -67,7 +67,7 @@ history = model.fit(X_train, Y_train, batch_size=512, epochs=15,
                     verbose=1, validation_data=(X_val, Y_val))
 
 # History plotten
-# eval.plot_history(history)
+eval.plot_history(history, "history")
 
 # Test predicten
 Y_pred = model.predict(X_test)
@@ -79,7 +79,7 @@ Y_cls = np.argmax(Y_pred, axis=1)
 Y_true = np.argmax(Y_test, axis=1)
 
 # Multiclass-Analyse
-# eval.prob_multiclass(Y_pred, Y_test, label=0)
+eval.prob_multiclass(Y_pred, Y_test, label=0, fname="multiclass")
 
 # compute the confusion matrix
 confusion_mtx = confusion_matrix(Y_true, Y_cls)
@@ -92,33 +92,12 @@ plt.figure(figsize=(8, 8))
 eval.plot_confusion_matrix(confusion_mtx, classes=range(10),
                            normalize=False, fname='cm')
 
-# claculate errors
-errors = (Y_cls - Y_true != 0)
-
-Y_cls_errors = Y_cls[errors]
-Y_pred_errors = Y_pred[errors]
-Y_true_errors = Y_true[errors]
-X_test_errors = X_test[errors]
-
-# rank errors in probability
-# Probabilities of the wrong predicted numbers
-Y_pred_errors_prob = np.max(Y_pred_errors, axis=1)
-
-# Predicted probabilities of the true values in the error set
-true_prob_errors = np.diagonal(np.take(Y_pred_errors, Y_true_errors, axis=1))
-
-# Difference between the probability of the predicted label and the true label
-delta_pred_true_errors = Y_pred_errors_prob - true_prob_errors
-
-# Sorted list of the delta prob errors
-sorted_dela_errors = np.argsort(delta_pred_true_errors)
-
-# Top 6 errors
-most_important_errors = sorted_dela_errors[-6:]
-
 # Show the top 6 errors
-eval.display_errors(most_important_errors, X_test_errors, Y_cls_errors,
-                    Y_true_errors, height=28, width=28, fname='error_plot')
+eval.display_errors(6, Y_cls, Y_true, Y_pred, X_test,
+                    height=28, width=28, nrows=2, ncols=3, fname='error_plot')
+
+eval.evaluate_test_params(model, X_test, Y_test)
+eval.plot_predictions(12, model, X_test, 28, 28, "predictions")
 
 # model using Dropout
 # dropout = 0.5
