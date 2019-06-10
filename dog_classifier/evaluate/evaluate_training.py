@@ -2,17 +2,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import itertools
+import os
 from keras.callbacks import Callback
 from sklearn.metrics import classification_report
 
 
+class HistoryEpoch(Callback):
+    """Class for calculating loss and metric after each epoch for
+    any given dataset, because trainings and validation loss are not comparable
+    when using dropout. Callback can be used to get internal states and
+    statistics during training, in our case after each epoch.
+
+    :param Callback: object of type Callback
+    """
+    def __init__(self, data):
+        self.data = data
+
+    def on_train_begin(self, logs={}):
+        self.loss = []
+        self.acc = []
+
+    def on_epoch_end(self, epoch, logs={}):
+        x, y = self.data
+        l, a = self.model.evaluate(x, y, verbose=0)
+        self.loss.append(l)
+        self.acc.append(a)
+
+
 def plot_history(network_history, fname):
     """function for plotting the loss and the accuracy
-    
+
     :param network_history: result of fitting the model
     :param fname: name of plot
     """
     print("plot history")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     plt.figure()
     plt.xlabel(r'Epochs')
     plt.ylabel(r'Loss')
@@ -35,13 +61,16 @@ def plot_history(network_history, fname):
 def prob_multiclass(Y_pred, Y_test, label, fname):
     """defines a multiclass probability in the case that the output of the cnn
     cannot be interpreted as a probability. Also plots for a given label
-    
+
     :param Y_pred: model prediction of the test data
     :param Y_test: test output data
     :param label: number (or rather name?) of class, which should be examined
     :param fname: name of plot
     """
     print("plot multiclass probability")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     n_cls = len(Y_pred[0])
 
     Y_prob = []
@@ -88,6 +117,9 @@ def plot_confusion_matrix(cm, classes, fname,
     :param fname: name of plot
     """
     print("plot confusion matrix")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
@@ -113,12 +145,8 @@ def plot_confusion_matrix(cm, classes, fname,
     plt.clf()
 
 
-def display_errors(n, Y_cls, Y_true, Y_pred, X_test,
-                   height,
-                   width,
-                   nrows,
-                   ncols,
-                   fname):
+def display_errors(n, Y_cls, Y_true, Y_pred, X_test, height, width, nrows,
+                   ncols, fname):
     """ This function computes the n-th biggest errors and shows n
     images with their predicted and real labels.
 
@@ -133,6 +161,9 @@ def display_errors(n, Y_cls, Y_true, Y_pred, X_test,
     :param fname: name of plot
     """
     print("plot errors")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     errors = (Y_cls - Y_true != 0)
 
     Y_cls_errors = Y_cls[errors]
@@ -181,27 +212,6 @@ def display_errors(n, Y_cls, Y_true, Y_pred, X_test,
     plt.clf()
 
 
-class HistoryEpoch(Callback):
-    """Class for calculating loss and metric after each epoch for
-    any given dataset, because trainings and validation loss are not comparable
-    when using dropout
-
-    :param Callback: object of type Callback
-    """
-    def __init__(self, data):
-        self.data = data
-
-    def on_train_begin(self, logs={}):
-        self.loss = []
-        self.acc = []
-
-    def on_epoch_end(self, epoch, logs={}):
-        x, y = self.data
-        l, a = self.model.evaluate(x, y, verbose=0)
-        self.loss.append(l)
-        self.acc.append(a)
-
-
 def plot_history_epoch(train_hist, val_hist, test_hist, fname):
     """plot train, test and val loss and accuracy for objects of class
     History Epoch
@@ -215,6 +225,9 @@ def plot_history_epoch(train_hist, val_hist, test_hist, fname):
     :param fname: name of resulting plot
     """
     print("plot history epoch")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     plt.figure()
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
@@ -242,6 +255,7 @@ def evaluate_test_params(model, X_test, Y_test):
     :param X_test: test input dataset
     :param Y_test: test output dataset
     """
+    print("evaluate test params")
     # Evaluate loss and metrics
     loss, accuracy = model.evaluate(X_test, Y_test, verbose=0)
     print('Test Loss:', loss)
@@ -265,6 +279,10 @@ def plot_predictions(n, model, X_test, height, width, fname):
     :param width: width of given pictures
     :param fname: name of resulting plot
     """
+    print("plot predictions")
+    pfad = "build"
+    if not os.path.exists(pfad):
+        os.makedirs(pfad)
     slice = n
     predicted = model.predict(X_test[:slice]).argmax(-1)
     # plt.figure(figsize=(16, 8))
