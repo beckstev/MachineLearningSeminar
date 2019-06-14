@@ -64,7 +64,7 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run
                 image_file = label_file.replace('.xml', '.jpg')
                 path_to_image = path_to_dog_race_labels.replace('Annotation',
                                                                 'Images')
-
+                path_to_image = os.path.join(path_to_image, image_file)
                 # In the following we wanna extract the dog race and bbox
                 # As mentioned at the top some images include several dogs and
                 # therefore several labels. This leads to an readout error
@@ -125,7 +125,7 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run
                 labels.append(dog_labels)
 
     columns = ["x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4", "race_label",
-               "width", "height", "path_to_label", "filename"]
+               "width", "height", "path_to_image", "filename"]
     # Save all the labels to a Dataframe
     df_label = pd.DataFrame(data=labels, columns=columns, dtype='uint16')
 
