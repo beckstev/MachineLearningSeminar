@@ -3,6 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.preprocessing.image import ImageDataGenerator
+from keras.models import load_model
 
 from network import DogNN, SeminarNN
 
@@ -42,13 +43,16 @@ model = SeminarNN()
 
 model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['accuracy'])
-# print(model.summary())
+print(model.summary())
+model.save('my_model.h5')
 
-STEP_SIZE_TRAIN = train_generator.n//train_generator.batch_size
-STEP_SIZE_VALID = val_generator.n//val_generator.batch_size
-
-model.fit_generator(generator=train_generator,
-                    steps_per_epoch=STEP_SIZE_TRAIN,
-                    validation_data=val_generator,
-                    validation_steps=STEP_SIZE_VALID,
-                    epochs=10)
+# STEP_SIZE_TRAIN = train_generator.n//train_generator.batch_size
+# STEP_SIZE_VALID = val_generator.n//val_generator.batch_size
+#
+# model.fit_generator(generator=train_generator,
+#                     steps_per_epoch=STEP_SIZE_TRAIN,
+#                     validation_data=val_generator,
+#                     validation_steps=STEP_SIZE_VALID,
+#                     epochs=10)
+#
+# model.save('my_model.h5')
