@@ -4,3 +4,4 @@ __pycache__/
 labels/
 __pycache__/
 *.h5
+dog_classifier.egg-info/
