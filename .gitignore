@@ -2,3 +2,4 @@ build/
 dataset/
 __pycache__/
 labels/
+dog_classifier.egg-info/
