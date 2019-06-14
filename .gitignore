@@ -1,3 +1,4 @@
 build/
 dataset/
 labels/
+dog_classifier.egg-info/

@@ -17,5 +17,5 @@ if __name__ == '__main__':
     val = args.val if args.val else 0.2
     init = args.init if args.init else False
 
-    generate_dataset(path_to_labels=args.label_path, train=train, test=test,
-                     val=val, inital_run=init)
+    generate_dataset(path_to_labels=args.label_path, train_size=train,
+                     test_size=test, val_size=val, inital_run=init)
