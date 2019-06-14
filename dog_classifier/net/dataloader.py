@@ -111,12 +111,8 @@ class DataGenerator(Sequence):
        '''
 
         # Generate indexes of the batch
-        index_of_dataset = self.data_index[index * self.batch_size:(index+1)*self.batch_size]
-
-        # Find list of IDs
-        list_IDs_temp = [self.data_index[k] for k in index_of_batch_img]
-
+        index_of_batch_img = self.data_index[index * self.batch_size: (index+1) * self.batch_size]
         # Generate data
-        X, y = self.__data_generation(list_IDs_temp)
+        X, y = self.__data_generation(index_of_batch_img)
 
         return X, y
