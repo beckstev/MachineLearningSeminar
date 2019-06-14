@@ -11,12 +11,10 @@ if __name__ =='__main__':
     encoder.fit(df_train['race_label'].values)
     df_train['race_label'] = encoder.transform(df_train['race_label'].values)
 
-    trainDataloader = DataGenerator(df_train)
-
+    trainDataloader = DataGenerator(df_train, shuffle=False)
     model = DogNN()
     model.compile(loss='categorical_crossentropy', optimizer='adam',
               metrics=['accuracy'])
 
-    print(type(trainDataloader))
     model.fit_generator(generator=trainDataloader, use_multiprocessing=True,
-                        workers=4)
+                         workers=4)
