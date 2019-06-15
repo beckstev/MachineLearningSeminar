@@ -2,22 +2,17 @@ from keras.datasets import mnist
 import matplotlib.pyplot as plt
 import numpy as np
 # import matplotlib.cm as cm
-import importlib.util
+# import importlib.util
 from sklearn.preprocessing import MinMaxScaler
 from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers.core import Dense
 from sklearn.metrics import confusion_matrix
+from dog_classifier.evaluate import evaluate_training as eval
 # for dropout
 # from keras.layers.core import Dropout
 # from keras.regularizers import l2
-
-
-spec = importlib.util.spec_from_file_location("evaluate", "../dog_classifier" +
-                                              "/evaluate/evaluate_training.py")
-eval = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(eval)
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
