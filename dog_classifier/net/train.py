@@ -20,6 +20,7 @@ def get_model(model_name):
 def trainNN(training_parameters):
     training_timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2], "labels/")
+
     encoder_model = training_parameters['encoder_model']
     bs_size = training_parameters['batch_size']
     num_of_epochs = training_parameters['n_epochs']
@@ -31,6 +32,7 @@ def trainNN(training_parameters):
     valDataloader = DataGenerator(df_val, encoder_model, batch_size=bs_size)
 
     model = get_model(training_parameters['architecture'])
+    # Set the leranrning rate of adam optimizer
     Adam(training_parameters['learning_rate'])
 
     model.compile(loss='categorical_crossentropy', optimizer='adam',
@@ -46,5 +48,4 @@ def trainNN(training_parameters):
 
     os.makedirs(model_save_path)
     model.save(model_save_path + '/model_parameter.h5')
-
-    evaluate_training.plot_history(history, 'mein_file')
+    evaluate_training.plot_history(history, path=model_save_path)
