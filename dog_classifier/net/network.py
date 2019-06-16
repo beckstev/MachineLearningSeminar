@@ -43,4 +43,5 @@ def SeminarNN():
     # model.add(Flatten())
     model.add(Dense(120, activation='softmax'))
 
+
     return model
