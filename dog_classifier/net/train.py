@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 from keras.optimizers import Adam
+import json
 
 from dog_classifier.net.dataloader import DataGenerator
 from dog_classifier.net.network import DogNN
@@ -18,6 +19,13 @@ def get_model(model_name):
 
 
 def trainNN(training_parameters):
+    ''' Traning a specific net architecture. Afterwards the paramters of the net
+        and loss-epoch plot will be saved into saved_models.
+    :param training_parameters: Dict which contains all the required traning
+                                parameters such as batch size, learning rate.
+    :return 0:
+    '''
+
     training_timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2], "labels/")
 
@@ -49,3 +57,5 @@ def trainNN(training_parameters):
     os.makedirs(model_save_path)
     model.save(model_save_path + '/model_parameter.h5')
     evaluate_training.plot_history(history, path=model_save_path)
+    with open(model_save_path + '/model_history.json', 'w') as f:
+        json.dump(history.history, f)
