@@ -64,6 +64,7 @@ def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run
                 image_file = label_file.replace('.xml', '.jpg')
                 path_to_image = path_to_dog_race_labels.replace('Annotation',
                                                                 'Images')
+                path_to_image = path_to_image.replace('../../', '../')
                 path_to_image = os.path.join(path_to_image, image_file)
                 # In the following we wanna extract the dog race and bbox
                 # As mentioned at the top some images include several dogs and
