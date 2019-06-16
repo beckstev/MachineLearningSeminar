@@ -41,6 +41,7 @@ def SeminarNN():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     # model.add(Flatten())
-    model.add(Dense(10, activation='softmax'))
+    model.add(Dense(120, activation='softmax'))
+
 
     return model
