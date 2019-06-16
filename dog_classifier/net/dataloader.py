@@ -1,7 +1,9 @@
 import numpy as np
 import cv2 as cv
 from keras.utils import to_categorical, Sequence
-
+from sklearn.preprocessing import LabelEncoder
+import os
+from pathlib import Path
 
 class DataGenerator(Sequence):
     ''' Dataloader for batch wise traning of a NN with batch wise rescaling of
@@ -9,7 +11,7 @@ class DataGenerator(Sequence):
         so that we can leverage nice functionalities such as multiprocessing.
     '''
 
-    def __init__(self, df, batch_size=16, n_classes=120,
+    def __init__(self, df, encoder_model, batch_size=16, n_classes=120,
                  use_rgb=True, shuffle=True, seed=13):
         '''Initialization
         :param df: Dataframe of the dataset (training, validation or testing)
@@ -24,12 +26,14 @@ class DataGenerator(Sequence):
         '''
         self.df = df
         self.batch_size = batch_size
+        self.encoder_model = encoder_model
         self.number_IDs = len(df)
         self.n_classes = n_classes
         self.shuffle = shuffle
         self.use_rgb = use_rgb
         self.seed = seed
         self.on_epoch_end()
+        self.encode_labels()
 
     def on_epoch_end(self):
         'Updates indexes after each epoch'
@@ -38,6 +42,14 @@ class DataGenerator(Sequence):
         if self.shuffle is True:
             np.random.seed(self.seed)
             np.random.shuffle(self.data_index)
+
+    def encode_labels(self):
+        'Encode the race into a number'
+        encoder = LabelEncoder()
+        path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2], "labels/")
+
+        encoder.classes_ = np.load(path_to_labels + self.encoder_model)
+        self.df['race_label'] = encoder.transform(self.df['race_label'].values)
 
     def __data_generation(self, list_IDs_temp):
         ''' Function which load and rescaled all the images for batch. The
