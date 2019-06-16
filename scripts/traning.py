@@ -4,7 +4,7 @@ import argparse
 from dog_classifier.net.train import trainNN
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Usage: python main_analysis <architecure>')
+    parser = argparse.ArgumentParser(description='Usage: python main_analysis <architecure> <encoder_model>')
     parser.add_argument('architecture', type=str, help='Class name of the network')
     parser.add_argument('encoder_model', type=str, help='Name of the saved encoder model')
     parser.add_argument('-e', '--epochs', type=int, help='Number of epochs to train')
