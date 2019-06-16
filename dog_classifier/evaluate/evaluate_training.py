@@ -116,6 +116,7 @@ def plot_confusion_matrix(cm, classes, fname,
     :param classes: (name of?) classes to plot
     :param fname: name of plot
     """
+    plt.rcParams.update({'font.size': 2})
     print("plot confusion matrix")
     pfad = "build"
     if not os.path.exists(pfad):
@@ -126,7 +127,6 @@ def plot_confusion_matrix(cm, classes, fname,
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45)
     plt.yticks(tick_marks, classes)
-
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
