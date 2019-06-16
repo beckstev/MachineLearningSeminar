@@ -1,6 +1,5 @@
 import argparse
 
-# BillDiction Library
 from dog_classifier.net.train import trainNN
 
 if __name__ == '__main__':
