@@ -57,11 +57,11 @@ def trainNN(training_parameters):
                                  min_delta=early_stopping_delta,
                                  verbose=1)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=5)
+                                  patience=3, verbose=1)
 
     history = model.fit_generator(trainDataloader, validation_data=valDataloader,
-                                  epochs=num_of_epochs)
-                                  #callbacks=[earlystopper, reduce_lr])
+                                  epochs=num_of_epochs,
+                                  callbacks=[earlystopper, reduce_lr])
 
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
@@ -71,6 +71,6 @@ def trainNN(training_parameters):
     os.makedirs(model_save_path)
     model.save(model_save_path + '/model_parameter.h5')
     evaluate_training.plot_history(history, path=model_save_path)
-    df_history = pd.Dataframe(history.history)
+    df_history = pd.DataFrame(history.history)
     df_history.to_csv(path_or_buf=model_save_path + '/model_history.csv',
                       index=False)
