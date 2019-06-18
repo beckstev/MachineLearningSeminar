@@ -39,8 +39,8 @@ def trainNN(training_parameters):
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
-    df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
+    df_train = pd.read_csv(path_to_labels + 'train_labels.csv').head(n=20)
+    df_val = pd.read_csv(path_to_labels + 'val_labels.csv').head(n=20)
 
     trainDataloader = DataGenerator(df_train, encoder_model, batch_size=bs_size)
     valDataloader = DataGenerator(df_val, encoder_model, batch_size=bs_size)
@@ -57,7 +57,7 @@ def trainNN(training_parameters):
                                  min_delta=early_stopping_delta,
                                  verbose=1)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=3, verbose=1)
+                                  patience=3, verbose=1, min_lr=1e-6)
 
     history = model.fit_generator(trainDataloader, validation_data=valDataloader,
                                   epochs=num_of_epochs,
