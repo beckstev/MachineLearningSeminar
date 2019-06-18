@@ -9,6 +9,8 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--epochs', type=int, help='Number of epochs to train')
     parser.add_argument('-bs', '--batch_size', type=int)
     parser.add_argument('-lr', '--learning_rate', type=float)
+    parser.add_argument('-p', '--early_stopping_patience', type=int)
+    parser.add_argument('-d', '--early_stopping_delta', type=float)
     parser.add_argument('--use_rgb', action='store_true')
 
     args = parser.parse_args()
@@ -25,6 +27,14 @@ if __name__ == '__main__':
     if args.batch_size:
         bs_size = args.batch_size
 
+    early_stopping_patience = 50
+    if args.early_stopping_patience:
+        early_stopping_patience = args.early_stopping_patience
+
+    early_stopping_delta = 1e-5
+    if args.early_stopping_delta:
+        early_stopping_delta = args.early_stopping_delta
+
     if args.use_rgb:
         norm_mean, norm_std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
     else:
@@ -36,6 +46,8 @@ if __name__ == '__main__':
                            'architecture': args.architecture,
                            'use_rgb': args.use_rgb,
                            'encoder_model': args.encoder_model,
+                           'early_stopping_patience': early_stopping_patience,
+                           'early_stopping_delta': early_stopping_delta,
                            'normalization': {
                                             'mean': norm_mean,
                                             'std': norm_std}
