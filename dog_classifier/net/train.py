@@ -39,8 +39,8 @@ def trainNN(training_parameters):
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    df_train = pd.read_csv(path_to_labels + 'train_labels.csv').head(n=20)
-    df_val = pd.read_csv(path_to_labels + 'val_labels.csv').head(n=20)
+    df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
+    df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
 
     trainDataloader = DataGenerator(df_train, encoder_model, batch_size=bs_size)
     valDataloader = DataGenerator(df_val, encoder_model, batch_size=bs_size)
