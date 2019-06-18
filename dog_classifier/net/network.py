@@ -1,7 +1,9 @@
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, GlobalMaxPooling2D, Flatten, GlobalAveragePooling2D, Dropout
 from keras import backend as K
+import argparse
 
+from dog_classifier.net import train
 
 def DogNN():
     # K.set_image_dim_ordering('th')
@@ -18,6 +20,46 @@ def DogNN():
     model.add(Dense(120, activation='softmax'))
     return model
 
+def DogNNv2():
+    # K.set_image_dim_ordering('th')
+    shape_input = (None, None, 3)
+
+    model = Sequential()
+    model.add(Conv2D(filters=2, kernel_size=(3, 3), activation='relu',
+                     dilation_rate=(2, 2), input_shape=shape_input))
+    #model.add(Conv2D(filters=4, kernel_size=(7, 7), activation='relu'))
+    #model.add(Conv2D(filters=8, kernel_size=(7, 7), activation='relu'))
+    #model.add(Conv2D(filters=8, kernel_size=(7, 5), activation='relu'))
+    #model.add(Conv2D(filters=8, kernel_size=(5, 7), activation='relu'))
+    #model.add(Conv2D(filters=8, kernel_size=(5, 7), activation='relu'))
+    #model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu'))
+    #model.add(Conv2D(filters=4, kernel_size=(3, 3), activation='relu'))
+    #model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(GlobalMaxPooling2D())
+    #model.add(Dense(100, activation='relu'))
+    model.add(Dense(120, activation='softmax'))
+    return model
+
+def LinearNN():
+    # K.set_image_dim_ordering('th')
+    shape_input = (None, None, 3)
+
+    model = Sequential()
+    model.add(Conv2D(filters=2, kernel_size=(5, 5), activation='relu',
+                     input_shape=shape_input))
+    model.add(Conv2D(filters=4, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=6, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=8, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=10, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=12, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=14, kernel_size=(3, 3), activation='relu'))
+    model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu'))
+    model.add(Conv2D(filters=18, kernel_size=(3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(GlobalMaxPooling2D())
+    #model.add(Dense(100, activation='relu'))
+    model.add(Dense(120, activation='softmax'))
+    return model
 
 def SeminarNN():
     img_rows, img_cols = None, None
@@ -45,3 +87,11 @@ def SeminarNN():
 
 
     return model
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
+    parser.add_argument('architecture', type=str, help='Class name of the network')
+
+    args = parser.parse_args()
+    model = train.get_model(args.architecture)
+    model.summary()

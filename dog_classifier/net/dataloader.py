@@ -101,9 +101,8 @@ class DataGenerator(Sequence):
 
         for i, ID in enumerate(list_IDs_temp):
             path_to_image = self.df['path_to_image'].values[ID]
-            image = cv.imread(path_to_image, colormode)
+            image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
-
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
 
