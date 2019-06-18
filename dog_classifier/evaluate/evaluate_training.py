@@ -120,7 +120,7 @@ def plot_confusion_matrix(cm, classes, path,
     :param classes: (name of?) classes to plot
     :param path: saving path, on which build will be added
     """
-    plt.rcParams.update({'font.size': 2})
+    plt.rcParams.update({'font.size': 3})
     print("plot confusion matrix")
     path = path + '/build/'
     if not os.path.exists(path):
@@ -138,9 +138,10 @@ def plot_confusion_matrix(cm, classes, path,
     fmt = '.2f' if normalize else 'd'
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
+        if cm[i, j] > thresh:
+            plt.text(j, i, format(cm[i, j], fmt),
+                    horizontalalignment="center",
+                    color="red" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
     plt.ylabel('True label')

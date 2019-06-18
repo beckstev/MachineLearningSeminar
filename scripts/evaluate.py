@@ -32,4 +32,4 @@ if __name__ == '__main__':
     # plot the confusion matrix
     # Prblem with figure size, still need fixing, some axis is cut off
     # plt.figure(figsize=(8, 8))
-    # eval.plot_confusion_matrix(confusion_mtx, classes=range(120), path=".")
+    eval.plot_confusion_matrix(confusion_mtx, classes=range(120), path=".")
