@@ -57,7 +57,7 @@ def trainNN(training_parameters):
                                  min_delta=early_stopping_delta,
                                  verbose=1)
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
-                                  patience=3, verbose=1)
+                                  patience=3, verbose=1, min_lr=1e-6)
 
     history = model.fit_generator(trainDataloader, validation_data=valDataloader,
                                   epochs=num_of_epochs,
