@@ -32,11 +32,19 @@ def crop_range(img_size, bbox, rescale_size):
     max_x_translation = diff_bbox_right_edge if diff_bbox_right_edge < diff_bbox_left_edge else diff_bbox_left_edge
     max_y_translation = diff_bbox_top_edge if diff_bbox_top_edge < diff_bbox_lower_edge else diff_bbox_lower_edge
 
+    x_trans = np.random.uniform(-max_x_translation, max_x_translation)
+    y_trans = np.random.uniform(-max_y_translation, max_y_translation)
+
+    trans_limits = (x_trans, y_trans)
+
+    # Zoom range
     max_x_zoom = 1 - max_x_translation / rescale_size[1]  # in percent
     max_y_zoom = 1 - max_y_translation / rescale_size[0]  # in percent
 
-    trans_limits = (max_x_translation, max_y_translation)
-    zoom_limits = (max_x_zoom, max_y_zoom)
+    zoom_x = np.random.uniform(max_x_zoom, 1)
+    zoom_y = np.random.uniform(max_y_zoom, 1)
+
+    zoom_limits = (zoom_x, zoom_y)
 
     return trans_limits, zoom_limits
 
