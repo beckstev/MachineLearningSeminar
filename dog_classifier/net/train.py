@@ -7,7 +7,7 @@ from keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import json
 
 from dog_classifier.net.dataloader import DataGenerator
-from dog_classifier.net.network import DogNN, DogNNv2, LinearNN
+from dog_classifier.net.network import DogNN, DogNNv2, LinearNN, MiniDogNN
 from dog_classifier.evaluate import evaluate_training
 
 
@@ -18,6 +18,8 @@ def get_model(model_name):
         return DogNNv2()
     elif model_name == 'LinearNN':
         return LinearNN()
+    elif model_name == 'MiniDogNN':
+        return MiniDogNN()
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
@@ -42,8 +44,8 @@ def trainNN(training_parameters):
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
 
-    trainDataloader = DataGenerator(df_train, encoder_model, batch_size=bs_size)
-    valDataloader = DataGenerator(df_val, encoder_model, batch_size=bs_size)
+    trainDataloader = DataGenerator(df_train, encoder_model, batch_size=bs_size, n_classes=5)
+    valDataloader = DataGenerator(df_val, encoder_model, batch_size=bs_size, n_classes=5)
 
     model = get_model(training_parameters['architecture'])
     # Set the leranrning rate of adam optimizer
