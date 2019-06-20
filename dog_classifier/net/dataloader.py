@@ -108,20 +108,31 @@ class DataGenerator(Sequence):
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
 
-            # plt.imshow(rescaled_image)
-            # plt.savefig('build/{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
-            # plt.clf()
+            plt.imshow(rescaled_image)
+            plt.savefig('build/{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
+            plt.clf()
 
+            # get bboxes
             bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
-            trans_limits, zoom_limits = crop_range(image.shape, bbox, rescale_size)
-            # print(zoom_limits)
+            # generate translation and zoom limits from crop_range
+            trans_limits, zoom_limits = crop_range(image.shape, bbox,
+                                                   rescale_size)
+            # get random rotation
             random_rotation = np.random.uniform(-30, 30)
+            # get random zoom fpr x and y
+            zoom_x = np.random.uniform(zoom_limits[0], 1)
+            zoom_y = np.random.uniform(zoom_limits[1], 1)
 
-            rescaled_image = apply_affine_transform(rescaled_image, zx=(0.9, 1.0), zy=0.9, theta=random_rotation, fill_mode='constant')
+            # transform the image
+            rescaled_image = apply_affine_transform(rescaled_image, zx=zoom_x,
+                                                    zy=zoom_y,
+                                                    theta=random_rotation,
+                                                    fill_mode='constant',
+                                                    tx=-2, ty=2)
 
-            # plt.imshow(rescaled_image)
-            # plt.savefig('build/augmented_{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
-            # plt.clf()
+            plt.imshow(rescaled_image)
+            plt.savefig('build/augmented_{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
+            plt.clf()
 
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
