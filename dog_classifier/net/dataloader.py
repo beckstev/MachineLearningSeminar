@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from keras.utils import to_categorical, Sequence
 from keras.preprocessing.image import apply_affine_transform
 from sklearn.preprocessing import LabelEncoder
+from dog_classifier.io.data_augmentation import crop_range
 import os
 from pathlib import Path
 
@@ -106,11 +107,22 @@ class DataGenerator(Sequence):
             path_to_image = self.df['path_to_image'].values[ID]
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
+
+            # plt.imshow(rescaled_image)
+            # plt.savefig('build/{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
+            # plt.clf()
+
+            bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
+            trans_limits, zoom_limits = crop_range(image.shape, bbox, rescale_size)
+            # print(zoom_limits)
             random_rotation = np.random.uniform(-30, 30)
-            rescaled_image = apply_affine_transform(rescaled_image, theta=random_rotation, zx=0.9, fill_mode='constant', zy=0.9)
-            plt.imshow(rescaled_image)
-            plt.savefig('build/{}.jpg'.format(i))
-            plt.clf()
+
+            rescaled_image = apply_affine_transform(rescaled_image, zx=(0.9, 1.0), zy=0.9, theta=random_rotation, fill_mode='constant')
+
+            # plt.imshow(rescaled_image)
+            # plt.savefig('build/augmented_{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
+            # plt.clf()
+
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
 
