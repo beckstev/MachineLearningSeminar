@@ -61,11 +61,6 @@ def DogNNv2():
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     model.add(Dense(120, activation='softmax'))
-
-    for layer in model.layers:
-        if type(layer) == Conv2D:
-            layer.activation = 'PReLU'
-            layer.kernel_initializer = 'he_normal'
     return model
 
 def LinearNN():
@@ -111,10 +106,35 @@ def SeminarNN():
     model.add(GlobalMaxPooling2D())
     # model.add(Flatten())
     model.add(Dense(120, activation='softmax'))
+    return model
+def MiniDogNN():
+    shape_input = (None, None, 3)
+    model = Sequential()
+    model.add(Conv2D(filters=3, kernel_size=(2, 2),
+                     dilation_rate=(2, 2),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),
+                     input_shape=shape_input))
 
+    model.add(PReLU(alpha_initializer=he_normal(),
+                    weights=None,
+                    shared_axes=[1, 2]))
+
+    model.add(Conv2D(filters=18, kernel_size=(2, 2),
+                     dilation_rate=(2, 2),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),
+                     input_shape=shape_input))
+
+    model.add(PReLU(alpha_initializer=he_normal(),
+                    weights=None,
+                    shared_axes=[1, 2]))
+
+    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(GlobalMaxPooling2D())
+    model.add(Dense(5, activation='softmax'))
 
     return model
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')
