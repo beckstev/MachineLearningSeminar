@@ -1,9 +1,12 @@
 import numpy as np
 import cv2 as cv
+import matplotlib.pyplot as plt
 from keras.utils import to_categorical, Sequence
+from keras.preprocessing.image import apply_affine_transform
 from sklearn.preprocessing import LabelEncoder
 import os
 from pathlib import Path
+
 
 class DataGenerator(Sequence):
     ''' Dataloader for batch wise traning of a NN with batch wise rescaling of
@@ -103,6 +106,11 @@ class DataGenerator(Sequence):
             path_to_image = self.df['path_to_image'].values[ID]
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
+            random_rotation = np.random.uniform(-30, 30)
+            rescaled_image = apply_affine_transform(rescaled_image, theta=random_rotation, zx=0.9, fill_mode='constant', zy=0.9)
+            plt.imshow(rescaled_image)
+            plt.savefig('build/{}.jpg'.format(i))
+            plt.clf()
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
 
