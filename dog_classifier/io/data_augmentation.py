@@ -5,6 +5,15 @@ import cv2 as cv
 
 def crop_range(img_size, bbox, rescale_size):
     '''Function to estimate the maximal x and y value for cropping.
+
+    :param img_size: Size of the original scaled image
+    :param bbox: Unscaled boundinx box of the image
+    :param rescale_size: Rescale size on which the original img will be scaled
+    :return trans_limits: Maximal values for linear translations
+                          (left -> right), (bottom -> top) and vice versa. For
+                          some directions may achieve higher. For some
+                          translation directions higher translation values can
+                          be achieved. 
     '''
     rescaled_bbox = resize_bbox(img_shape, bbox, rescale_size)
 
@@ -20,7 +29,10 @@ def crop_range(img_size, bbox, rescale_size):
     max_x_zoom = max_x_translation / rescale_size[1]  # in percent
     max_y_zoom = max_y_translation / rescale_size[0]  # in percent
 
-    return (max_x_translation, max_y_translation, max_x_zoom, max_y_zoom)
+    trans_limits = (max_x_translation, max_y_translation)
+    zoom_limits = (max_x_zoom, max_y_zoom)
+
+    return trans_limits, zoom_limits
 
 
 def resize_bbox(img_size, bbox, rescale_size):
