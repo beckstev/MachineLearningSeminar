@@ -119,16 +119,28 @@ class DataGenerator(Sequence):
                                                    rescale_size)
             # get random rotation
             random_rotation = np.random.uniform(-30, 30)
+            if np.random.uniform(0, 1) < 0.5:
+                zx = zoom_limits[0]
+                zy = zoom_limits[1]
+                tx = 0
+                ty = 0
+            else:
+                zx = 1
+                zy = 1
+                tx = trans_limits[0]
+                ty = trans_limits[1]
             # get random zoom fpr x and y
-            zoom_x = np.random.uniform(zoom_limits[0], 1)
-            zoom_y = np.random.uniform(zoom_limits[1], 1)
+            # zoom_x = np.random.uniform(zoom_limits[0], 1)
+            # zoom_y = np.random.uniform(zoom_limits[1], 1)
 
             # transform the image
-            rescaled_image = apply_affine_transform(rescaled_image, zx=zoom_x,
-                                                    zy=zoom_y,
+            rescaled_image = apply_affine_transform(rescaled_image,
+                                                    zx=zx,
+                                                    zy=zy,
                                                     theta=random_rotation,
                                                     fill_mode='constant',
-                                                    tx=-2, ty=2)
+                                                    tx=tx,
+                                                    ty=ty)
 
             plt.imshow(rescaled_image)
             plt.savefig('build/augmented_{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
