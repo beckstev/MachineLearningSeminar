@@ -1,9 +1,12 @@
 import numpy as np
 import cv2 as cv
 from keras.utils import to_categorical, Sequence
+from dog_classifier.io.transform import apply_affine_transform
 from sklearn.preprocessing import LabelEncoder
+from dog_classifier.io.data_augmentation import crop_range
 import os
 from pathlib import Path
+
 
 class DataGenerator(Sequence):
     ''' Dataloader for batch wise traning of a NN with batch wise rescaling of
@@ -90,11 +93,12 @@ class DataGenerator(Sequence):
         min_height_of_batch = min(height_of_batch_images)
 
         # Tuple which will be used for cv2.rescale
-        rescale_size = (min_height_of_batch, min_width_of_batch)
+        # cv2.rescale takes first the horizontal and then the vertical axis
+        rescale_size = (min_width_of_batch, min_height_of_batch)
 
         # This array will be used to save the resized images. As we can see
         # the size of the array is fixed.
-        X = np.empty((self.batch_size, min_width_of_batch, min_height_of_batch,
+        X = np.empty((self.batch_size, min_height_of_batch, min_width_of_batch,
                      n_channels))
         # List to save the labels
         y = []
@@ -103,6 +107,37 @@ class DataGenerator(Sequence):
             path_to_image = self.df['path_to_image'].values[ID]
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
+
+            # get bboxes
+            bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
+            # generate translation and zoom limits from crop_range
+            trans_limits, zoom_limits = crop_range(image.shape, bbox,
+                                                   rescale_size)
+            # get random rotation
+            random_rotation = np.random.uniform(-30, 30)
+            if np.random.uniform(0, 1) < 0.5:
+                zx = zoom_limits[0]
+                zy = zoom_limits[1]
+                tx = 0
+                ty = 0
+            else:
+                zx = 1
+                zy = 1
+                tx = trans_limits[0]
+                ty = trans_limits[1]
+            # get random zoom fpr x and y
+            # zoom_x = np.random.uniform(zoom_limits[0], 1)
+            # zoom_y = np.random.uniform(zoom_limits[1], 1)
+
+            # transform the image
+            rescaled_image = apply_affine_transform(rescaled_image,
+                                                    zx=zx,
+                                                    zy=zy,
+                                                    theta=random_rotation,
+                                                    fill_mode='constant',
+                                                    tx=tx,
+                                                    ty=ty)
+
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
 
