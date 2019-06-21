@@ -36,7 +36,7 @@ def DogNNv2():
     model.add(PReLU(alpha_initializer=he_normal(),
                     weights=None,
                     shared_axes=[1, 2]))
-
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Conv2D(filters=8, kernel_size=(3, 3),
                      kernel_initializer=he_normal(),
                      bias_initializer=he_normal(),))
@@ -47,11 +47,13 @@ def DogNNv2():
                      bias_initializer=he_normal(),))
     model.add(PReLU(alpha_initializer=he_normal(), weights=None,
                     shared_axes=[1, 2]))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Conv2D(filters=16, kernel_size=(3, 3),
                      kernel_initializer=he_normal(),
                      bias_initializer=he_normal(),))
     model.add(PReLU(alpha_initializer=he_normal(), weights=None,
                     shared_axes=[1, 2]))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Conv2D(filters=64, kernel_size=(3, 3),
                      kernel_initializer=he_normal(),
                      bias_initializer=he_normal(),))
@@ -62,6 +64,43 @@ def DogNNv2():
     model.add(GlobalMaxPooling2D())
     model.add(Dense(120, activation='softmax'))
     return model
+def DogNNv3():
+        # K.set_image_dim_ordering('th')
+        shape_input = (None, None, 3)
+        model = Sequential()
+        model.add(Conv2D(filters=4, kernel_size=(3, 3),
+                         dilation_rate=(2, 2),
+                         kernel_initializer=he_normal(),
+                         bias_initializer=he_normal(),
+                         input_shape=shape_input))
+        model.add(PReLU(alpha_initializer=he_normal(),
+                        weights=None,
+                        shared_axes=[1, 2]))
+        model.add(Conv2D(filters=8, kernel_size=(3, 3),
+                         kernel_initializer=he_normal(),
+                         bias_initializer=he_normal(),))
+        model.add(PReLU(alpha_initializer=he_normal(), weights=None,
+                        shared_axes=[1, 2]))
+        model.add(Conv2D(filters=25, kernel_size=(3, 3),
+                         kernel_initializer=he_normal(),
+                         bias_initializer=he_normal(),))
+        model.add(PReLU(alpha_initializer=he_normal(), weights=None,
+                        shared_axes=[1, 2]))
+        model.add(Conv2D(filters=40, kernel_size=(3, 3),
+                         kernel_initializer=he_normal(),
+                         bias_initializer=he_normal(),))
+        model.add(PReLU(alpha_initializer=he_normal(), weights=None,
+                        shared_axes=[1, 2]))
+        model.add(AveragePooling2D(pool_size=(2, 2)))
+        model.add(AveragePooling2D(pool_size=(2, 2)))
+        model.add(GlobalMaxPooling2D())
+        model.add(Dense(120, activation='softmax'))
+
+        for layer in model.layers:
+            if type(layer) == Conv2D:
+                layer.activation = 'PReLU'
+                layer.kernel_initializer = 'he_normal'
+        return model
 
 def LinearNN():
     # K.set_image_dim_ordering('th')
