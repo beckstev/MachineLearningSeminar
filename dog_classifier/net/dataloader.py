@@ -1,8 +1,7 @@
 import numpy as np
 import cv2 as cv
-import matplotlib.pyplot as plt
 from keras.utils import to_categorical, Sequence
-from keras.preprocessing.image import apply_affine_transform
+from dog_classifier.io.transform import apply_affine_transform
 from sklearn.preprocessing import LabelEncoder
 from dog_classifier.io.data_augmentation import crop_range
 import os
@@ -94,11 +93,12 @@ class DataGenerator(Sequence):
         min_height_of_batch = min(height_of_batch_images)
 
         # Tuple which will be used for cv2.rescale
-        rescale_size = (min_height_of_batch, min_width_of_batch)
+        # cv2.rescale takes first the horizontal and then the vertical axis
+        rescale_size = (min_width_of_batch, min_height_of_batch)
 
         # This array will be used to save the resized images. As we can see
         # the size of the array is fixed.
-        X = np.empty((self.batch_size, min_width_of_batch, min_height_of_batch,
+        X = np.empty((self.batch_size, min_height_of_batch, min_width_of_batch,
                      n_channels))
         # List to save the labels
         y = []
@@ -107,10 +107,6 @@ class DataGenerator(Sequence):
             path_to_image = self.df['path_to_image'].values[ID]
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
-
-            plt.imshow(rescaled_image)
-            plt.savefig('build/{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
-            plt.clf()
 
             # get bboxes
             bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
@@ -141,10 +137,6 @@ class DataGenerator(Sequence):
                                                     fill_mode='constant',
                                                     tx=tx,
                                                     ty=ty)
-
-            plt.imshow(rescaled_image)
-            plt.savefig('build/augmented_{}'.format(path_to_image.replace('/', '_').replace('..', '_')))
-            plt.clf()
 
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
