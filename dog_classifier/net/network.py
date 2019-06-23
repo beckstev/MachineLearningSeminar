@@ -3,7 +3,6 @@ from keras.layers import Dense, Conv2D, MaxPooling2D, AveragePooling2D, GlobalMa
 from keras.initializers import he_normal
 from keras import backend as K
 import argparse
-
 from dog_classifier.net import train
 
 # ------------------------------------------------------------
@@ -30,7 +29,9 @@ def DogNN():
 
     model.add(Dense(120, activation='relu'))
     model.add(Dense(120, activation='softmax'))
+
     return model
+
 
 def DogNNv2():
     # K.set_image_dim_ordering('th')
@@ -106,6 +107,7 @@ def DogNNv3():
         model.add(Dense(120, activation='softmax'))
         return model
 
+
 def LinearNN():
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
@@ -122,9 +124,11 @@ def LinearNN():
     model.add(Conv2D(filters=18, kernel_size=(3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
-    #model.add(Dense(100, activation='relu'))
+    # model.add(Dense(100, activation='relu'))
     model.add(Dense(120, activation='softmax'))
+
     return model
+
 
 def SeminarNN():
     img_rows, img_cols = None, None
@@ -178,6 +182,8 @@ def MiniDogNN():
     model.add(Dense(5, activation='softmax'))
 
     return model
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')

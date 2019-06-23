@@ -11,6 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
+    parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('--use_rgb', action='store_true')
 
     args = parser.parse_args()
@@ -40,7 +41,12 @@ if __name__ == '__main__':
     else:
         norm_mean, norm_std = [0.5], [0.2]
 
-    training_parameters = {'batch_size': bs_size,
+    n_classes = 120
+    if args.n_classes:
+        n_classes = args.n_classes
+
+    training_parameters = {'n_classes': n_classes,
+                           'batch_size': bs_size,
                            'learning_rate': learning_rate,
                            'n_epochs': n_epochs,
                            'architecture': args.architecture,

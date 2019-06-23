@@ -53,11 +53,13 @@ def trainNN(training_parameters):
                                    training_timestamp)
     os.makedirs(model_save_path)
 
+    n_classes = training_parameters['n_classes']
     encoder_model = training_parameters['encoder_model']
     bs_size = training_parameters['batch_size']
     num_of_epochs = training_parameters['n_epochs']
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
+
     model = get_model(training_parameters['architecture'])
     # Set the leranrning rate of adam optimizer
     Adam(training_parameters['learning_rate'])
