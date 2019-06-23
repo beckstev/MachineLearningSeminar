@@ -15,7 +15,7 @@ class DataGenerator(Sequence):
     '''
 
     def __init__(self, df, encoder_model, batch_size=16, n_classes=120,
-                 use_rgb=True, shuffle=True, seed=13):
+                 use_rgb=True, shuffle=True, is_test=False, seed=13):
         '''Initialization
         :param df: Dataframe of the dataset (training, validation or testing)
                    which contains for all images the path to the image, the
@@ -25,6 +25,8 @@ class DataGenerator(Sequence):
         :param use_rgb: Boolean to indicate if the function should use RGB
                         or grayscale images
         :param shuffle: To get a new image order every epoch abs
+        :param is_train: Boolean to indicate if we are loading testing data. If
+                         so we do not wanna use any data augmentation
         :param seed: Set a seed for numpy random functions
         '''
         self.df = df
@@ -35,6 +37,7 @@ class DataGenerator(Sequence):
         self.shuffle = shuffle
         self.use_rgb = use_rgb
         self.seed = seed
+        self.is_test = is_test
         self.on_epoch_end()
         self.encode_labels()
 
@@ -108,35 +111,37 @@ class DataGenerator(Sequence):
             image = cv.imread(path_to_image, colormode) * 1/255
             rescaled_image = cv.resize(image, rescale_size)
 
-            # get bboxes
-            bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
-            # generate translation and zoom limits from crop_range
-            trans_limits, zoom_limits = crop_range(image.shape, bbox,
+            if self.is_test is False:
+                # get bboxes
+                bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
+                # generate translation and zoom limits from crop_range
+                trans_limits, zoom_limits = crop_range(image.shape, bbox,
                                                    rescale_size)
-            # get random rotation
-            random_rotation = np.random.uniform(-30, 30)
-            if np.random.uniform(0, 1) < 0.5:
-                zx = zoom_limits[0]
-                zy = zoom_limits[1]
-                tx = 0
-                ty = 0
-            else:
-                zx = 1
-                zy = 1
-                tx = trans_limits[0]
-                ty = trans_limits[1]
-            # get random zoom fpr x and y
-            # zoom_x = np.random.uniform(zoom_limits[0], 1)
-            # zoom_y = np.random.uniform(zoom_limits[1], 1)
 
-            # transform the image
-            rescaled_image = apply_affine_transform(rescaled_image,
-                                                    zx=zx,
-                                                    zy=zy,
-                                                    theta=random_rotation,
-                                                    fill_mode='constant',
-                                                    tx=tx,
-                                                    ty=ty)
+                # get random rotation
+                random_rotation = np.random.uniform(-30, 30)
+                if np.random.uniform(0, 1) < 0.5:
+                    zx = zoom_limits[0]
+                    zy = zoom_limits[1]
+                    tx = 0
+                    ty = 0
+                else:
+                    zx = 1
+                    zy = 1
+                    tx = trans_limits[0]
+                    ty = trans_limits[1]
+                # get random zoom fpr x and y
+                # zoom_x = np.random.uniform(zoom_limits[0], 1)
+                # zoom_y = np.random.uniform(zoom_limits[1], 1)
+
+                # transform the image
+                rescaled_image = apply_affine_transform(rescaled_image,
+                                                        zx=zx,
+                                                        zy=zy,
+                                                        theta=random_rotation,
+                                                        fill_mode='constant',
+                                                        tx=tx,
+                                                        ty=ty)
 
             X[i, ] = rescaled_image
             y.append(self.df['race_label'].values[ID])
