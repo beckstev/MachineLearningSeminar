@@ -5,6 +5,13 @@ import itertools
 import os
 from keras.callbacks import Callback
 from sklearn.metrics import classification_report
+from keras.models import load_model
+from dog_classifier.net.dataloader import DataGenerator
+from keras.utils import to_categorical
+from pathlib import Path
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import sys
 
 
 class HistoryEpoch(Callback):
@@ -293,3 +300,142 @@ def plot_predictions(n, model, X_test, height, width, path):
                  bbox=dict(facecolor='white', alpha=1))
         plt.axis('off')
     plt.savefig("{}/plot_predictions.pdf".format(path))
+
+
+def predict(path_to_model, encoder_model, fname):
+    """function will predict with predict_generator from a given, saved model
+    and save the result as txt
+    :param path_to_model: Path to model
+    :param encoder_model: version of encoder used for training
+    :param fname: name of the created predicition txt file
+    """
+    main_model = 'model_parameter.h5'
+    model_params = os.path.join(path_to_model, main_model)
+    # This try and except block enables us to use 'model_parameter_checkpoint.h5'
+    # files if there is now 'model_parameter_checkpoint.h5'
+    try:
+        model = load_model(model_params)
+    except OSError as e:
+        files_in_mode_path = os.listdir(path_to_model)
+        checkpoint_model = 'model_parameter_checkpoint.h5'
+
+        if checkpoint_model in files_in_mode_path:
+            print('-------------')
+            print(f'The request model does not include "{main_model}".')
+            print(f'However, there is a checkpoint model "{checkpoint_model}"',
+                  'which could be used instead.')
+            print('Do you wanna evaluate the checkpoint_model? yes-(y), no-(n)')
+            reply = str(input())
+            if reply == 'y':
+                print('Using checkpoint model')
+                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
+                model = load_model(checkpoint_model_params)
+            else:
+                print('Exiting program')
+                sys.exit(1)
+        else:
+            raise OSError(f'There is no file "{main_model}" or "{checkpoint_model}"!')
+
+
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+    df_test = pd.read_csv(path_to_labels + 'test_labels.csv')
+
+    testDataloader = DataGenerator(df_test,
+                                   encoder_model=encoder_model,
+                                   shuffle=True,
+                                   is_test=True)
+
+    # Test predicten
+    Y_pred = model.predict_generator(testDataloader, verbose=1)
+
+    # Save predictions
+    path_predictions = os.path.join(path_to_model, fname)
+    np.savetxt(path_predictions, Y_pred)
+
+
+def preprocess(path_to_model, encoder_model, fname):
+    """function, that computes Y_pred, Y_test, Y_cls and Y_true for further use
+    in the evaluation process.
+    :param path_to_model: path to model, where everthing regarding this model
+                          is saved
+    :param encoder_model: version of encoder used for training
+    :param fname: name of predicition txt
+    """
+
+    # Read test dataset
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+    df_test = pd.read_csv(path_to_labels + 'test_labels.csv')
+
+    # call the data generator for the test loader
+    testDataloader = DataGenerator(df_test,
+                                   encoder_model=encoder_model,
+                                   shuffle=True,
+                                   is_test=True)
+
+    # create prediction array from given file
+    path_predictions = os.path.join(path_to_model, fname)
+
+    Y_pred = np.genfromtxt(path_predictions)
+    Y_test = to_categorical(df_test['race_label'], num_classes=None)
+    diff = (Y_test.shape[0] - Y_pred.shape[0])
+    # Y_test erstellen, indem die verwendeten Indizes der Bilder verwendet
+    # werden. Dann werden die gedroppt, die überstehen
+    values = df_test['race_label'].values
+    test = values[testDataloader.data_index]
+    Y_test = to_categorical(test[:-diff], num_classes=None)
+
+    # Convert predictions classes to one hot vectors
+    Y_cls = np.argmax(np.array(Y_pred), axis=1)
+
+    # Convert validation observations to one hot vectors
+    Y_true = np.argmax(np.array(Y_test), axis=1)
+
+    path_to_images = df_test['path_to_image'].values
+    path_to_images = path_to_images[testDataloader.data_index]
+    return Y_pred, Y_test, Y_cls, Y_true, path_to_images
+
+
+def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+
+    encoder_path = os.path.join(path_to_labels, encoder_model)
+    encoder = LabelEncoder()
+    encoder.classes_ = np.load(encoder_path)
+    for index in range(len(Y_pred)):
+        # Indices of the array represent the dog race
+        race_index_true = np.where(Y_true[index] == 1)
+        race_true = encoder.inverse_transform(race_index_true)
+
+        # Indicies of the three races with highest prohability
+        # Notice: the last element of races_high_pred  has the highest prob
+        races_high_pred = np.argsort(Y_pred[index])[-3:]
+        races_pred = encoder.inverse_transform(races_high_pred)
+
+        path_to_image = path_to_images[index]
+        img = plt.imread(path_to_image)
+        plt.imshow(img)
+        img_width = img.shape[1]
+        img_height = img.shape[0]
+        scale = 6
+        height_steps = img_height / 6
+
+        for i in range(len(races_pred)):
+            race_index_pred = races_high_pred[i]
+            prob = Y_pred[index][race_index_pred] * 100
+            text = f"{races_pred[i]}: \n {prob:.2} %"
+            plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
+
+        plt.title(f'True race: {race_true[0]} ')
+        plt.axis('off')
+        # plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
+        plt.show()
+
+
+if __name__ == '__main__':
+    enocder = "encoder_2019-06-16_12:45:37.npy"
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+    df_test = pd.read_csv(path_to_labels + 'val_test.csv')
