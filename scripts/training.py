@@ -16,19 +16,19 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    n_epochs = int(1e5)
+    n_epochs = int(5e2)
     if args.epochs:
         n_epochs = args.epochs
 
-    learning_rate = 1e-4
+    learning_rate = 1e-3
     if args.learning_rate:
         learning_rate = args.learning_rate
 
-    bs_size = 8
+    bs_size = 16
     if args.batch_size:
         bs_size = args.batch_size
 
-    early_stopping_patience = 50
+    early_stopping_patience = 30
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
 
