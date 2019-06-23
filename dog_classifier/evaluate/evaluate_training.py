@@ -301,13 +301,13 @@ def plot_predictions(n, model, X_test, height, width, path):
         plt.axis('off')
     plt.savefig("{}/plot_predictions.pdf".format(path))
 
+
 def predict(path_to_model, encoder_model, fname):
     """function will predict with predict_generator from a given, saved model
     and save the result as txt
-    :param path_to_file: Path to model
-    :param path_to_save: Path of saving prediction
+    :param path_to_model: Path to model
     :param encoder_model: version of encoder used for training
-    :param fname: name of the created txt file
+    :param fname: name of the created predicition txt file
     """
     main_model = 'model_parameter.h5'
     model_params = os.path.join(path_to_model, main_model)
@@ -323,7 +323,7 @@ def predict(path_to_model, encoder_model, fname):
             print('-------------')
             print(f'The request model does not include "{main_model}".')
             print(f'However, there is a checkpoint model "{checkpoint_model}"',
-                   'which could be used instead.')
+                  'which could be used instead.')
             print('Do you wanna evaluate the checkpoint_model? yes-(y), no-(n)')
             reply = str(input())
             if reply == 'y':
@@ -357,8 +357,10 @@ def predict(path_to_model, encoder_model, fname):
 def preprocess(path_to_model, encoder_model, fname):
     """function, that computes Y_pred, Y_test, Y_cls and Y_true for further use
     in the evaluation process.
-    :param path_to_file: file with path, in which the prediciton was made
+    :param path_to_model: path to model, where everthing regarding this model
+                          is saved
     :param encoder_model: version of encoder used for training
+    :param fname: name of predicition txt
     """
 
     # Read test dataset
@@ -417,7 +419,7 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
         plt.imshow(img)
         img_width = img.shape[1]
         img_height = img.shape[0]
-        scale =  6
+        scale = 6
         height_steps = img_height / 6
 
         for i in range(len(races_pred)):
@@ -428,12 +430,12 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
 
         plt.title(f'True race: {race_true[0]} ')
         plt.axis('off')
-        #plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
+        # plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
         plt.show()
 
 
 if __name__ == '__main__':
     enocder = "encoder_2019-06-16_12:45:37.npy"
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
-                                       "labels/")
+                                  "labels/")
     df_test = pd.read_csv(path_to_labels + 'val_test.csv')
