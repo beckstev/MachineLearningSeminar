@@ -11,6 +11,8 @@ from keras.utils import to_categorical
 from pathlib import Path
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+import sys
+
 
 class HistoryEpoch(Callback):
     """Class for calculating loss and metric after each epoch for
@@ -307,9 +309,33 @@ def predict(path_to_model, encoder_model, fname):
     :param encoder_model: version of encoder used for training
     :param fname: name of the created txt file
     """
+    main_model = 'model_parameter.h5'
+    model_params = os.path.join(path_to_model, main_model)
+    # This try and except block enables us to use 'model_parameter_checkpoint.h5'
+    # files if there is now 'model_parameter_checkpoint.h5'
+    try:
+        model = load_model(model_params)
+    except OSError as e:
+        files_in_mode_path = os.listdir(path_to_model)
+        checkpoint_model = 'model_parameter_checkpoint.h5'
 
-    model_params = os.path.join(path_to_model, 'our_first_nn.h5')
-    model = load_model(model_params)
+        if checkpoint_model in files_in_mode_path:
+            print('-------------')
+            print(f'The request model does not include "{main_model}".')
+            print(f'However, there is a checkpoint model "{checkpoint_model}"',
+                   'which could be used instead.')
+            print('Do you wanna evaluate the checkpoint_model? yes-(y), no-(n)')
+            reply = str(input())
+            if reply == 'y':
+                print('Using checkpoint model')
+                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
+                model = load_model(checkpoint_model_params)
+            else:
+                print('Exiting program')
+                sys.exit(1)
+        else:
+            raise OSError(f'There is no file "{main_model}" or "{checkpoint_model}"!')
+
 
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
