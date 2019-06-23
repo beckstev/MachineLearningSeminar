@@ -25,7 +25,7 @@ class DataGenerator(Sequence):
         :param use_rgb: Boolean to indicate if the function should use RGB
                         or grayscale images
         :param shuffle: To get a new image order every epoch abs
-        :param is_train: Boolean to indicate if we are loading testing data. If
+        :param is_test: Boolean to indicate if we are loading testing data. If
                          so we do not wanna use any data augmentation
         :param seed: Set a seed for numpy random functions
         '''
