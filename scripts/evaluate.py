@@ -10,10 +10,12 @@ if __name__ == '__main__':
     parser.add_argument('encoder_model', type=str, help='encoder model to use')
     parser.add_argument('--fname_pred', type=str, help='file name of prediction file')
     parser.add_argument('--init', type=bool, help='Flag to predict one time.')
+    parser.add_argument('--n', type=int, help='Number of classes. Default is 120')
 
     args = parser.parse_args()
     init = args.init if args.init else False
     fname_pred = args.fname_pred if args.fname_pred else 'prediction.txt'
+    n_classes = args.n if args.n else 120
 
     if init:
         eval.predict(args.model_path, args.encoder_model,
@@ -23,11 +25,10 @@ if __name__ == '__main__':
                                                     args.encoder_model,
                                                     fname_pred)
 
-
     # visualize_predictions
-    eval.visualize_predictions(Y_pred, Y_test, path_to_images, args.encoder_model)
+    # eval.visualize_predictions(Y_pred, Y_test, path_to_images, args.encoder_model)
     # Multiclass-Analyse
-    eval.prob_multiclass(Y_pred, Y_test, label=10, path=args.model_path,)
+    # eval.prob_multiclass(Y_pred, Y_test, label=10, path=args.model_path,)
 
     # compute the confusion matrix
     confusion_mtx = confusion_matrix(Y_true, Y_cls)
@@ -35,4 +36,6 @@ if __name__ == '__main__':
     # plot the confusion matrix
     # Prblem with figure size, still need fixing, some axis is cut off
     # plt.figure(figsize=(8, 8))
-    eval.plot_confusion_matrix(confusion_mtx, classes=range(120), path=args.model_path)
+    eval.plot_confusion_matrix(confusion_mtx, classes=range(n_classes),
+                               path=args.model_path,
+                               encoder_model=args.encoder_model)
