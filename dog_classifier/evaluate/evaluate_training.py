@@ -4,6 +4,7 @@ import matplotlib.cm as cm
 import itertools
 import os
 from keras.callbacks import Callback
+from keras.layers import PReLU
 from sklearn.metrics import classification_report
 from keras.models import load_model
 from dog_classifier.net.dataloader import DataGenerator
@@ -12,6 +13,7 @@ from pathlib import Path
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import sys
+from keras.utils.generic_utils import CustomObjectScope
 
 
 class HistoryEpoch(Callback):
@@ -330,7 +332,8 @@ def predict(path_to_model, encoder_model, fname):
     # This try and except block enables us to use 'model_parameter_checkpoint.h5'
     # files if there is now 'model_parameter_checkpoint.h5'
     try:
-        model = load_model(model_params)
+        with CustomObjectScope({'PRELU': PReLU()}):
+            model = load_model(model_params)
     except OSError as e:
         files_in_mode_path = os.listdir(path_to_model)
         checkpoint_model = 'model_parameter_checkpoint.h5'
@@ -345,7 +348,8 @@ def predict(path_to_model, encoder_model, fname):
             if reply == 'y':
                 print('Using checkpoint model')
                 checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
-                model = load_model(checkpoint_model_params)
+                with CustomObjectScope({'PRELU': PReLU()}):
+                    model = load_model(checkpoint_model_params)
             else:
                 print('Exiting program')
                 sys.exit(1)
