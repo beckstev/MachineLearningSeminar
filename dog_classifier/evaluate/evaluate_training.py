@@ -332,7 +332,8 @@ def predict(path_to_model, encoder_model, fname):
             if reply == 'y':
                 print('Using checkpoint model')
                 checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
-                model = load_model(checkpoint_model_params)
+                with CustomObjectScope({'PRELU': PReLU()}):
+                    model = load_model(checkpoint_model_params)
             else:
                 print('Exiting program')
                 sys.exit(1)
