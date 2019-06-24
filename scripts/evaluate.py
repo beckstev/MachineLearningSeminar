@@ -1,4 +1,4 @@
-
+import os
 import argparse
 from dog_classifier.evaluate import evaluate_training as eval
 from sklearn.metrics import confusion_matrix
@@ -9,15 +9,13 @@ if __name__ == '__main__':
     parser.add_argument('model_path', type=str, help='path to save/saved model')
     parser.add_argument('encoder_model', type=str, help='encoder model to use')
     parser.add_argument('--fname_pred', type=str, help='file name of prediction file')
-    parser.add_argument('--init', type=bool, help='Flag to predict one time.')
     parser.add_argument('--n', type=int, help='Number of classes. Default is 120')
 
     args = parser.parse_args()
-    init = args.init if args.init else False
     fname_pred = args.fname_pred if args.fname_pred else 'prediction.txt'
     n_classes = args.n if args.n else 120
 
-    if init:
+    if not os.path.isfile(args.model_path + '/prediction.txt'):
         eval.predict(args.model_path, args.encoder_model,
                      fname_pred)
 
