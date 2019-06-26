@@ -8,12 +8,15 @@ from dog_classifier.net import train
 # ------------------------------------------------------------
 # needs to be defined as activation class otherwise error
 # AttributeError: 'Activation' object has no attribute '__name__'
+
+
 class PRELU(PReLU):
     def __init__(self, **kwargs):
         self.__name__ = "PReLU"
         super(PRELU, self).__init__(**kwargs)
 
-def DogNN():
+
+def DogNN(n_classes):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
 
@@ -28,12 +31,12 @@ def DogNN():
     model.add(GlobalMaxPooling2D())
 
     model.add(Dense(120, activation='relu'))
-    model.add(Dense(120, activation='softmax'))
+    model.add(Dense(n_classes, activation='softmax'))
 
     return model
 
 
-def DogNNv2():
+def DogNNv2(n_classes):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
     model = Sequential()
@@ -72,43 +75,44 @@ def DogNNv2():
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
-    model.add(Dense(120, activation='softmax'))
+    model.add(Dense(n_classes, activation='softmax'))
     return model
 
-def DogNNv3():
-        # K.set_image_dim_ordering('th')
-        shape_input = (None, None, 3)
-        model = Sequential()
-        model.add(Conv2D(filters=4, kernel_size=(3, 3),
-                         dilation_rate=(2, 2),
-                         kernel_initializer=he_normal(),
-                         bias_initializer=he_normal(),
-                         input_shape=shape_input))
-        model.add(PRELU(alpha_initializer=he_normal(),
-                        shared_axes=[1, 2]))
-        model.add(Conv2D(filters=8, kernel_size=(3, 3),
-                         kernel_initializer=he_normal(),
-                         bias_initializer=he_normal(),))
-        model.add(PRELU(alpha_initializer=he_normal(),
-                        shared_axes=[1, 2]))
-        model.add(Conv2D(filters=25, kernel_size=(3, 3),
-                         kernel_initializer=he_normal(),
-                         bias_initializer=he_normal(),))
-        model.add(PRELU(alpha_initializer=he_normal(),
-                        shared_axes=[1, 2]))
-        model.add(Conv2D(filters=40, kernel_size=(3, 3),
-                         kernel_initializer=he_normal(),
-                         bias_initializer=he_normal(),))
-        model.add(PRELU(alpha_initializer=he_normal(),
-                        shared_axes=[1, 2]))
-        model.add(AveragePooling2D(pool_size=(2, 2)))
-        model.add(AveragePooling2D(pool_size=(2, 2)))
-        model.add(GlobalMaxPooling2D())
-        model.add(Dense(120, activation='softmax'))
-        return model
+
+def DogNNv3(n_classes):
+    # K.set_image_dim_ordering('th')
+    shape_input = (None, None, 3)
+    model = Sequential()
+    model.add(Conv2D(filters=4, kernel_size=(3, 3),
+                     dilation_rate=(2, 2),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),
+                     input_shape=shape_input))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    shared_axes=[1, 2]))
+    model.add(Conv2D(filters=8, kernel_size=(3, 3),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    shared_axes=[1, 2]))
+    model.add(Conv2D(filters=25, kernel_size=(3, 3),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    shared_axes=[1, 2]))
+    model.add(Conv2D(filters=40, kernel_size=(3, 3),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    shared_axes=[1, 2]))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(GlobalMaxPooling2D())
+    model.add(Dense(n_classes, activation='softmax'))
+    return model
 
 
-def LinearNN():
+def LinearNN(n_classes):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
     model = Sequential()
@@ -125,12 +129,12 @@ def LinearNN():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     # model.add(Dense(100, activation='relu'))
-    model.add(Dense(120, activation='softmax'))
+    model.add(Dense(n_classes, activation='softmax'))
 
     return model
 
 
-def SeminarNN():
+def SeminarNN(n_classes):
     img_rows, img_cols = None, None
 
     if K.image_data_format() == 'channels_first':
@@ -152,9 +156,11 @@ def SeminarNN():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     # model.add(Flatten())
-    model.add(Dense(120, activation='softmax'))
+    model.add(Dense(n_classes, activation='softmax'))
     return model
-def MiniDogNN():
+
+
+def MiniDogNN(n_classes):
     shape_input = (None, None, 3)
     model = Sequential()
     model.add(Conv2D(filters=3, kernel_size=(2, 2),
@@ -179,7 +185,7 @@ def MiniDogNN():
 
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
-    model.add(Dense(5, activation='softmax'))
+    model.add(Dense(n_classes, activation='softmax'))
 
     return model
 
