@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 from keras.optimizers import Adam
@@ -44,16 +45,31 @@ def save_training_parameters(training_parameters, model_save_path):
 
 def save_final_loss_and_acc(history, model_save_path):
     df_history = pd.DataFrame(history.history)
-    print(df_history.columns)
     df_history = df_history.drop(['lr'], axis=1)
-    loss_acc = df_history.tail(1).values
+
+    # best values
+    min_loss = min(df_history['loss'].values)
+    max_acc = max(df_history['acc'].values)
+    min_val_loss = min(df_history['val_loss'].values)
+    max_val_acc = max(df_history['val_acc'].values)
+    max_list = [min_val_loss, max_val_acc, min_loss, max_acc]
+
+    # final values
+    acc = df_history['acc'].tail(1).values.tolist()
+    loss = df_history['loss'].tail(1).values.tolist()
+    val_acc = df_history['val_acc'].tail(1).values.tolist()
+    val_loss = df_history['val_loss'].tail(1).values.tolist()
+    list_loss_acc = [val_loss, val_acc, loss, acc]
+
     columns = df_history.columns.values
-    list_loss_acc = loss_acc.tolist()
     list_columns = columns.tolist()
+
     with open(model_save_path + '/loss_acc.json', 'w') as json_file:
         json.dump(list_columns, json_file)
         json_file.write('\n')
         json.dump(list_loss_acc, json_file)
+        json_file.write('\n')
+        json.dump(max_list, json_file)
 
 
 def trainNN(training_parameters, grid_search=False):
