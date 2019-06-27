@@ -177,7 +177,7 @@ def PreDogNN():
 
     return model
 
-def PreBigDogNN():
+def PreBigDogNN(n_classes):
     l2_value = 0.01
     drop_rate = 0.2
 
@@ -191,20 +191,20 @@ def PreBigDogNN():
     model.add(conv_base)
     model.add(AveragePooling2D(pool_size=(4, 4)))
     model.add(GlobalMaxPooling2D())
-    model.add(Dropout(rate=drop_rate))
-    model.add(Dense(30, kernel_initializer=he_normal(),
+    model.add(Dense(150, kernel_initializer=he_normal(),
                     bias_initializer=he_normal(),
                     kernel_regularizer=l2(l2_value)))
     model.add(PRELU(alpha_initializer=he_normal(),
                     weights=None))
-    model.add(Dropout(rate=drop_rate))
-    model.add(Dense(30, kernel_initializer=he_normal(),
+    #model.add(Dropout(rate=drop_rate))
+    model.add(Dense(120, kernel_initializer=he_normal(),
                     bias_initializer=he_normal(),
                     kernel_regularizer=l2(l2_value)))
     model.add(PRELU(alpha_initializer=he_normal(),
                     weights=None))
-    model.add(Dropout(rate=drop_rate))
-    model.add(Dense(5, activation='softmax'))
+
+    #model.add(Dropout(rate=drop_rate))
+    model.add(Dense(n_classes, activation='softmax'))
 
     return model
 
@@ -212,7 +212,8 @@ def PreBigDogNN():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')
+    parser.add_argument('n_classes', type=int, help='Number of classes')
 
     args = parser.parse_args()
-    model = train.get_model(args.architecture)
+    model = train.get_model(args.architecture, args.n_classes)
     model.summary()
