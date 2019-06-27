@@ -190,7 +190,7 @@ def PreDogNN():
     l2_value = 0.01
     drop_rate = 0.2
 
-    conv_base = MobileNetV2(weights='imagenet',
+    conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
                                   input_shape=(224, 224, 3),
                                   )
