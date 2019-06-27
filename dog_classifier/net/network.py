@@ -1,6 +1,8 @@
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPooling2D, AveragePooling2D, GlobalMaxPooling2D, Dropout, PReLU
+from keras.layers import Dense, Conv2D, MaxPooling2D, AveragePooling2D, GlobalMaxPooling2D, Dropout, PReLU, Dropout
 from keras.initializers import he_normal
+from keras.applications import InceptionResNetV2, MobileNetV2
+from keras.regularizers import l2
 from keras import backend as K
 import argparse
 from dog_classifier.net import train
@@ -72,7 +74,7 @@ def DogNNv2():
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
-    model.add(Dense(120, activation='softmax'))
+    model.add(Dense(5, activation='softmax'))
     return model
 
 def DogNNv3():
@@ -91,7 +93,7 @@ def DogNNv3():
                          bias_initializer=he_normal(),))
         model.add(PRELU(alpha_initializer=he_normal(),
                         shared_axes=[1, 2]))
-        model.add(Conv2D(filters=25, kernel_size=(3, 3),
+        model.add(Conv2D(filters=16, kernel_size=(3, 3),
                          kernel_initializer=he_normal(),
                          bias_initializer=he_normal(),))
         model.add(PRELU(alpha_initializer=he_normal(),
@@ -104,13 +106,14 @@ def DogNNv3():
         model.add(AveragePooling2D(pool_size=(2, 2)))
         model.add(AveragePooling2D(pool_size=(2, 2)))
         model.add(GlobalMaxPooling2D())
-        model.add(Dense(120, activation='softmax'))
+        model.add(Dense(64, activation='softmax'))
+        model.add(Dense(5, activation='softmax'))
         return model
 
 
 def LinearNN():
     # K.set_image_dim_ordering('th')
-    shape_input = (None, None, 3)
+    shape_input = (224, 224, 3)
     model = Sequential()
     model.add(Conv2D(filters=2, kernel_size=(5, 5), activation='relu',
                      input_shape=shape_input))
@@ -182,6 +185,38 @@ def MiniDogNN():
     model.add(Dense(5, activation='softmax'))
 
     return model
+
+def PreDogNN():
+    l2_value = 0.01
+    drop_rate = 0.2
+
+    conv_base = MobileNetV2(weights='imagenet',
+                                  include_top=False,
+                                  input_shape=(224, 224, 3),
+                                  )
+    conv_base.trainable = False
+
+    model = Sequential()
+    model.add(conv_base)
+    model.add(AveragePooling2D(pool_size=(4, 4)))
+    model.add(GlobalMaxPooling2D())
+    model.add(Dropout(rate=drop_rate))
+    model.add(Dense(30, kernel_initializer=he_normal(),
+                    bias_initializer=he_normal(),
+                    kernel_regularizer=l2(l2_value)))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    weights=None))
+    model.add(Dropout(rate=drop_rate))
+    model.add(Dense(30, kernel_initializer=he_normal(),
+                    bias_initializer=he_normal(),
+                    kernel_regularizer=l2(l2_value)))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    weights=None))
+    model.add(Dropout(rate=drop_rate))
+    model.add(Dense(5, activation='softmax'))
+
+    return model
+
 
 
 if __name__ == '__main__':
