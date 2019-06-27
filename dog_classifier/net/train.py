@@ -10,31 +10,37 @@ import sys
 import shutil
 
 from dog_classifier.net.dataloader import DataGenerator
-from dog_classifier.net.network import DogNN, DogNNv2, LinearNN, DogNNv3, MiniDogNN
+from dog_classifier.net.network import DogNN, DogNNv2, LinearNN, DogNNv3, MiniDogNN, SeminarNN
 from dog_classifier.evaluate import evaluate_training
 
 
-def get_model(model_name):
+def get_model(model_name, n_classes):
     if model_name == 'DogNN':
-        return DogNN()
+        return DogNN(n_classes)
     elif model_name == 'DogNNv2':
-        return DogNNv2()
+        return DogNNv2(n_classes)
     elif model_name == 'LinearNN':
-        return LinearNN()
+        return LinearNN(n_classes)
     elif model_name == 'MiniDogNN':
-        return MiniDogNN()
+        return MiniDogNN(n_classes)
     elif model_name == 'DogNNv3':
-        return DogNNv3()
+        return DogNNv3(n_classes)
+    elif model_name == 'SeminarNN':
+        return SeminarNN(n_classes)
     else:
         raise NameError(f'There is no such Network: {model_name}')
+
 
 def save_history(history, model_save_path):
     df_history = pd.DataFrame(history.history)
     df_history.to_csv(path_or_buf=model_save_path + '/model_history.csv',
-                     index=False)
+                      index=False)
+
+
 def save_training_parameters(training_parameters, model_save_path):
     with open(model_save_path + '/training_parameters.json', 'w') as json_file:
         json.dump(training_parameters, json_file)
+
 
 def trainNN(training_parameters):
     ''' Traning a specific net architecture. Afterwards the paramters of the net
@@ -46,7 +52,7 @@ def trainNN(training_parameters):
 
     training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
-                                       "labels/")
+                                  "labels/")
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
                                    training_parameters['architecture'],
@@ -60,7 +66,7 @@ def trainNN(training_parameters):
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    model = get_model(training_parameters['architecture'])
+    model = get_model(training_parameters['architecture'], n_classes)
     # Set the leranrning rate of adam optimizer
     Adam(training_parameters['learning_rate'])
 
@@ -68,9 +74,10 @@ def trainNN(training_parameters):
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
     with K.tf.device('/cpu:0'):
         trainDataloader = DataGenerator(df_train, encoder_model,
-                                        batch_size=bs_size)
+                                        batch_size=bs_size,
+                                        n_classes=n_classes)
         valDataloader = DataGenerator(df_val, encoder_model,
-                                      batch_size=bs_size)
+                                      batch_size=bs_size, n_classes=n_classes)
 
     model.compile(loss='categorical_crossentropy', optimizer='adam',
                   metrics=['accuracy'])
@@ -95,9 +102,11 @@ def trainNN(training_parameters):
 
     # We use try to stop the training whenever we want
     try:
-        history = model.fit_generator(trainDataloader, validation_data=valDataloader,
+        history = model.fit_generator(trainDataloader,
+                                      validation_data=valDataloader,
                                       epochs=num_of_epochs,
-                                      callbacks=[earlystopper, reduce_lr, hist, modelCheckpoint])
+                                      callbacks=[earlystopper, reduce_lr, hist,
+                                                 modelCheckpoint])
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt, do you wanna save the model: yes-(y), no-(n)')
