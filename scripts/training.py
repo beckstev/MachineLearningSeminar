@@ -9,6 +9,7 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--epochs', type=int, help='Number of epochs to train')
     parser.add_argument('-bs', '--batch_size', type=int)
     parser.add_argument('-lr', '--learning_rate', type=float)
+    parser.add_argument('-l2', '--regularisation_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
@@ -27,6 +28,10 @@ if __name__ == '__main__':
     bs_size = 16
     if args.batch_size:
         bs_size = args.batch_size
+
+    l2_reg = 0.001
+    if args.regularisation_rate:
+        l2_reg = args.regularisation_rate
 
     early_stopping_patience = 30
     if args.early_stopping_patience:
@@ -48,6 +53,7 @@ if __name__ == '__main__':
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
                            'learning_rate': learning_rate,
+                           'l2_regularisation': l2_reg,
                            'n_epochs': n_epochs,
                            'architecture': args.architecture,
                            'use_rgb': args.use_rgb,
