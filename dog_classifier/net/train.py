@@ -28,13 +28,43 @@ def get_model(model_name):
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
+
 def save_history(history, model_save_path):
     df_history = pd.DataFrame(history.history)
     df_history.to_csv(path_or_buf=model_save_path + '/model_history.csv',
-                     index=False)
+                      index=False)
+
+
 def save_training_parameters(training_parameters, model_save_path):
     with open(model_save_path + '/training_parameters.json', 'w') as json_file:
         json.dump(training_parameters, json_file)
+
+
+def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+
+    encoder_model = training_parameters['encoder_model']
+    bs_size = training_parameters['batch_size']
+    n_classes = training_parameters['n_classes']
+    img_resize = training_parameters['img_resize']
+
+    df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
+    df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
+    with K.tf.device('/cpu:0'):
+        trainDataloader = DataGenerator(df_train, encoder_model,
+                                        batch_size=bs_size,
+                                        n_classes=n_classes,
+                                        const_img_resize=img_resize,
+                                        is_autoencoder=is_autoencoder)
+
+        valDataloader = DataGenerator(df_val, encoder_model,
+                                      batch_size=bs_size,
+                                      n_classes=n_classes,
+                                      const_img_resize=img_resize,
+                                      is_autoencoder=is_autoencoder)
+
+    return trainDataloader, valDataloader
 
 def trainNN(training_parameters):
     ''' Traning a specific net architecture. Afterwards the paramters of the net
@@ -45,17 +75,15 @@ def trainNN(training_parameters):
     '''
 
     training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
-    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
-                                       "labels/")
+
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
                                    training_parameters['architecture'],
                                    training_timestamp)
     os.makedirs(model_save_path)
 
-    n_classes = training_parameters['n_classes']
-    encoder_model = training_parameters['encoder_model']
-    bs_size = training_parameters['batch_size']
+    trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters)
+
     num_of_epochs = training_parameters['n_epochs']
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
@@ -63,14 +91,6 @@ def trainNN(training_parameters):
     model = get_model(training_parameters['architecture'])
     # Set the leranrning rate of adam optimizer
     Adam(training_parameters['learning_rate'])
-
-    df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
-    df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
-    with K.tf.device('/cpu:0'):
-        trainDataloader = DataGenerator(df_train, encoder_model,
-                                        batch_size=bs_size)
-        valDataloader = DataGenerator(df_val, encoder_model,
-                                      batch_size=bs_size)
 
     model.compile(loss='categorical_crossentropy', optimizer='adam',
                   metrics=['accuracy'])
