@@ -11,6 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
+    parser.add_argument('-ir', '--imgage_resize', type=tuple, help='Tuple (width, height) with determines the shape of the resized images')
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('--use_rgb', action='store_true')
 
@@ -45,6 +46,8 @@ if __name__ == '__main__':
     if args.n_classes:
         n_classes = args.n_classes
 
+    img_resize = args.imgage_resize if args.imgage_resize else None
+
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
                            'learning_rate': learning_rate,
@@ -56,8 +59,8 @@ if __name__ == '__main__':
                            'early_stopping_delta': early_stopping_delta,
                            'normalization': {
                                             'mean': norm_mean,
-                                            'std': norm_std}
-
+                                            'std': norm_std},
+                           'img_resize': img_resize
                            }
 
     trainNN(training_parameters)
