@@ -42,6 +42,20 @@ def save_training_parameters(training_parameters, model_save_path):
         json.dump(training_parameters, json_file)
 
 
+def save_final_loss_and_acc(history, model_save_path):
+    df_history = pd.DataFrame(history.history)
+    print(df_history.columns)
+    df_history = df_history.drop(['lr'], axis=1)
+    loss_acc = df_history.tail(1).values
+    columns = df_history.columns.values
+    list_loss_acc = loss_acc.tolist()
+    list_columns = columns.tolist()
+    with open(model_save_path + '/loss_acc.json', 'w') as json_file:
+        json.dump(list_columns, json_file)
+        json_file.write('\n')
+        json.dump(list_loss_acc, json_file)
+
+
 def trainNN(training_parameters, grid_search=False):
     ''' Traning a specific net architecture. Afterwards the paramters of the net
         and loss-epoch plot will be saved into saved_models.
@@ -138,3 +152,7 @@ def trainNN(training_parameters, grid_search=False):
     save_history(history, model_save_path)
     save_training_parameters(training_parameters, model_save_path)
     evaluate_training.plot_history(history, path=model_save_path)
+
+    # if grid_search, additionally save the final (val-)loss and (val-)accuracy
+    if grid_search:
+        save_final_loss_and_acc(history, model_save_path)
