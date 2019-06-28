@@ -8,17 +8,18 @@ def find_parameters(training_parameters, batch_size, learning_rate, l2_reg):
 
     for i in range(len(permutations)):
         learning_rate = permutations[i, 1]
-        print(learning_rate)
+        print('\n')
+        print('current lr: ', learning_rate)
 
         bs_size = permutations[i, 0]
         bs_size = int(bs_size)
-        print(bs_size)
+        print('current bs: ', bs_size)
 
         l2_reg = permutations[i, 2]
-        print(l2_reg)
+        print('current l2_reg: ', l2_reg)
+        print('\n')
         training_parameters['learning_rate'] = learning_rate
         training_parameters['batch_size'] = bs_size
         training_parameters['l2_regularisation'] = l2_reg
-        print('grid_search', training_parameters['batch_size'])
 
         trainNN(training_parameters, grid_search=True)

@@ -24,18 +24,14 @@ if __name__ == '__main__':
     if args.learning_rate:
         learning_rate = args.learning_rate
 
-    # print('learning_rate', learning_rate)
     bs_size = [5, 10, 15]
     if args.batch_size:
         bs_size = args.batch_size
-
-    # print('batch_size', bs_size)
 
     l2_reg = [0.001, 0.01]
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
-    # print('l2_reg', l2_reg)
     early_stopping_patience = 30
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
