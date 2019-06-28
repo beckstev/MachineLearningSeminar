@@ -1,20 +1,16 @@
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 import os
-from datetime import datetime
 from pathlib import Path
-import sys
-import shutil
-from sklearn.externals import joblib
 import pickle
+import json
 
 from keras.models import Model
-from keras.utils import to_categorical
 
 from dog_classifier.evaluate.evaluate_training import model_loader
+from dog_classifier.evaluate import evaluate_randomforest as eval_rf
 from dog_classifier.net.train import get_train_and_val_dataloader
+
 
 def get_encoder(path_to_autoencoder):
     main_model = 'autoencoder_parameter.h5'
@@ -42,9 +38,9 @@ def get_labels(Dataloader, len_y_predict):
 def train_random_forest(training_parameters):
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "auto_encoder")
+                                   "autoencoder")
 
-    encoder = get_encoder('/home/beckstev/Documents/MachineLearningSeminar/saved_models/auto_encoder/28-06-2019_12:18:50')
+    encoder = get_encoder(model_save_path)
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters, is_autoencoder=True)
 
     X_train_data = encoder.predict_generator(trainDataloader, verbose=1)
@@ -55,8 +51,7 @@ def train_random_forest(training_parameters):
     y_val_data = get_labels(valDataloader, 192)
     y = np.concatenate((y_train_data, y_val_data))
 
-    rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=5, n_jobs=4)
-
+    rf = RandomForestClassifier(n_estimators=400, min_samples_leaf=10, n_jobs=-1)
     rf.fit(X_train, y)
 
     pickle_file = 'randomforest.sav'
@@ -64,3 +59,9 @@ def train_random_forest(training_parameters):
 
     with open(rf_save_path, 'wb') as pickle_file:
         pickle.dump(rf, pickle_file)
+
+    score = eval_rf.eval_rf_training(rf, X_train, y)
+
+    save_score_path = os.path.join(model_save_path, 'score.json')
+    with open(save_score_path, 'w') as json_file:
+        json.dump(score, json_file)
