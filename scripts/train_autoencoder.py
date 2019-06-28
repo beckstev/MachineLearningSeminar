@@ -44,7 +44,7 @@ if __name__ == '__main__':
                            'n_epochs': n_epochs,
                            'use_rgb': args.use_rgb,
                            'encoder_model': args.encoder_model,
-                            'img_resize': img_resize
+                           'img_resize': img_resize
                            }
 
     #train_autoencoder(training_parameters)
