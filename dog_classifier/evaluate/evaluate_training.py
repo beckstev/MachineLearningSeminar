@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import itertools
@@ -126,7 +127,12 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     :param encoder_model: encoder_model
     :param path: saving path
     """
-    plt.rcParams.update({'font.size': 3})
+    # change font size according to number of classes
+    if len(classes) == 120:
+        mpl.rcParams.update({'font.size': 3})
+    else:
+        mpl.rcParams.update({'font.size': 5})
+
     print("plot confusion matrix")
 
     path = path + '/build/'
@@ -155,19 +161,23 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    # Loop over data dimensions and create text annotations.
-    # fmt = '.2f' if normalize else 'd'
-    # thresh = cm.max() / 2.
-    # for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-    #     plt.text(j, i, format(cm[i, j], fmt),
-    #              horizontalalignment="center",
-    #              color="white" if cm[i, j] > thresh else "black")
+    # print text if not 120 classes are given
+    if len(classes) != 120:
+        # Loop over data dimensions and create text annotations.
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, format(cm[i, j], fmt),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
 
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig("{}/confusion_matrix.pdf".format(path))
     plt.clf()
+    # reset rcParams
+    mpl.rcParams.update(mpl.rcParamsDefault)
 
 
 def display_errors(n, Y_cls, Y_true, Y_pred, X_test, height, width, nrows,
