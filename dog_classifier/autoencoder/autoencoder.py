@@ -52,13 +52,12 @@ def AutoDogEncoder(img_input_size, n_classes):
 
 
 def train_autoencoder(training_parameters):
-    training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
 
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "auto_encoder",
-                                   training_timestamp)
-    os.makedirs(model_save_path)
+                                   "autoencoder")
+    if not os.path.isdir(model_save_path):
+        os.makedirs(model_save_path)
     num_of_epochs = training_parameters['n_epochs']
 
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters, is_autoencoder=True)
@@ -105,4 +104,4 @@ def train_autoencoder(training_parameters):
     model.save(model_save_path + '/autoencoder_parameter.h5')
     save_history(history, model_save_path)
     save_training_parameters(training_parameters, model_save_path)
-    evaluate_training.plot_history(history, path=model_save_path)
+    evaluate_training.plot_history(history, path, model_save_path)
