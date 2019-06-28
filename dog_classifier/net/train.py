@@ -81,6 +81,7 @@ def trainNN(training_parameters, grid_search=False):
         model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                        "saved_models",
                                        training_parameters['architecture'],
+                                       'hyper_param_tuning',
                                        'bs_'+str(training_parameters['batch_size']) + '_'
                                        'lr_'+str(training_parameters['learning_rate']) + '_'
                                        'l2_'+str(training_parameters['l2_regularisation']))
