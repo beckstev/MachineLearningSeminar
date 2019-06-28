@@ -409,6 +409,7 @@ def preprocess(path_to_model, encoder_model, fname):
     path_predictions = os.path.join(path_to_model, fname)
 
     Y_pred = np.genfromtxt(path_predictions)
+    # The Dataloader converts the labels automatically into ahot vecotor
     Y_test = testDataloader.df['race_label'].values
     diff = (Y_test.shape[0] - Y_pred.shape[0])
 
