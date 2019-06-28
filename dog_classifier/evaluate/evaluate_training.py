@@ -402,26 +402,27 @@ def preprocess(path_to_model, encoder_model, fname):
     testDataloader = DataGenerator(df_test,
                                    encoder_model=encoder_model,
                                    shuffle=True,
-                                   is_test=True)
+                                   is_test=True,
+                                   )
 
     # create prediction array from given file
     path_predictions = os.path.join(path_to_model, fname)
 
     Y_pred = np.genfromtxt(path_predictions)
-    Y_test = to_categorical(df_test['race_label'], num_classes=None)
+    Y_test = testDataloader.df['race_label'].values
     diff = (Y_test.shape[0] - Y_pred.shape[0])
+
     # Y_test erstellen, indem die verwendeten Indizes der Bilder verwendet
     # werden. Dann werden die gedroppt, die überstehen
-    values = df_test['race_label'].values
-    test = values[testDataloader.data_index]
-    Y_test = to_categorical(test[:-diff], num_classes=None)
+    Y_true = Y_test[testDataloader.data_index]
+    # if diff is equal to zero we get an empty array. We dont want this.
+    if diff is not 0:
+        Y_true = Y_true[:-diff]
 
     # Convert predictions classes to one hot vectors
     Y_cls = np.argmax(np.array(Y_pred), axis=1)
 
     # Convert validation observations to one hot vectors
-    Y_true = np.argmax(np.array(Y_test), axis=1)
-
     path_to_images = df_test['path_to_image'].values
     path_to_images = path_to_images[testDataloader.data_index]
     return Y_pred, Y_test, Y_cls, Y_true, path_to_images
