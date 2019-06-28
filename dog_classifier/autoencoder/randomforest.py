@@ -1,4 +1,4 @@
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +7,8 @@ from datetime import datetime
 from pathlib import Path
 import sys
 import shutil
+from sklearn.externals import joblib
+import pickle
 
 from keras.models import Model
 from keras.utils import to_categorical
@@ -27,30 +29,38 @@ def get_labels(Dataloader, len_y_predict):
     # Dataloader shuffels the labels, therefore we need the mask
     y_mask = Dataloader.data_index
     diff = (y_mask.shape[0] - len_y_predict)
-    # Y_test erstellen, indem die verwendeten Indizes der Bilder verwendet
-    # werden. Dann werden die gedroppt, die überstehen
+
     y = df['race_label'].values
     y = y[y_mask]
-    print(y)
-    y = to_categorical(y, num_classes=None)
-    # Convert validation observations to one hot vectors
-    y = np.argmax(np.array(y), axis=1)
-    print(y)
+    # Y_test erstellen, indem die verwendeten Indizes der Bilder verwendet
+    # werden. Dann werden die gedroppt, die überstehen
+    if diff is not 0:
+        y = y[:-diff]
     return y
 
 
 def train_random_forest(training_parameters):
+    model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                   "saved_models",
+                                   "auto_encoder")
+
     encoder = get_encoder('/home/beckstev/Documents/MachineLearningSeminar/saved_models/auto_encoder/28-06-2019_12:18:50')
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters, is_autoencoder=True)
 
-    #X_train_data = encoder.predict_generator(trainDataloader, verbose=1)
-    #X_val_data = encoder.predict_generator(valDataloader, verbose=1)
-    #print(X_train_data.shape, X_val_data.shape)
-
-    #X_train = np.concatenate((X_train_data, X_val_data))
+    X_train_data = encoder.predict_generator(trainDataloader, verbose=1)
+    X_val_data = encoder.predict_generator(valDataloader, verbose=1)
+    X_train = np.concatenate((X_train_data, X_val_data))
 
     y_train_data = get_labels(trainDataloader, 464)
     y_val_data = get_labels(valDataloader, 192)
-
     y = np.concatenate((y_train_data, y_val_data))
-    print(y)
+
+    rf = RandomForestClassifier(n_estimators=100, min_samples_leaf=5, n_jobs=4)
+
+    rf.fit(X_train, y)
+
+    pickle_file = 'randomforest.sav'
+    rf_save_path = os.path.join(model_save_path, pickle_file)
+
+    with open(rf_save_path, 'wb') as pickle_file:
+        pickle.dump(rf, pickle_file)
