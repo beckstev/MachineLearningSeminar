@@ -1,6 +1,7 @@
 import argparse
 
 from dog_classifier.autoencoder.autoencoder import train_autoencoder
+from dog_classifier.autoencoder.randomforest import train_random_forest
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: python main_analysis <architecure> <encoder_model>')
@@ -46,4 +47,5 @@ if __name__ == '__main__':
                             'img_resize': img_resize
                            }
 
-    train_autoencoder(training_parameters)
+    #train_autoencoder(training_parameters)
+    train_random_forest(training_parameters)
