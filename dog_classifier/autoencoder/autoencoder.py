@@ -1,21 +1,15 @@
 import os
-from datetime import datetime
-from pathlib import Path
-import json
 import sys
 import shutil
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape, UpSampling2D
-from keras.models import Sequential
-from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping, History, ModelCheckpoint
-from keras import backend as K
+from pathlib import Path
 
-from dog_classifier.net.train import get_train_and_val_dataloader, save_history, save_training_parameters
+from keras.optimizers import Adam
+from keras.models import Sequential
+from keras.callbacks import ReduceLROnPlateau, History, ModelCheckpoint
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape, UpSampling2D
+
 from dog_classifier.evaluate import evaluate_training
-from dog_classifier.net.dataloader import DataGenerator
+from dog_classifier.net.train import get_train_and_val_dataloader, save_history, save_training_parameters
 
 
 def AutoDogEncoder(img_input_size, n_classes):
@@ -27,8 +21,9 @@ def AutoDogEncoder(img_input_size, n_classes):
                           adapt the size of the autoencoder to the number of
                           classes. NOT USED IN THE CURRENT VERSION!
         :return model: Returns the autoencoder as keras Sequential
+    '''
     img_input_size = (img_input_size[0], img_input_size[1], 3)
-    print(img_input_size)
+
     model = Sequential()
     # Encoder
     model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu',
@@ -68,22 +63,26 @@ def AutoDogEncoder(img_input_size, n_classes):
 
 
 def train_autoencoder(training_parameters):
-    training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
+    ''' Function to train the AutoDogEncoder Autoencoder.
+    :param training_parameters: Dict object which contains all the required training
+                                information/parameters.
 
+    '''
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "auto_encoder",
-                                   training_timestamp)
-    os.makedirs(model_save_path)
+                                   "autoencoder")
+
+    if not os.path.isdir(model_save_path):
+        os.makedirs(model_save_path)
     num_of_epochs = training_parameters['n_epochs']
 
-    trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters, is_autoencoder=True)
-
+    trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters,
+                                                                  is_autoencoder=True)
 
     n_classes = training_parameters['n_classes']
     img_resize = training_parameters['img_resize']
     model = AutoDogEncoder(img_resize, n_classes)
-    model.summary()
+
     # Set the leranrning rate of adam optimizer
     Adam(training_parameters['learning_rate'])
 
@@ -97,14 +96,15 @@ def train_autoencoder(training_parameters):
     # KeyboardInterrupt
     hist = History()
 
-    modelCheckpoint = ModelCheckpoint(filepath=model_save_path + '/auto_encoder_parameter_checkpoint.h5',
+    modelCheckpoint = ModelCheckpoint(filepath=model_save_path + '/autoencoder_parameter_checkpoint.h5',
                                       verbose=1,
                                       save_best_only=True,
                                       period=2,
                                       save_weights_only=False)
 
     try:
-        history = model.fit_generator(trainDataloader, validation_data=valDataloader,
+        history = model.fit_generator(trainDataloader,
+                                      validation_data=valDataloader,
                                       epochs=num_of_epochs,
                                       callbacks=[reduce_lr, hist, modelCheckpoint])
 
