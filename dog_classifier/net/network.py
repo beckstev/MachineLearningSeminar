@@ -2,6 +2,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPooling2D, AveragePooling2D, GlobalMaxPooling2D, Dropout, PReLU, Dropout
 from keras.initializers import he_normal
 from keras.applications import InceptionResNetV2, MobileNetV2
+
 from keras.regularizers import l2
 from keras import backend as K
 import argparse
@@ -18,7 +19,7 @@ class PRELU(PReLU):
         super(PRELU, self).__init__(**kwargs)
 
 
-def DogNN(n_classes):
+def DogNN(n_classes, l2_reg):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
 
@@ -38,7 +39,7 @@ def DogNN(n_classes):
     return model
 
 
-def DogNNv2(n_classes):
+def DogNNv2(n_classes,l2_reg):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
     model = Sequential()
@@ -81,7 +82,7 @@ def DogNNv2(n_classes):
     return model
 
 
-def DogNNv3(n_classes):
+def DogNNv3(n_classes, l2_reg):
     # K.set_image_dim_ordering('th')
     shape_input = (None, None, 3)
     model = Sequential()
@@ -115,9 +116,7 @@ def DogNNv3(n_classes):
 
 
 
-
-
-def MiniDogNN(n_classes):
+def MiniDogNN(n_classes, l2_reg):
     shape_input = (None, None, 3)
     model = Sequential()
     model.add(Conv2D(filters=3, kernel_size=(2, 2),
@@ -142,6 +141,7 @@ def MiniDogNN(n_classes):
 
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
+    model.add(Dense(20, activation='softmax', kernel_regularizer=l2(l2_reg)))
     model.add(Dense(n_classes, activation='softmax'))
 
     return model
@@ -212,8 +212,10 @@ def PreBigDogNN(n_classes):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')
-    parser.add_argument('n_classes', type=int, help='Number of classes')
-
+    parser.add_argument('n_classes', type=int, help='number of classes')
+   
+    l2 = 0.01
     args = parser.parse_args()
-    model = train.get_model(args.architecture, args.n_classes)
+    model = train.get_model(args.architecture, args.n_classes, l2)
+
     model.summary()
