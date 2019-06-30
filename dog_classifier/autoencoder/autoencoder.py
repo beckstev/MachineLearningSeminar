@@ -1,6 +1,5 @@
 import os
 import sys
-import shutil
 from pathlib import Path
 
 from keras.optimizers import Adam
@@ -23,10 +22,9 @@ def AutoDogEncoder(img_input_size, n_classes):
         :return model: Returns the autoencoder as keras Sequential
     '''
     img_input_size = (img_input_size[0], img_input_size[1], 3)
-
     model = Sequential()
     # Encoder
-    model.add(Conv2D(filters=16, kernel_size=(3, 3), activation='relu',
+    model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu',
                      input_shape=img_input_size, padding='same'))
     model.add(MaxPooling2D((2, 2), padding='same'))
 
@@ -37,14 +35,14 @@ def AutoDogEncoder(img_input_size, n_classes):
     model.add(Conv2D(filters=8, kernel_size=(5, 5),
                      activation='relu', padding='same'))
     model.add(MaxPooling2D((2, 2), padding='same'))
-    model.add(Conv2D(filters=64, kernel_size=(5, 5),
+    model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))
 
-    # Output shape:  (None, 30, 30, 64)
+    # Output shape:  (None, 15, 15, 64)
     model.add(Flatten())
-    model.add(Reshape((30, 30, 64)))
+    model.add(Reshape((30, 30, 16)))
     # Decoder
-    model.add(Conv2D(filters=64, kernel_size=(5, 5),
+    model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))
     model.add(UpSampling2D((2, 2)))
     model.add(Conv2D(filters=8, kernel_size=(5, 5),
@@ -53,10 +51,8 @@ def AutoDogEncoder(img_input_size, n_classes):
     model.add(Conv2D(filters=8, kernel_size=(5, 5),
                      activation='relu', padding='same'))
     model.add(UpSampling2D((2, 2)))
-    model.add(Conv2D(filters=16, kernel_size=(3, 3),
-                     activation='relu'))
-
-    model.add(UpSampling2D((2, 2)))
+    model.add(Conv2D(filters=16, kernel_size=(5, 5),
+                     activation='relu', padding='same'))
     model.add(Conv2D(filters=3, kernel_size=(5, 5),
                      activation='sigmoid', padding='same'))
     return model
@@ -115,12 +111,9 @@ def train_autoencoder(training_parameters):
             save_history(hist, model_save_path)
             save_training_parameters(training_parameters, model_save_path)
             evaluate_training.plot_history(hist, path=model_save_path)
-        else:
-            print(f'Deleting: "{model_save_path}" !')
-            shutil.rmtree(model_save_path)
         sys.exit(1)
 
-    model.save(model_save_path + '/auto_encoder_parameter.h5')
+    model.save(model_save_path + '/autoencoder_parameter.h5')
     save_history(history, model_save_path)
     save_training_parameters(training_parameters, model_save_path)
     evaluate_training.plot_history(history, path=model_save_path)
