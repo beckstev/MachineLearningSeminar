@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    n_epochs = int(5e2)
+    n_epochs = int(5e1)
     if args.epochs:
         n_epochs = args.epochs
 
@@ -47,5 +47,5 @@ if __name__ == '__main__':
                            'img_resize': img_resize
                            }
 
-    #train_autoencoder(training_parameters)
+    train_autoencoder(training_parameters)
     train_random_forest(training_parameters)
