@@ -96,7 +96,7 @@ def train_random_forest(training_parameters):
     with open(rf_save_path, 'wb') as pickle_file:
         pickle.dump(rf, pickle_file)
 
-    # The score is does not have to fit the real accuracy of the fitted model
+    # The score does not have to fit the real accuracy of the fitted model
     # due to the fact that the eval_rf_training runs intern a cross validation.
     score = eval_rf.eval_rf_training(rf, X_train, y)
 

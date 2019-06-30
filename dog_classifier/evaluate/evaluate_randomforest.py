@@ -42,7 +42,7 @@ def get_rf_prediction(Dataloader):
         To generate the correct input for the rf the pretrained encoder
         (AutoDogEncoder) is used.
         :param Dataloader: Dataloader which is required for the prediction
-                           auf the encoder (AutoDogEncoder)
+                           of the encoder (AutoDogEncoder)
         :return y_pred: Returns the predicted labels as hot vector
     '''
 
@@ -136,7 +136,7 @@ def get_label_encoder(encoder_model):
 
 
 def visualize_rf_preduction(encoder, img_resize):
-    ''' Function to visulaize the predictions of the random forest.
+    ''' Function to visualize the predictions of the random forest.
         :param encoder: File name of the label encoder
         :param img_resize: Tuple (width, height) which defines the size
                            for the rescaled images. The images will be
