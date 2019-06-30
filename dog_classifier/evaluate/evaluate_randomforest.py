@@ -114,6 +114,7 @@ def get_true_labels_and_img_paths(dataloader, len_y_predict):
 
     # Check if there was a uncompleted batch
     diff = (y_true.shape[0] - len_y_predict)
+    print(diff)
     if diff is not 0:
         y_true = y_true[:-diff]
         path_to_images = path_to_images[:-diff]
@@ -144,7 +145,7 @@ def visualize_rf_preduction(encoder, img_resize):
 
     test_dataloader = get_test_datagenerator(encoder, img_resize)
     y_pred = get_rf_prediction(test_dataloader)
-    y_true, img_paths = get_true_labels_and_img_paths(test_dataloader, y_pred)
+    y_true, img_paths = get_true_labels_and_img_paths(test_dataloader, y_pred.shape[0])
     label_encoder = get_label_encoder(encoder)
     for index in range(len(y_pred)):
         race_true = label_encoder.inverse_transform((y_true[index],))[0]
