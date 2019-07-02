@@ -16,23 +16,23 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    n_epochs = int(5e2)
+    n_epochs = int(5e1)
     if args.epochs:
         n_epochs = args.epochs
 
-    learning_rate = [1e-3, 1e-2]
+    learning_rate = [1e-3, 1e-1, 1e-5, 1e-6]
     if args.learning_rate:
         learning_rate = args.learning_rate
 
-    bs_size = [5, 10, 15]
+    bs_size = [5, 10, 15, 20, 25]
     if args.batch_size:
         bs_size = args.batch_size
 
-    l2_reg = [0.001, 0.01]
+    l2_reg = [0.5, 0.1, 0.05, 0.01, 0.001, 0.005, 0.00001 ]
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
-    early_stopping_patience = 30
+    early_stopping_patience = 10
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
 

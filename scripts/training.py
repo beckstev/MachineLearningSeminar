@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    n_epochs = int(5e2)
+    n_epochs = int(1e2)
     if args.epochs:
         n_epochs = args.epochs
 
@@ -29,11 +29,11 @@ if __name__ == '__main__':
     if args.batch_size:
         bs_size = args.batch_size
 
-    l2_reg = 0.001
+    l2_reg = 0.01
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
-    early_stopping_patience = 30
+    early_stopping_patience = 10
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
 
