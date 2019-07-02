@@ -6,9 +6,11 @@ from pathlib import Path
 from keras.models import Model
 from sklearn.ensemble import RandomForestClassifier
 
-from dog_classifier.evaluate.evaluate_training import model_loader
-from dog_classifier.evaluate import evaluate_randomforest as eval_rf
 from dog_classifier.net.train import get_train_and_val_dataloader
+from dog_classifier.evaluate.evaluate_training import model_loader
+from dog_classifier.evaluate.evaluate_randomforest import get_true_labels_and_img_paths
+
+from dog_classifier.evaluate import evaluate_randomforest as eval_rf
 
 
 
@@ -81,8 +83,8 @@ def train_random_forest(training_parameters):
     # validation does not use the saved model!
     X_train = np.concatenate((X_train_data, X_val_data))
 
-    y_train_data = get_labels(trainDataloader, 464)
-    y_val_data = get_labels(valDataloader, 192)
+    y_train_data, _ = get_true_labels_and_img_paths(trainDataloader, X_train_data.shape[0])
+    y_val_data, _ = get_true_labels_and_img_paths(valDataloader, X_val_data.shape[0])
     y = np.concatenate((y_train_data, y_val_data))
 
     # With n_jobs=-1 the random forest always uses the maximal available number
