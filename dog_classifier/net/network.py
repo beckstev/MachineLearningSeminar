@@ -119,20 +119,31 @@ def DogNNv3(n_classes, l2_reg):
 def MiniDogNN(n_classes, l2_reg):
     shape_input = (None, None, 3)
     model = Sequential()
-    model.add(Conv2D(filters=3, kernel_size=(2, 2),
+    model.add(Conv2D(filters=8, kernel_size=(3, 3),
+                     kernel_initializer=he_normal(),
+                     bias_initializer=he_normal(),
+                     kernel_regularizer=l2(l2_reg),
+                     input_shape=shape_input))
+
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    weights=None,
+                    shared_axes=[1, 2]))
+    model.add(Conv2D(filters=32, kernel_size=(3, 3),
                      dilation_rate=(2, 2),
                      kernel_initializer=he_normal(),
                      bias_initializer=he_normal(),
+                     kernel_regularizer=l2(l2_reg),
                      input_shape=shape_input))
 
     model.add(PRELU(alpha_initializer=he_normal(),
                     weights=None,
                     shared_axes=[1, 2]))
 
-    model.add(Conv2D(filters=18, kernel_size=(2, 2),
+    model.add(Conv2D(filters=64, kernel_size=(3, 3),
                      dilation_rate=(2, 2),
                      kernel_initializer=he_normal(),
                      bias_initializer=he_normal(),
+                     kernel_regularizer=l2(l2_reg),
                      input_shape=shape_input))
 
     model.add(PRELU(alpha_initializer=he_normal(),
@@ -141,7 +152,12 @@ def MiniDogNN(n_classes, l2_reg):
 
     model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
-    model.add(Dense(20, activation='softmax', kernel_regularizer=l2(l2_reg)))
+    model.add(Dense(n_classes, kernel_regularizer=l2(l2_reg)))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    weights=None))
+    model.add(Dense(n_classes, kernel_regularizer=l2(l2_reg)))
+    model.add(PRELU(alpha_initializer=he_normal(),
+                    weights=None))
     model.add(Dense(n_classes, activation='softmax'))
 
     return model
