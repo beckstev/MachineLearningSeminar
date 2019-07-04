@@ -21,7 +21,7 @@ def AutoDogEncoder(img_input_size, n_classes):
                           classes. NOT USED IN THE CURRENT VERSION!
         :return model: Returns the autoencoder as keras Sequential
     '''
-    img_input_size = (img_input_size[0], img_input_size[1], 3)
+    img_input_size = (img_input_size[1], img_input_size[0], 3)
     model = Sequential()
     # Encoder
     model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu',
