@@ -338,34 +338,13 @@ def predict(path_to_model, encoder_model, fname):
     :param fname: name of the created predicition txt file
     """
     main_model = 'model_parameter.h5'
+    checkpoint_model = 'model_parameter_checkpoint.h5'
     model_params = os.path.join(path_to_model, main_model)
     # This try and except block enables us to use 'model_parameter_checkpoint.h5'
     # files if there is now 'model_parameter_checkpoint.h5'
-    try:
-        with CustomObjectScope({'PRELU': PReLU()}):
-            model = load_model(model_params)
-    except OSError as e:
-        files_in_mode_path = os.listdir(path_to_model)
-        checkpoint_model = 'model_parameter_checkpoint.h5'
 
-        if checkpoint_model in files_in_mode_path:
-            print('-------------')
-            print(f'The request model does not include "{main_model}".')
-            print(f'However, there is a checkpoint model "{checkpoint_model}"',
-                  'which could be used instead.')
-            print('Do you wanna evaluate the checkpoint_model? yes-(y), no-(n)')
-            reply = str(input())
-            if reply == 'y':
-                print('Using checkpoint model')
-                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
-                with CustomObjectScope({'PRELU': PReLU()}):
-                    model = load_model(checkpoint_model_params)
-            else:
-                print('Exiting program')
-                sys.exit(1)
-        else:
-            raise OSError(f'There is no file "{main_model}" or "{checkpoint_model}"!')
-
+    with CustomObjectScope({'PRELU': PReLU()}):
+        model = model_loader(path_to_model, main_model, checkpoint_model)
 
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
@@ -465,6 +444,33 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
         # plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
         plt.show()
 
+
+def model_loader(path_to_model, main_model, checkpoint_model):
+    try:
+        model_params = os.path.join(path_to_model, main_model)
+        model = load_model(model_params)
+
+    except OSError as e:
+        files_in_mode_path = os.listdir(path_to_model)
+
+        if checkpoint_model in files_in_mode_path:
+            print('-------------')
+            print(f'The request model does not include "{main_model}".')
+            print(f'However, there is a checkpoint model "{checkpoint_model}"',
+                  'which could be used instead.')
+            print('Do you wanna evaluate the checkpoint_model? yes-(y), no-(n)')
+            reply = str(input())
+            if reply == 'y':
+                print('Using checkpoint model')
+                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
+                model = load_model(checkpoint_model_params)
+            else:
+                print('Exiting program')
+                sys.exit(1)
+        else:
+            raise OSError(f'There is no file "{main_model}" or "{checkpoint_model}"!')
+
+    return model
 
 if __name__ == '__main__':
     enocder = "encoder_2019-06-16_12:45:37.npy"
