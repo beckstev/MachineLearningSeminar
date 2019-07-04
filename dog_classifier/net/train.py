@@ -11,7 +11,7 @@ import sys
 import shutil
 
 from dog_classifier.net.dataloader import DataGenerator
-from dog_classifier.net.network import DogNN, DogNNv2, LinearNN, DogNNv3, MiniDogNN, SeminarNN
+from dog_classifier.net.network import DogNN, DogNNv2, DogNNv3, MiniDogNN, PreDogNN, PreBigDogNN
 from dog_classifier.evaluate import evaluate_training
 
 
