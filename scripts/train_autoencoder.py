@@ -36,6 +36,13 @@ if __name__ == '__main__':
     if args.n_classes:
         n_classes = args.n_classes
 
+    even_divider = sum(args.image_resize) / 2**3
+
+    # The image size has to be an even divider of 8. The reason for it is
+    # that we are using three downsampling layers for the autoencoder
+    
+    assert type(even_divider) is int, 'The image size has to be an even divider of 8!'
+
     img_resize = tuple(args.image_resize) if args.image_resize else None
 
     training_parameters = {'n_classes': n_classes,
