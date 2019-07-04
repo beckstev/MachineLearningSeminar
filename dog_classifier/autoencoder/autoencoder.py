@@ -38,9 +38,12 @@ def AutoDogEncoder(img_input_size, n_classes):
     model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))
 
-    # Output shape:  (None, 15, 15, 64)
+    # Output shape is defined by the maxpooling2D
+    # [1::] to skip the None value
+    final_shape = model.get_layer('conv2d_4').output_shape[1::]
     model.add(Flatten())
-    model.add(Reshape((30, 30, 16)))
+
+    model.add(Reshape(final_shape))
     # Decoder
     model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))
