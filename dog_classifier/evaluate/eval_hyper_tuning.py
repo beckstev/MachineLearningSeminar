@@ -42,6 +42,15 @@ def read_tuning_results(path_to_model):
 
     return df_param
 
+def array_to_string_list(array):
+    str_list = []
+    unique_elements = np.unique(array)
+
+    for element in unique_elements:
+        str_list.append(str(element))
+
+    return str_list
+
 
 def eval_3d(df, score):
 
@@ -59,17 +68,15 @@ def eval_3d(df, score):
     ax.set_ylabel('log L2 regulation')
     ax.set_zlabel('log Learning rate')
 
+    print(array_to_string_list(bs))
     scatter_plot = ax.scatter(bs[~mask_max], np.log(l2[~mask_max]), np.log(lr[~mask_max]), c=sc[~mask_max])
     ax.scatter(bs[mask_max], np.log(l2[mask_max]), np.log(lr[mask_max]), c='r', marker='*')
     fig.colorbar(scatter_plot)
 
+
     plt.show()
 
-
-
-
-
 if __name__ =='__main__':
-    path = "/home/beckstev/Documents/MachineLearningSeminar/saved_models/MiniDogNN"
+    path = "/home/beckstev/Documents/MLSeminar/MachineLearningSeminar/saved_models/MiniDogNN"
     df = read_tuning_results(path)
     eval_3d(df, 'val_acc')
