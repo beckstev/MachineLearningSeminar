@@ -51,32 +51,55 @@ def array_to_string_list(array):
 
     return str_list
 
+def exp_str(string):
+    return np.exp(float(string))
 
-def eval_3d(df, score):
-
+def create_3d_subplot(df, score, figure, position, angle):
     bs = df['batch_size'].values
     l2 = df['l2_regularisation'].values
     lr = df['learning_rate'].values
 
+    mask_max = (score == max(score))
+    ax = figure.add_subplot(position, projection='3d')
+    ax.set_xlabel('Batch size')
+    ax.set_ylabel('L2 regulation')
+    ax.set_zlabel('Learning rate')
+
+    ax.scatter(xs=bs[mask_max], ys=np.log(l2[mask_max]), zs=np.log(lr[mask_max]), c='r', marker='*')
+    scatter_plot = ax.scatter(xs=bs[~mask_max], ys=np.log(l2[~mask_max]), zs=np.log(lr[~mask_max]), c=score[~mask_max])
+
+    yticks = ax.get_yticks()
+    ylabels = [f'{exp_str(tick):.1e}' for tick in yticks]
+    ax.set_yticklabels(ylabels)
+
+    zticks = ax.get_zticks()
+    zlabels = [f'{exp_str(tick):.1e}' for tick in zticks]
+    ax.set_zticklabels(zlabels)
+
+    ax.view_init(30, angle)
+    return ax, scatter_plot
+
+
+def eval_3d(df, score):
     if score is 'val_acc':
+        cbar_label = 'Validation accuracy'
         sc = df[score].values
 
-    mask_max = sc == max(sc)
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.set_xlabel('Batch size')
-    ax.set_ylabel('log L2 regulation')
-    ax.set_zlabel('log Learning rate')
 
-    print(array_to_string_list(bs))
-    scatter_plot = ax.scatter(bs[~mask_max], np.log(l2[~mask_max]), np.log(lr[~mask_max]), c=sc[~mask_max])
-    ax.scatter(bs[mask_max], np.log(l2[mask_max]), np.log(lr[mask_max]), c='r', marker='*')
-    fig.colorbar(scatter_plot)
+    ax0, scatter_plot = create_3d_subplot(df, sc, fig, 121, 30)
+    ax1, _ = create_3d_subplot(df, sc, fig, 122, 60)
+    ax2, _ = create_3d_subplot(df, sc, fig, 123, 90)
 
+    cbar = fig.colorbar(scatter_plot)
+    cbar.set_label(cbar_label)
 
     plt.show()
 
+
+
+
 if __name__ =='__main__':
-    path = "/home/beckstev/Documents/MLSeminar/MachineLearningSeminar/saved_models/MiniDogNN"
+    path = "../../saved_models/MiniDogNN"
     df = read_tuning_results(path)
     eval_3d(df, 'val_acc')
