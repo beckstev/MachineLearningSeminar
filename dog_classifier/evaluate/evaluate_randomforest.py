@@ -15,6 +15,17 @@ from sklearn.metrics import make_scorer, accuracy_score
 from dog_classifier.net.dataloader import DataGenerator
 import dog_classifier.autoencoder.randomforest as dog_rf
 
+mpl.use('pgf')
+mpl.rcParams.update(
+    {'font.size': 10,
+        'font.family': 'sans-serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+        'pgf.texsystem': 'lualatex',
+        'text.latex.unicode': True,
+        'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
+     })
+
 
 def eval_rf_training(rf, X, y):
     ''' Function to evaluate a random forest with a cross validation.

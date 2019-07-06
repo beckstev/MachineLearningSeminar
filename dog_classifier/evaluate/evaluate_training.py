@@ -16,6 +16,17 @@ from sklearn.preprocessing import LabelEncoder
 import sys
 from keras.utils.generic_utils import CustomObjectScope
 
+mpl.use('pgf')
+mpl.rcParams.update(
+    {'font.size': 10,
+        'font.family': 'sans-serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+        'pgf.texsystem': 'lualatex',
+        'text.latex.unicode': True,
+        'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
+     })
+
 
 class HistoryEpoch(Callback):
     """Class for calculating loss and metric after each epoch for

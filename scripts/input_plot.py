@@ -2,8 +2,20 @@ import pandas as pd
 from pathlib import Path
 import os
 import cv2 as cv
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from dog_classifier.net.dataloader import DataGenerator
+
+mpl.use('pgf')
+mpl.rcParams.update(
+    {'font.size': 10,
+        'font.family': 'sans-serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+        'pgf.texsystem': 'lualatex',
+        'text.latex.unicode': True,
+        'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
+     })
 
 
 def generate_batch(batch_size):
