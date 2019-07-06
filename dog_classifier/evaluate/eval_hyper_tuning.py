@@ -52,54 +52,74 @@ def array_to_string_list(array):
     return str_list
 
 def exp_str(string):
+    print(string)
     return np.exp(float(string))
 
-def create_3d_subplot(df, score, figure, position, angle):
+
+def create_3d_subplot(df, score, figure, position, polar, azimut):
     bs = df['batch_size'].values
     l2 = df['l2_regularisation'].values
     lr = df['learning_rate'].values
 
     mask_max = (score == max(score))
     ax = figure.add_subplot(position, projection='3d')
+    #ax = figure.add_plot(projection='3d')
     ax.set_xlabel('Batch size')
-    ax.set_ylabel('L2 regulation')
-    ax.set_zlabel('Learning rate')
+    ax.set_ylabel('Log(L2 regulation)', labelpad=5)
+    ax.set_zlabel('Log(Learning rate)', labelpad=9)
 
-    ax.scatter(xs=bs[mask_max], ys=np.log(l2[mask_max]), zs=np.log(lr[mask_max]), c='r', marker='*')
-    scatter_plot = ax.scatter(xs=bs[~mask_max], ys=np.log(l2[~mask_max]), zs=np.log(lr[~mask_max]), c=score[~mask_max])
+    scatter_plot = ax.scatter(xs=bs[~mask_max], ys=np.log(l2[~mask_max]), zs=np.log(lr[~mask_max]),
+                              c=score[~mask_max])
 
-    yticks = ax.get_yticks()
-    ylabels = [f'{exp_str(tick):.1e}' for tick in yticks]
-    ax.set_yticklabels(ylabels)
+    ax.scatter(xs=bs[mask_max], ys=np.log(l2[mask_max]), zs=np.log(lr[mask_max]),
+               c='r', marker='*', label=f'Acc: {score[mask_max][0]:.2}')
 
-    zticks = ax.get_zticks()
-    zlabels = [f'{exp_str(tick):.1e}' for tick in zticks]
-    ax.set_zticklabels(zlabels)
+    # yticks = ax.get_yticks()
+    # ylabels = [f'{exp_str(tick):.2e}' for tick in yticks]
+    # ax.set_yticklabels(ylabels)
 
-    ax.view_init(30, angle)
+    # zticks = ax.get_zticks()
+    # zlabels = [f'{exp_str(tick):.2e}' for tick in zticks]
+    # ax.set_zticklabels(zlabels)
+
+    ax.view_init(azimut, polar)
     return ax, scatter_plot
 
 
-def eval_3d(df, score):
+def eval_3d(df, save_path, score):
     if score is 'val_acc':
         cbar_label = 'Validation accuracy'
         sc = df[score].values
 
-    fig = plt.figure()
+    bs = df['batch_size'].values
+    l2 = df['l2_regularisation'].values
+    lr = df['learning_rate'].values
+    mask_max = (sc == max(sc))
+    best_hyp = (int(bs[mask_max][0]), l2[mask_max][0], lr[mask_max][0])
 
-    ax0, scatter_plot = create_3d_subplot(df, sc, fig, 121, 30)
-    ax1, _ = create_3d_subplot(df, sc, fig, 122, 60)
-    ax2, _ = create_3d_subplot(df, sc, fig, 123, 90)
+    fig = plt.figure(figsize=(7.2, 4.45))
 
-    cbar = fig.colorbar(scatter_plot)
+    ax0, scatter_plot = create_3d_subplot(df, sc, fig, 121, 64, 20)
+    ax1, _ = create_3d_subplot(df, sc, fig, 122, -64, 20)
+    # ax2, _ = create_3d_subplot(df, sc, fig, 133, 80, 45)
+
+    colorbar_ax = fig.add_axes([0.22, 0.9, 0.6, 0.02])
+    cbar = fig.colorbar(scatter_plot, cax=colorbar_ax, orientation="horizontal")
     cbar.set_label(cbar_label)
+    ax1.legend(loc='center left',
+               bbox_to_anchor=(-0.34, 0.38, 0.2, 0.2),
+               frameon=False)
 
-    plt.show()
+    fig.suptitle(f'Optimal hyperparameter: Bs={best_hyp[0]}, L2-reg={best_hyp[1]}, Lr={best_hyp[2]}')
 
-
-
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    save_path = os.path.join(save_path, 'hyper_raum.png')
+    plt.tight_layout()
+    plt.savefig(save_path, dpi=600, pad_inches=0.1)
 
 if __name__ =='__main__':
     path = "../../saved_models/MiniDogNN"
     df = read_tuning_results(path)
-    eval_3d(df, 'val_acc')
+    save_path = os.path.join(path, 'hyper_param_tuning/eval')
+    eval_3d(df, save_path, 'val_acc')
