@@ -20,14 +20,14 @@ def get_model(model_name, n_classes, l2_reg):
         return DogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv2':
         return DogNNv2(n_classes, l2_reg)
-    elif model_name == 'LinearNN':
-        return LinearNN(n_classes, l2_reg)
+    elif model_name == 'PreBigDogNN':
+        return PreBigDogNN(n_classes)
     elif model_name == 'MiniDogNN':
         return MiniDogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv3':
         return DogNNv3(n_classes, l2_reg)
-    elif model_name == 'SeminarNN':
-        return SeminarNN(n_classes, l2_reg)
+    elif model_name == 'PreDogNN':
+        return PreDogNN()
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
@@ -101,7 +101,7 @@ def trainNN(training_parameters, grid_search=False):
 
     training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters)
-    
+
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
     # Test, if grid_search. in this case, the path has to be modified
