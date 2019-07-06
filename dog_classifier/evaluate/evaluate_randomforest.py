@@ -4,6 +4,7 @@ import itertools
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix
@@ -147,6 +148,10 @@ def create_confusion_matrix(label_encoder, y_true, y_pred):
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
+    if len(classes) == 120:
+        mpl.rcParams.update({'font.size': 3})
+    else:
+        mpl.rcParams.update({'font.size': 5})
     tick_marks = np.arange(max(y_true)+1)
 
     plt.figure(figsize=(5.8, 3.58))
@@ -169,9 +174,11 @@ def create_confusion_matrix(label_encoder, y_true, y_pred):
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    model_save_path = os.path.join(model_save_path, 'build/confusion_matrix.png')
+    model_save_path = os.path.join(model_save_path, 'build/confusion_matrix.pdf')
     plt.savefig(model_save_path, dip=600, bbox_inches='tight', pad_inches=0)
     plt.clf()
+    # reset rcParams
+    mpl.rcParams.update(mpl.rcParamsDefault)
 
 
 def visualize_rf_preduction(encoder, img_resize):
