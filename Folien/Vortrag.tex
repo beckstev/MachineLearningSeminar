@@ -2,61 +2,22 @@
 \begin{document}
 
 \maketitle
-  \section{Definition und Motivation}
-  \begin{frame}{Definition und Motivation}
-    Fragestellung:
-    \begin{center}
-      \textbf{Wie schnell und präzise kann eine Hunderassen-Klassifizierung mit 120 Klassen
-      durchgeführt werden?}
-    \end{center}
-    Motivation:
-    \begin{itemize}\setlength\itemsep{1em}
-      \item Klassifizierung ohne Vorwissen möglich
-      \item Persönliche Defizite ausgleichen
-      \item Hunde sind cooler als Katzen
-    \end{itemize}
+  \section{Input und Struktur des Neuronalen Netzes}
+  \begin{frame}{Struktur des Neuronalen Netzes}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.4\textwidth]{logos/model_plot.png}
+      \caption{Plot.}
+      \label{fig:1}
+    \end{figure}
   \end{frame}
-  \section{Datensatz}
-  \begin{frame}{Datensatz}
-    \begin{itemize}\setlength\itemsep{1em}
-      \item \href{https://www.kaggle.com/jessicali9530/stanford-dogs-dataset}{Stanford Dogs Dataset}
-      \item Lizenz: ???
-      \item Informationen: Klassifikationen und Bounding Boxes
-      \item Anzahl Einträge: 20.580 auf 120 Klassen verteilt
-      \item Input-Features: Bilder
-      \item Target-Variablen: Klassen und Bounding Boxes
-      \item Bisherige Arbeiten: Kernels bei Kaggle
-    \end{itemize}
+  \begin{frame}{Input des NN}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.7\textwidth]{logos/subplot.pdf}
+      %\caption{Bilder vor und nach der Data Augmentation.}
+      \label{fig:input}
+    \end{figure}
   \end{frame}
 
-  \section{Alternativ-Methode}
-  \begin{frame}{Alternativ-Methode}
-    \begin{columns}[c]
-      \column{0.6\textwidth}
-      \begin{itemize}\setlength\itemsep{2em}
-        \item \textbf{Ziel:} Vergleich zweier Architekturen \\
-        \rightarrow \ CNN ohne Bounding Boxes und ein vorgeschaltetes CNN, welches
-        die Bounding Boxes predicted
-        \item \textbf{Motivation:}
-        \begin{itemize}\setlength\itemsep{1em}
-          \item Ohne Bounding Boxes: besser für allgemeine und schnelle
-          Verwendbarkeit
-          \item Allerdings: Klassifizierung mit Bounding Boxes sollte besser funktionieren,
-          da weniger störanfällig
-        \end{itemize}
-      \end{itemize}
-      % Wir wollen zwei Architekturen vergleichen, ein CNN ohne Bounding Boxes und zwei
-      % CNN, bei welchen das erste die Bounding Boxes predicted und damit dann das zweite
-      % CNN ausführt, welches die Klassifizierung vornimmt. Motivation: Es wäre besser
-      % für die allgemeine und schnelle Verwendbarkeit, allerdings sollte die Klassifizierung
-      % mit Bounding Boxes besser funktionieren, da sie weniger störanfällig ist.
-      \column{0.4\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=0.6\textwidth]{logos/alternative_method.pdf}
-        \caption{Blau: Ohne Verwendung von Bboxes. \quad Orangefarbend: Verwendung von BBoxes}
-        %\label{}
-      \end{figure}
-    \end{columns}
-  \end{frame}
 \end{document}
