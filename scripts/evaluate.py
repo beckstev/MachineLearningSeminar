@@ -32,8 +32,6 @@ if __name__ == '__main__':
     confusion_mtx = confusion_matrix(Y_true, Y_cls)
 
     # plot the confusion matrix
-    # Prblem with figure size, still need fixing, some axis is cut off
-    # plt.figure(figsize=(8, 8))
     eval.plot_confusion_matrix(confusion_mtx, classes=range(n_classes),
                                path=args.model_path,
                                encoder_model=args.encoder_model)

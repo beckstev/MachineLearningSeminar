@@ -127,6 +127,9 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     :param encoder_model: encoder_model
     :param path: saving path
     """
+    # Set figsize
+    plt.set_figheight(3.58)
+    plt.set_figwidth(5.8)
     # change font size according to number of classes
     if len(classes) == 120:
         mpl.rcParams.update({'font.size': 3})
