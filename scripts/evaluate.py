@@ -26,7 +26,7 @@ if __name__ == '__main__':
     # visualize_predictions
     # eval.visualize_predictions(Y_pred, Y_test, path_to_images, args.encoder_model)
     # Multiclass-Analyse
-    # eval.prob_multiclass(Y_pred, Y_test, label=10, path=args.model_path,)
+    # eval.prob_multiclass(Y_pred, Y_test, Y_true, label=1, path=args.model_path)
 
     # compute the confusion matrix
     confusion_mtx = confusion_matrix(Y_true, Y_cls)
