@@ -128,8 +128,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     :param path: saving path
     """
     # Set figsize
-    plt.set_figheight(3.58)
-    plt.set_figwidth(5.8)
+    plt.figure(figsize=(5.8, 3.58))
     # change font size according to number of classes
     if len(classes) == 120:
         mpl.rcParams.update({'font.size': 3})
@@ -175,7 +174,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.savefig("{}/confusion_matrix.pdf".format(path))
+    plt.savefig("{}/confusion_matrix.pdf".format(path), dpi=500, pad_inches=0, bbox_inches='tight')
     plt.clf()
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
