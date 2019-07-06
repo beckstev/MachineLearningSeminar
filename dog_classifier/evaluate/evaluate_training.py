@@ -49,7 +49,7 @@ def plot_history(network_history, path):
     path = path + '/build/'
     if not os.path.exists(path):
         os.makedirs(path)
-    plt.figure()
+    plt.figure(figsize=(5.8, 3.58))
     plt.xlabel(r'Epochs')
     plt.ylabel(r'Loss')
     plt.plot(network_history.history['loss'])
@@ -58,7 +58,7 @@ def plot_history(network_history, path):
     plt.savefig("{}/history_loss.pdf".format(path))
     plt.clf()
 
-    plt.figure()
+    plt.figure(figsize=(5.8, 3.58))
     plt.xlabel(r'Epochs')
     plt.ylabel(r'Accuracy')
     plt.plot(network_history.history['acc'])
@@ -156,10 +156,8 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
+    plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
     plt.yticks(tick_marks, classes)
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     # print text if not 120 classes are given
     if len(classes) != 120:
@@ -263,7 +261,7 @@ def plot_history_epoch(train_hist, val_hist, test_hist, path):
     path = path + '/build/'
     if not os.path.exists(path):
         os.makedirs(path)
-    plt.figure()
+    plt.figure(figsize=(5.8, 3.58))
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.plot(train_hist.loss)
@@ -271,7 +269,7 @@ def plot_history_epoch(train_hist, val_hist, test_hist, path):
     plt.plot(test_hist.loss)
     plt.legend(['Training', 'Validation', 'Testing'])
 
-    plt.figure()
+    plt.figure(figsize=(5.8, 3.58))
     plt.xlabel('Epochs')
     plt.ylabel('Accuracy')
     plt.plot(train_hist.acc)
@@ -320,7 +318,7 @@ def plot_predictions(n, model, X_test, height, width, path):
         os.makedirs(path)
     slice = n
     predicted = model.predict(X_test[:slice]).argmax(-1)
-    # plt.figure(figsize=(16, 8))
+    # plt.figure(figsize=(5.8, 3.58))
     for i in range(slice):
         plt.subplot(1, slice, i+1)
         plt.imshow(X_test[i].reshape(height, width), interpolation='nearest')

@@ -1,10 +1,12 @@
 import os
 import pickle
+import itertools
 import numpy as np
 import pandas as pd
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import make_scorer, accuracy_score
@@ -58,6 +60,7 @@ def get_rf_prediction(Dataloader):
 
     # Using the encoder to get features for the random forest
     X_rf = encoder.predict_generator(Dataloader, verbose=1)
+
     #The pretrained rf uses the features to make a label prediction
     y_pred = rf.predict(X_rf)
 
@@ -135,6 +138,42 @@ def get_label_encoder(encoder_model):
     return encoder
 
 
+def create_confusion_matrix(label_encoder, y_true, y_pred):
+    model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                   "saved_models",
+                                   "autoencoder")
+
+    cm = confusion_matrix(y_true, y_pred)
+    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
+    tick_marks = np.arange(max(y_true)+1)
+
+    plt.figure(figsize=(5.8, 3.58))
+    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
+    plt.yticks(tick_marks, classes)
+    plt.title('Confusion matrix random forest\n')
+    plt.colorbar()
+
+    # print text if not 120 classes are given
+    if max(y_true) != 120:
+        # Loop over data dimensions and create text annotations.
+        fmt = '.2f'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(j, i, format(cm[i, j], fmt),
+                     horizontalalignment="center",
+                     color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    model_save_path = os.path.join(model_save_path, 'build/confusion_matrix.png')
+    plt.savefig(model_save_path, dip=600, bbox_inches='tight', pad_inches=0)
+    plt.clf()
+
+
 def visualize_rf_preduction(encoder, img_resize):
     ''' Function to visualize the predictions of the random forest.
         :param encoder: File name of the label encoder
@@ -147,6 +186,7 @@ def visualize_rf_preduction(encoder, img_resize):
     y_pred = get_rf_prediction(test_dataloader)
     y_true, img_paths = get_true_labels_and_img_paths(test_dataloader, y_pred.shape[0])
     label_encoder = get_label_encoder(encoder)
+    create_confusion_matrix(label_encoder, y_true, y_pred)
     for index in range(len(y_pred)):
         race_true = label_encoder.inverse_transform((y_true[index],))[0]
         race_pred = label_encoder.inverse_transform((y_pred[index],))[0]
