@@ -34,11 +34,11 @@ if __name__ == '__main__':
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
-    early_stopping_patience = 30
+    early_stopping_patience = 7
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
 
-    early_stopping_delta = 1e-5
+    early_stopping_delta = 1e-4
     if args.early_stopping_delta:
         early_stopping_delta = args.early_stopping_delta
 
