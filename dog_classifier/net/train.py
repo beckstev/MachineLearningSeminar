@@ -111,7 +111,7 @@ def trainNN(training_parameters, grid_search=False):
                                        training_parameters['architecture'],
                                        'hyper_param_tuning',
                                        'bs_'+str(training_parameters['batch_size']) + '_'
-                                       'lr_'+str(training_parameters['learning_rate']) + '_'
+                                       'use_rgb_'+str(training_parameters['use_rgb']) + '_'
                                        'l2_'+str(training_parameters['l2_regularisation']))
         if not os.path.exists(model_save_path):
             os.makedirs(model_save_path)
@@ -133,9 +133,9 @@ def trainNN(training_parameters, grid_search=False):
 
     model = get_model(training_parameters['architecture'], n_classes, l2_reg)
     # Set the leranrning rate of adam optimizer
-    Adam(training_parameters['learning_rate'])
+    adam = Adam(lr=training_parameters['learning_rate'])
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam',
+    model.compile(loss='categorical_crossentropy', optimizer=adam,
                   metrics=['accuracy'])
 
     earlystopper = EarlyStopping(monitor='val_loss',
