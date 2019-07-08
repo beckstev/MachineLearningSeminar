@@ -101,7 +101,7 @@ def trainNN(training_parameters, grid_search=False):
 
     training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters)
-    
+
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
     # Test, if grid_search. in this case, the path has to be modified
