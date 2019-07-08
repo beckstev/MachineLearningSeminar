@@ -1,10 +1,21 @@
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib as mpl
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import json
 import os
 
+mpl.use('pgf')
+mpl.rcParams.update(
+    {'font.size': 10,
+        'font.family': 'sans-serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+        'pgf.texsystem': 'lualatex',
+        'text.latex.unicode': True,
+        'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
+     })
 
 def read_jsons(df, paths_to_json):
     params = dict()
@@ -17,7 +28,7 @@ def read_jsons(df, paths_to_json):
                 # https://www.geeksforgeeks.org/python-merging-two-dictionaries/
                 params = {**params, **param}
     # We have to make sure that we are not adding an empty dict to params.
-    # Otherwise we add NaN values to our dataframe
+    # Otherwd
     if params:
         df = df.append(params, ignore_index=True)
 
@@ -114,12 +125,27 @@ def eval_3d(df, save_path, score):
 
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save_path = os.path.join(save_path, 'hyper_raum.png')
+    save_path_3d_plot = os.path.join(save_path, 'hyper_raum.pdf')
     plt.tight_layout()
-    plt.savefig(save_path, dpi=600, pad_inches=0.1)
+    plt.savefig(save_path_3d_plot, pad_inches=0.1)
 
-if __name__ =='__main__':
-    path = "../../saved_models/MiniDogNN"
-    df = read_tuning_results(path)
-    save_path = os.path.join(path, 'hyper_param_tuning/eval')
+
+    # Plotting also histogramm of accuracy
+    bins = np.linspace(min(sc)-0.01, max(sc)+0.01, int(len(sc)/8))
+    save_path_acc_hist = os.path.join(save_path, 'acc_hist.pdf')
+    plt.clf()
+    fig = plt.figure(figsize=(7.2, 4.45))
+    ax = fig.add_subplot(111)
+    ax.hist(sc, bins=bins)
+    ax.set_xlabel(cbar_label)
+    ax.set_ylabel('Number of models')
+
+    details = f'Total number of models: {len(sc)} \n Minimal accuracy: {min(sc):.2} \n Maximal accuracy {max(sc):.2}'
+    ax.text(0.67, 0.85, details, transform=ax.transAxes)
+    plt.savefig(save_path_acc_hist, pad_inches=0, bbox_inches='tight')
+
+
+def eval_ht(model_path):
+    df = read_tuning_results(model_path)
+    save_path = os.path.join(model_path, 'hyper_param_tuning/eval')
     eval_3d(df, save_path, 'val_acc')
