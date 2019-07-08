@@ -85,19 +85,43 @@ def train_random_forest(training_parameters, grid_search):
 
     # With n_jobs=-1 the random forest always uses the maximal available number
     # of cores
+    save_best_params_path = os.path.join(model_save_path, 'best_params_rf.json')
     if grid_search:
         param_grid = {'bootstrap': [True],
-                      'max_features': ['auto', 'sqrt', 'log2', 2, 3, 4, 5],
-                      'max_depth': [None, 10, 50, 100],
-                      'min_samples_leaf': [2, 5, 10, 15, 20, 50, 71, 100],
-                      'min_samples_split': [8, 10, 12, 15, 20, 25],
-                      'criterion' : ['gini', 'entropy'],
-                      'n_estimators': [100, 200, 300, 400, 700, 1000, 1500]}
+                      'max_features': ['auto', 'log2'],
+                      'max_depth': [None, 10, 100],
+                      'min_samples_leaf': [1, 10, 31],
+                      'min_samples_split': [2, 8, 10],
+                      'criterion': ['gini', 'entropy'],
+                      'n_estimators': [100, 400, 1000, 1500]}
 
+        rf = RandomForestClassifier()
+        grid_search = GridSearchCV(estimator=rf,
+                                   param_grid=param_grid,
+                                   cv=3,
+                                   n_jobs=-1,
+                                   verbose=2)
+        print('Starting GridSearchCV')
+        grid_search.fit(X_train, y)
 
-    rf = RandomForestClassifier(n_estimators=400, min_samples_leaf=10, n_jobs=-1)
+        best_params = grid_search.best_params_
+        print(f'Best parameters for Random forest: {best_params}')
+        with open(save_best_params_path, 'w') as json_file:
+            json.dump(best_params, json_file)
+
+        save_tested_params_path = os.path.join(model_save_path, 'tested_params_rf.json')
+        with open(save_tested_params_path, 'w') as json_file:
+            json.dump(param_grid, json_file)
+
+    if os.path.isfile(save_best_params_path):
+        print('Found best parameter file')
+        with open(save_best_params_path) as f:
+            best_params = json.load(f)
+        rf = RandomForestClassifier(**best_params)
+    else:
+        rf = RandomForestClassifier(n_estimators=400, min_samples_leaf=10, n_jobs=-1)
+
     rf.fit(X_train, y)
-
     pickle_file = 'randomforest.sav'
     rf_save_path = os.path.join(model_save_path, pickle_file)
 
