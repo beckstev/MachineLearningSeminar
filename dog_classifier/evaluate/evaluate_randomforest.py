@@ -150,6 +150,13 @@ def get_label_encoder(encoder_model):
 
 
 def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
+    # I have to put this here, othwise I get a strange error:
+    # File "/home/beckstev/.local/anaconda3/lib/python3.7/site-packages/matplotlib/dviread.py", line 199, in __init__
+    # self.file = open(filename, 'rb')
+    # FileNotFoundError: [Errno 2] No such file or directory:
+    # '/home/user/.cache/matplotlib/tex.cache/4ee3b5cbb5a9a35df6cd457d83904876.dvi'
+    mpl.rcParams.update(mpl.rcParamsDefault)
+
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
                                    "autoencoder" + "_n_" + str(n_classes))
@@ -159,7 +166,8 @@ def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
 
     classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
     classes = [cl.replace('_', ' ') for cl in classes]
-    if len(classes) == 120:
+
+    if len(classes) == max(y_true):
         mpl.rcParams.update({'font.size': 3})
     else:
         mpl.rcParams.update({'font.size': 5})
