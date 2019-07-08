@@ -13,6 +13,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', '--learning_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
+    parser.add_argument('--grid_search', action='store_true')
     parser.add_argument('--use_rgb', action='store_true')
 
     args = parser.parse_args()
@@ -57,5 +58,5 @@ if __name__ == '__main__':
                            'img_resize': img_resize
                            }
 
-    train_autoencoder(training_parameters)
-    train_random_forest(training_parameters, grid_search=False)
+    #train_autoencoder(training_parameters)
+    train_random_forest(training_parameters, grid_search=args.grid_search)
