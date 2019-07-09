@@ -17,6 +17,7 @@ mpl.rcParams.update(
         'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
      })
 
+
 def read_jsons(df, paths_to_json):
     params = dict()
 
@@ -46,25 +47,13 @@ def read_tuning_results(path_to_model):
         path_hyp_param = os.path.join(path_to_model_hp, dir, json_hyp_param)
 
         json_traning_param = 'training_parameters.json'
-        path_train_param = os.path.join(path_to_model_hp, dir, json_traning_param)
+        path_train_param = os.path.join(path_to_model_hp, dir,
+                                        json_traning_param)
 
         paths_to_params = [path_train_param, path_hyp_param]
         df_param = read_jsons(df_param, paths_to_params)
 
     return df_param
-
-def array_to_string_list(array):
-    str_list = []
-    unique_elements = np.unique(array)
-
-    for element in unique_elements:
-        str_list.append(str(element))
-
-    return str_list
-
-def exp_str(string):
-    print(string)
-    return np.exp(float(string))
 
 
 def create_3d_subplot(df, score, figure, position, polar, azimut):
@@ -74,12 +63,13 @@ def create_3d_subplot(df, score, figure, position, polar, azimut):
 
     mask_max = (score == max(score))
     ax = figure.add_subplot(position, projection='3d')
-    #ax = figure.add_plot(projection='3d')
+    # ax = figure.add_plot(projection='3d')
     ax.set_xlabel('Batch size')
     ax.set_ylabel('Log(L2 regulation)', labelpad=5)
     ax.set_zlabel('Use RGB', labelpad=9)
 
-    scatter_plot = ax.scatter(xs=bs[~mask_max], ys=np.log(l2[~mask_max]), zs=use_rgb[~mask_max],
+    scatter_plot = ax.scatter(xs=bs[~mask_max], ys=np.log(l2[~mask_max]),
+                              zs=use_rgb[~mask_max],
                               c=score[~mask_max])
 
     ax.scatter(xs=bs[mask_max], ys=np.log(l2[mask_max]), zs=use_rgb[mask_max],
@@ -129,14 +119,15 @@ def eval_3d(df, save_path, score):
     plt.tight_layout()
     plt.savefig(save_path_3d_plot, pad_inches=0.1)
 
-
     # Plotting also histogramm of accuracy
-    bins = np.linspace(min(sc)-0.01, max(sc)+0.01, int(len(sc)/5))
+    # bins = np.linspace(min(sc)-0.01, max(sc)+0.01, int(len(sc)/5))
+    bins = np.array([0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6])
+    bincenters = 0.5 * (bins[1:] + bins[:-1])
     save_path_acc_hist = os.path.join(save_path, 'acc_hist.pdf')
     plt.clf()
     fig = plt.figure(figsize=(7.2, 4.45))
     ax = fig.add_subplot(111)
-    ax.hist(sc, bins=bins)
+    ax.hist(sc, bins=bincenters)
     ax.set_xlabel(cbar_label)
     ax.set_ylabel('Number of models')
 
