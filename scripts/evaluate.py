@@ -9,15 +9,18 @@ if __name__ == '__main__':
     parser.add_argument('model_path', type=str, help='path to save/saved model')
     parser.add_argument('encoder_model', type=str, help='encoder model to use')
     parser.add_argument('--fname_pred', type=str, help='file name of prediction file')
+    parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images')
     parser.add_argument('--n', type=int, help='Number of classes. Default is 120')
 
     args = parser.parse_args()
     fname_pred = args.fname_pred if args.fname_pred else 'prediction.txt'
     n_classes = args.n if args.n else 120
 
+    img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
+
     if not os.path.isfile(args.model_path + '/prediction.txt'):
         eval.predict(args.model_path, args.encoder_model,
-                     fname_pred)
+                     fname_pred, img_resize)
 
     Y_pred, Y_test, Y_cls, Y_true, path_to_images = eval.preprocess(args.model_path,
                                                     args.encoder_model,

@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('-l2', '--regularisation_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
-    parser.add_argument('-ir', '--imgage_resize', type=tuple, help='Tuple (width, height) with determines the shape of the resized images')
+    parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images')
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('--use_rgb', action='store_true')
 
@@ -34,11 +34,11 @@ if __name__ == '__main__':
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
-    early_stopping_patience = 10
+    early_stopping_patience = 7
     if args.early_stopping_patience:
         early_stopping_patience = args.early_stopping_patience
 
-    early_stopping_delta = 1e-5
+    early_stopping_delta = 1e-4
     if args.early_stopping_delta:
         early_stopping_delta = args.early_stopping_delta
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     if args.n_classes:
         n_classes = args.n_classes
 
-    img_resize = args.imgage_resize if args.imgage_resize else None
+    img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
