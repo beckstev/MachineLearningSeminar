@@ -3,7 +3,12 @@
 
 \maketitle
   \section{Input und Struktur des Neuronalen Netzes}
-  \begin{frame}{Struktur des Neuronalen Netzes}
+
+  \begin{frame}[noframenumbering]
+    \tableofcontents[currentsection]
+  \end{frame}
+
+  \begin{frame}{Struktur des Neuronalen Netzes (MiniDogNN)}
     \begin{figure}
       \centering
       \includegraphics[width=0.9\textwidth]{logos/nn.pdf}
@@ -18,6 +23,107 @@
       %\caption{Bilder vor und nach der Data Augmentation.}
       \label{fig:input}
     \end{figure}
+  \end{frame}
+
+  \section{Loss- und Accuracy-Kurven}
+
+  \begin{frame}[noframenumbering]
+    \tableofcontents[currentsection]
+  \end{frame}
+
+  \begin{frame}{PreBigDogNN}
+    \begin{columns}[c]
+      \column{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{logos/history_acc_prebig.pdf}
+        % \caption{}
+        \label{fig:acc_prebig}
+      \end{figure}
+      \column{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{logos/history_loss_prebig.pdf}
+        % \caption{}
+        \label{fig:loss_prebig}
+      \end{figure}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}{MiniDogNN}
+    \begin{columns}[c]
+      \column{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{logos/history_acc_mini.pdf}
+        % \caption{}
+        \label{fig:acc_mini}
+      \end{figure}
+      \column{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{logos/history_loss_mini.pdf}
+        % \caption{}
+        \label{fig:loss_mini}
+      \end{figure}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}{PreDogNN}
+    \begin{columns}[c]
+      \column{0.5\textwidth}
+      % \begin{figure}
+      %   \centering
+      %   \includegraphics[width=\textwidth]{logos/history_acc_pre.pdf}
+      %   % \caption{}
+      %   \label{fig:acc_pre}
+      % \end{figure}
+      \column{0.5\textwidth}
+      % \begin{figure}
+      %   \centering
+      %   \includegraphics[width=\textwidth]{logos/history_loss_pre.pdf}
+      %   % \caption{}
+      %   \label{fig:loss_pre}
+      % \end{figure}
+    \end{columns}
+  \end{frame}
+
+  \section{Confusion Matrices}
+
+  \begin{frame}[noframenumbering]
+    \tableofcontents[currentsection]
+  \end{frame}
+
+  \begin{frame}{PreBigDogNN}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.5\textwidth]{logos/confusion_matrix_bigpretrained.pdf}
+      % \caption{}
+      \label{fig:cm_prebig}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}{MiniDogNN}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.5\textwidth]{logos/confusion_matrix_mini.pdf}
+      % \caption{}
+      \label{fig:cm_mini}
+    \end{figure}
+  \end{frame}
+
+  \begin{frame}{PreDogNN}
+    \begin{figure}
+      \centering
+      \includegraphics[width=0.5\textwidth]{logos/confusion_matrix_PreDogNN.pdf}
+      % \caption{}
+      \label{fig:cm_pre}
+    \end{figure}
+  \end{frame}
+
+  \section{Alternativ-Methode}
+  \begin{frame}{Accuracy-Vergleich}
+
   \end{frame}
 
 \end{document}
