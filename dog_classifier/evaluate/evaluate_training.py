@@ -338,12 +338,13 @@ def plot_predictions(n, model, X_test, height, width, path):
     plt.savefig("{}/plot_predictions.pdf".format(path))
 
 
-def predict(path_to_model, encoder_model, fname):
+def predict(path_to_model, encoder_model, fname, img_resize):
     """function will predict with predict_generator from a given, saved model
     and save the result as txt
     :param path_to_model: Path to model
     :param encoder_model: version of encoder used for training
     :param fname: name of the created predicition txt file
+    :param img_resize: Tuple (width, height) with determines the shape of the resized images
     """
     main_model = 'model_parameter.h5'
     checkpoint_model = 'model_parameter_checkpoint.h5'
@@ -361,7 +362,8 @@ def predict(path_to_model, encoder_model, fname):
     testDataloader = DataGenerator(df_test,
                                    encoder_model=encoder_model,
                                    shuffle=True,
-                                   is_test=True)
+                                   is_test=True,
+                                   const_img_resize=img_resize)
 
     # Test predicten
     Y_pred = model.predict_generator(testDataloader, verbose=1)
