@@ -163,7 +163,12 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
+
+    if len(classes) == 120:
+        plt.title(title, fontsize=12)
+    else:
+        plt.title(title)
+
     plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
