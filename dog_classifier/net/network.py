@@ -1,7 +1,9 @@
 from keras.models import Sequential
+import os
 from keras.layers import Dense, Conv2D, MaxPooling2D, AveragePooling2D, GlobalMaxPooling2D, Dropout, PReLU, Dropout
 from keras.initializers import he_normal
 from keras.applications import InceptionResNetV2, MobileNetV2
+from keras.utils.vis_utils import plot_model
 
 from keras.regularizers import l2
 from keras import backend as K
@@ -229,9 +231,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')
     parser.add_argument('n_classes', type=int, help='number of classes')
-   
+    parser.add_argument('--save_model', action='store_true')
+
     l2 = 0.01
     args = parser.parse_args()
     model = train.get_model(args.architecture, args.n_classes, l2)
+    print(args.architecture)
+    filestr = '../../saved_models/{}/'.format(args.architecture)
+    if not os.path.exists(filestr):
+        os.makedirs(filestr)
+    filestr += 'model_plot.png'
 
     model.summary()
+    if args.save_model:
+        plot_model(model, to_file=filestr, show_shapes=True, show_layer_names=True)

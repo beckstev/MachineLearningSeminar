@@ -20,14 +20,14 @@ def get_model(model_name, n_classes, l2_reg):
         return DogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv2':
         return DogNNv2(n_classes, l2_reg)
-    elif model_name == 'LinearNN':
-        return LinearNN(n_classes, l2_reg)
+    elif model_name == 'PreBigDogNN':
+        return PreBigDogNN(n_classes)
     elif model_name == 'MiniDogNN':
         return MiniDogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv3':
         return DogNNv3(n_classes, l2_reg)
-    elif model_name == 'SeminarNN':
-        return SeminarNN(n_classes, l2_reg)
+    elif model_name == 'PreDogNN':
+        return PreDogNN()
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
