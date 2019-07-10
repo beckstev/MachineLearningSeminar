@@ -51,7 +51,7 @@ if __name__ == '__main__':
     if args.n_classes:
         n_classes = args.n_classes
 
-    img_resize = args.imgage_resize if args.imgage_resize else None
+    img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
