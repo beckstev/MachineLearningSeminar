@@ -167,7 +167,7 @@ def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
     classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
     classes = [cl.replace('_', ' ') for cl in classes]
 
-    if len(classes) == max(y_true):
+    if n_classes == 120:
         mpl.rcParams.update({'font.size': 3})
     else:
         mpl.rcParams.update({'font.size': 5})
@@ -181,7 +181,7 @@ def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
     plt.colorbar()
 
     # print text if not 120 classes are given
-    if max(y_true) != 120:
+    if n_classes != 120:
         # Loop over data dimensions and create text annotations.
         fmt = '.2f'
         thresh = cm.max() / 2.
