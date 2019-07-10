@@ -58,5 +58,5 @@ if __name__ == '__main__':
                            'img_resize': img_resize
                            }
 
-    #train_autoencoder(training_parameters)
+    train_autoencoder(training_parameters)
     train_random_forest(training_parameters, grid_search=args.grid_search)
