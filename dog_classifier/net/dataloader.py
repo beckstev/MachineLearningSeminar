@@ -37,7 +37,6 @@ class DataGenerator(Sequence):
                                the y is equal to X
         :param seed: Set a seed for numpy random functions
         '''
-        print('Dataloader: ', use_rgb)
         self.df = df
         self.batch_size = batch_size
         self.encoder_model = encoder_model
@@ -135,7 +134,6 @@ class DataGenerator(Sequence):
             # plt.axis('off')
             # plt.savefig('../saved_models/bilder/original_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
             # plt.clf()
-
             rescaled_image = cv.resize(image, rescale_size)
 
             if self.is_test is False:

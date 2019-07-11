@@ -6,9 +6,8 @@ def find_parameters(training_parameters, batch_size,  use_rgb, l2_reg):
 
     permutations = np.array(np.meshgrid(batch_size, use_rgb, l2_reg)).T.reshape(-1,3)
 
-    permutations = np.array(np.meshgrid(batch_size, use_rgb, l2_reg)).T.reshape(-1, 3)
     for i in range(len(permutations)):
-        try:
+        # try:
             use_rgb = permutations[i, 1]
             print('\n')
             print('use rgb: ', use_rgb)
@@ -25,7 +24,7 @@ def find_parameters(training_parameters, batch_size,  use_rgb, l2_reg):
             training_parameters['l2_regularisation'] = l2_reg
 
             trainNN(training_parameters, grid_search=True)
-            
-        except Exception as e:
-            print(f'Error: {e} for the following perumation {permutations[i]}!')
-            continue
+
+        # except Exception as e:
+        #     print(f'Error: {e} for the following permutation {permutations[i]}!')
+        #     continue
