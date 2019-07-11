@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 from dog_classifier.io.data_augmentation import crop_range
 import os
 from pathlib import Path
+# import matplotlib.pyplot as plt
 
 
 class DataGenerator(Sequence):
@@ -126,7 +127,14 @@ class DataGenerator(Sequence):
 
         for i, ID in enumerate(list_IDs_temp):
             path_to_image = self.df['path_to_image'].values[ID]
+
             image = cv.imread(path_to_image, colormode) * 1/255
+            # save_img = image[..., ::-1]
+            # plt.imshow(save_img)
+            # plt.axis('off')
+            # plt.savefig('../saved_models/bilder/original_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
+            # plt.clf()
+
             rescaled_image = cv.resize(image, rescale_size)
 
             if self.is_test is False:
@@ -134,7 +142,7 @@ class DataGenerator(Sequence):
                 bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
                 # generate translation and zoom limits from crop_range
                 trans_limits, zoom_limits = crop_range(image.shape, bbox,
-                                                   rescale_size)
+                                                       rescale_size)
 
                 # get random rotation
                 random_rotation = np.random.uniform(-30, 30)
@@ -143,16 +151,19 @@ class DataGenerator(Sequence):
                     zy = zoom_limits[1]
                     tx = 0
                     ty = 0
+                    # text = "zoom x: {:1.2f}, zoom y: {:1.2f} \n rot: {:1.2f}".format(zx, zy, random_rotation)
                 else:
                     zx = 1
                     zy = 1
                     tx = trans_limits[0]
                     ty = trans_limits[1]
+                    # text = "trans x: {:1.2f}, trans y: {:1.2f} \n rot: {:1.2f}".format(tx, ty, random_rotation)
                 # get random zoom fpr x and y
                 # zoom_x = np.random.uniform(zoom_limits[0], 1)
                 # zoom_y = np.random.uniform(zoom_limits[1], 1)
 
                 # transform the image
+
                 rescaled_image = apply_affine_transform(rescaled_image,
                                                         zx=zx,
                                                         zy=zy,
@@ -161,6 +172,13 @@ class DataGenerator(Sequence):
                                                         tx=tx,
                                                         ty=ty)
             X[i, ] = rescaled_image
+
+            # save_img = rescaled_image[..., ::-1]
+            # plt.imshow(save_img)
+            # plt.axis('off')
+            # plt.savefig('../saved_models/bilder/augmented_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
+            # plt.clf()
+
             y.append(self.df['race_label'].values[ID])
         return X, to_categorical(y, num_classes=self.n_classes)
 
@@ -174,7 +192,7 @@ class DataGenerator(Sequence):
                    containing the rescaled images of the batch.
         :return y: The labels of the images as 2D matrix
                    (batch_size, number_of_classes). To create the matrix
-                   the fucntion keras.utils.to_categorical is used.
+                   the function keras.utils.to_categorical is used.
        '''
 
         # Generate indexes of the batch

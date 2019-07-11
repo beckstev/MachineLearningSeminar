@@ -21,7 +21,7 @@ def AutoDogEncoder(img_input_size, n_classes):
                           classes. NOT USED IN THE CURRENT VERSION!
         :return model: Returns the autoencoder as keras Sequential
     '''
-    img_input_size = (img_input_size[0], img_input_size[1], 3)
+    img_input_size = (img_input_size[1], img_input_size[0], 3)
     model = Sequential()
     # Encoder
     model.add(Conv2D(filters=16, kernel_size=(5, 5), activation='relu',
@@ -38,9 +38,12 @@ def AutoDogEncoder(img_input_size, n_classes):
     model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))
 
-    # Output shape:  (None, 15, 15, 64)
+    # Output shape is defined by the maxpooling2D
+    # [1::] to skip the None value
+    final_shape = model.get_layer('conv2d_4').output_shape[1::]
     model.add(Flatten())
-    model.add(Reshape((30, 30, 16)))
+
+    model.add(Reshape(final_shape))
     # Decoder
     model.add(Conv2D(filters=16, kernel_size=(5, 5),
                      activation='relu', padding='same'))

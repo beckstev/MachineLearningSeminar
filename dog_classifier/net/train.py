@@ -11,7 +11,7 @@ import sys
 import shutil
 
 from dog_classifier.net.dataloader import DataGenerator
-from dog_classifier.net.network import DogNN, DogNNv2, LinearNN, DogNNv3, MiniDogNN, SeminarNN
+from dog_classifier.net.network import DogNN, DogNNv2, DogNNv3, MiniDogNN, PreDogNN, PreBigDogNN
 from dog_classifier.evaluate import evaluate_training
 
 
@@ -20,14 +20,14 @@ def get_model(model_name, n_classes, l2_reg):
         return DogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv2':
         return DogNNv2(n_classes, l2_reg)
-    elif model_name == 'LinearNN':
-        return LinearNN(n_classes, l2_reg)
+    elif model_name == 'PreBigDogNN':
+        return PreBigDogNN(n_classes)
     elif model_name == 'MiniDogNN':
         return MiniDogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv3':
         return DogNNv3(n_classes, l2_reg)
-    elif model_name == 'SeminarNN':
-        return SeminarNN(n_classes, l2_reg)
+    elif model_name == 'PreDogNN':
+        return PreDogNN()
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
@@ -101,7 +101,7 @@ def trainNN(training_parameters, grid_search=False):
 
     training_timestamp = datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters)
-    
+
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
     # Test, if grid_search. in this case, the path has to be modified
@@ -111,7 +111,7 @@ def trainNN(training_parameters, grid_search=False):
                                        training_parameters['architecture'],
                                        'hyper_param_tuning',
                                        'bs_'+str(training_parameters['batch_size']) + '_'
-                                       'lr_'+str(training_parameters['learning_rate']) + '_'
+                                       'use_rgb_'+str(training_parameters['use_rgb']) + '_'
                                        'l2_'+str(training_parameters['l2_regularisation']))
         if not os.path.exists(model_save_path):
             os.makedirs(model_save_path)
@@ -133,9 +133,9 @@ def trainNN(training_parameters, grid_search=False):
 
     model = get_model(training_parameters['architecture'], n_classes, l2_reg)
     # Set the leranrning rate of adam optimizer
-    Adam(training_parameters['learning_rate'])
+    adam = Adam(lr=training_parameters['learning_rate'])
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam',
+    model.compile(loss='categorical_crossentropy', optimizer=adam,
                   metrics=['accuracy'])
 
     earlystopper = EarlyStopping(monitor='val_loss',

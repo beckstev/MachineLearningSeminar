@@ -12,13 +12,13 @@ if __name__ == '__main__':
     parser.add_argument('-l2', '--regularisation_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
-    parser.add_argument('-ir', '--imgage_resize', type=tuple, help='Tuple (width, height) with determines the shape of the resized images')
+    parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images')
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('--use_rgb', action='store_true')
 
     args = parser.parse_args()
 
-    n_epochs = int(5e2)
+    n_epochs = int(1e2)
     if args.epochs:
         n_epochs = args.epochs
 
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     if args.batch_size:
         bs_size = args.batch_size
 
-    l2_reg = 0.001
+    l2_reg = 0.01
     if args.regularisation_rate:
         l2_reg = args.regularisation_rate
 
