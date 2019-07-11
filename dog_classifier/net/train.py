@@ -51,6 +51,8 @@ def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     bs_size = training_parameters['batch_size']
     n_classes = training_parameters['n_classes']
     img_resize = training_parameters['img_resize']
+    use_rgb = training_parameters['use_rgb']
+    print('training_parameters: ', use_rgb)
 
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
@@ -59,13 +61,15 @@ def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
                                         batch_size=bs_size,
                                         n_classes=n_classes,
                                         const_img_resize=img_resize,
-                                        is_autoencoder=is_autoencoder)
+                                        is_autoencoder=is_autoencoder,
+                                        use_rgb=use_rgb)
 
         valDataloader = DataGenerator(df_val, encoder_model,
                                       batch_size=bs_size,
                                       n_classes=n_classes,
                                       const_img_resize=img_resize,
-                                      is_autoencoder=is_autoencoder)
+                                      is_autoencoder=is_autoencoder,
+                                      use_rgb=use_rgb)
 
     return trainDataloader, valDataloader
 
