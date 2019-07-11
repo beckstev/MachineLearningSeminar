@@ -37,6 +37,7 @@ class DataGenerator(Sequence):
                                the y is equal to X
         :param seed: Set a seed for numpy random functions
         '''
+        print('Dataloader: ', use_rgb)
         self.df = df
         self.batch_size = batch_size
         self.encoder_model = encoder_model
@@ -103,13 +104,13 @@ class DataGenerator(Sequence):
                        (batch_size, number_of_classes). To create the matrix
                        the fucntion keras.utils.to_categorical is used.
         '''
-        if self.use_rgb is True:
+        if self.use_rgb == 1.0:
             # The function cv2.imread has an argument to read an image in RGB
             # or grayscale mode. 1 = RGB, 0 = Grayscale. Compare
             # https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_gui/py_image_display/py_image_display.html
             colormode = 1
             n_channels = 3
-        else:
+        if self.use_rgb == 0.0:
             colormode = 0
             n_channels = 1
 
