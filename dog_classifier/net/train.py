@@ -15,7 +15,7 @@ from dog_classifier.net.network import DogNN, DogNNv2, DogNNv3, MiniDogNN, PreDo
 from dog_classifier.evaluate import evaluate_training
 
 
-def get_model(model_name, n_classes, l2_reg):
+def get_model(model_name, n_classes, l2_reg, use_rgb):
     if model_name == 'DogNN':
         return DogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv2':
@@ -25,7 +25,7 @@ def get_model(model_name, n_classes, l2_reg):
     elif model_name == 'MiniDogNN':
         return MiniDogNN(n_classes, l2_reg)
     elif model_name == 'DogNNv3':
-        return DogNNv3(n_classes, l2_reg)
+        return DogNNv3(n_classes, l2_reg, use_rgb)
     elif model_name == 'PreDogNN':
         return PreDogNN()
     else:
@@ -52,7 +52,6 @@ def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     n_classes = training_parameters['n_classes']
     img_resize = training_parameters['img_resize']
     use_rgb = training_parameters['use_rgb']
-    print('training_parameters: ', use_rgb)
 
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
@@ -135,7 +134,7 @@ def trainNN(training_parameters, grid_search=False):
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    model = get_model(training_parameters['architecture'], n_classes, l2_reg)
+    model = get_model(training_parameters['architecture'], n_classes, l2_reg, training_parameters['use_rgb'])
     # Set the leranrning rate of adam optimizer
     adam = Adam(lr=training_parameters['learning_rate'])
 

@@ -84,9 +84,14 @@ def DogNNv2(n_classes,l2_reg):
     return model
 
 
-def DogNNv3(n_classes, l2_reg):
+def DogNNv3(n_classes, l2_reg, use_rgb):
     # K.set_image_dim_ordering('th')
-    shape_input = (None, None, 3)
+    print('use_rgb DogNNv3:', use_rgb)
+    if use_rgb == 1.0:
+        shape_input = (None, None, 3)
+    else:
+        shape_input = (None, None, 1)
+    print('shape input: ', shape_input)
     model = Sequential()
     model.add(Conv2D(filters=4, kernel_size=(3, 3),
                      dilation_rate=(2, 2),
