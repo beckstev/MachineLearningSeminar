@@ -13,8 +13,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--early_stopping_delta', type=float)
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('-ir', '--imgage_resize', type=tuple, help='Tuple (width, height) with determines the shape of the resized images')
-    parser.add_argument('--use_rgb', action='store_true')
-
+    
     args = parser.parse_args()
 
     n_epochs = int(5e2)
@@ -41,11 +40,15 @@ if __name__ == '__main__':
     if args.early_stopping_delta:
         early_stopping_delta = args.early_stopping_delta
 
+    use_rgb = [True, False]
+
     n_classes = 120
     if args.n_classes:
         n_classes = args.n_classes
     img_resize = args.imgage_resize if args.imgage_resize else None
     use_rgb = [True, False]
+
+    img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
@@ -53,7 +56,6 @@ if __name__ == '__main__':
                            'l2_regularisation': l2_reg,
                            'n_epochs': n_epochs,
                            'architecture': args.architecture,
-                           'use_rgb': args.use_rgb,
                            'encoder_model': args.encoder_model,
                            'early_stopping_patience': early_stopping_patience,
                            'early_stopping_delta': early_stopping_delta,
