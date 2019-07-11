@@ -2,7 +2,9 @@ import numpy as np
 from dog_classifier.net.train import trainNN
 
 
-def find_parameters(training_parameters, batch_size, use_rgb, l2_reg):
+def find_parameters(training_parameters, batch_size,  use_rgb, l2_reg):
+
+    permutations = np.array(np.meshgrid(batch_size, use_rgb, l2_reg)).T.reshape(-1,3)
 
     permutations = np.array(np.meshgrid(batch_size, use_rgb, l2_reg)).T.reshape(-1, 3)
     for i in range(len(permutations)):
@@ -23,6 +25,7 @@ def find_parameters(training_parameters, batch_size, use_rgb, l2_reg):
             training_parameters['l2_regularisation'] = l2_reg
 
             trainNN(training_parameters, grid_search=True)
+            
         except Exception as e:
             print(f'Error: {e} for the following perumation {permutations[i]}!')
             continue
