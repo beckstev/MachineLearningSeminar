@@ -101,7 +101,7 @@ class DataGenerator(Sequence):
                        containing the rescaled images of the batch.
             :return y: The labels of the images as 2D matrix
                        (batch_size, number_of_classes). To create the matrix
-                       the fucntion keras.utils.to_categorical is used.
+                       the function keras.utils.to_categorical is used.
         '''
         if self.use_rgb == 1.0:
             # The function cv2.imread has an argument to read an image in RGB
@@ -130,13 +130,19 @@ class DataGenerator(Sequence):
 
             image = cv.imread(path_to_image, colormode) * 1/255
             # save_img = image[..., ::-1]
-            # plt.imshow(save_img)
+            # plt.imshow(save_img, cmap='Greys')
             # plt.axis('off')
             # plt.savefig('../saved_models/bilder/original_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
             # plt.clf()
             rescaled_image = cv.resize(image, rescale_size)
 
             if self.is_test is False:
+                if self.use_rgb == 0.0:
+                    print(rescaled_image.shape)
+                    rescaled_image = rescaled_image.reshape(rescale_size[1],
+                                                            rescale_size[0],
+                                                            n_channels)
+                    print(rescaled_image.shape)
                 # get bboxes
                 bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
                 # generate translation and zoom limits from crop_range
@@ -172,8 +178,10 @@ class DataGenerator(Sequence):
                                                         ty=ty)
             X[i, ] = rescaled_image
 
+            # rescaled_image = rescaled_image.reshape(rescale_size[1],
+            #                                         rescale_size[0],)
             # save_img = rescaled_image[..., ::-1]
-            # plt.imshow(save_img)
+            # plt.imshow(save_img, cmap='Greys')
             # plt.axis('off')
             # plt.savefig('../saved_models/bilder/augmented_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
             # plt.clf()
