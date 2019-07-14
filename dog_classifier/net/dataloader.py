@@ -136,13 +136,15 @@ class DataGenerator(Sequence):
             # plt.clf()
             rescaled_image = cv.resize(image, rescale_size)
 
+            # reshape if grayscale
+            if self.use_rgb == 0.0:
+                print(rescaled_image.shape)
+                rescaled_image = rescaled_image.reshape(rescale_size[1],
+                                                        rescale_size[0],
+                                                        n_channels)
+                print(rescaled_image.shape)
+
             if self.is_test is False:
-                if self.use_rgb == 0.0:
-                    print(rescaled_image.shape)
-                    rescaled_image = rescaled_image.reshape(rescale_size[1],
-                                                            rescale_size[0],
-                                                            n_channels)
-                    print(rescaled_image.shape)
                 # get bboxes
                 bbox = np.array(self.df.loc[ID, "x1":"y4"].values, dtype='float32')
                 # generate translation and zoom limits from crop_range
