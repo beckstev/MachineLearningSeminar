@@ -17,13 +17,13 @@ from dog_classifier.evaluate import evaluate_training
 
 def get_model(model_name, n_classes, l2_reg, use_rgb):
     if model_name == 'DogNN':
-        return DogNN(n_classes, l2_reg)
+        return DogNN(n_classes, l2_reg, use_rgb)
     elif model_name == 'DogNNv2':
-        return DogNNv2(n_classes, l2_reg)
+        return DogNNv2(n_classes, l2_reg, use_rgb)
     elif model_name == 'PreBigDogNN':
         return PreBigDogNN(n_classes)
     elif model_name == 'MiniDogNN':
-        return MiniDogNN(n_classes, l2_reg)
+        return MiniDogNN(n_classes, l2_reg, use_rgb)
     elif model_name == 'DogNNv3':
         return DogNNv3(n_classes, l2_reg, use_rgb)
     elif model_name == 'PreDogNN':
