@@ -3,8 +3,8 @@ import pickle
 import itertools
 import numpy as np
 import pandas as pd
-from pathlib import Path
 import matplotlib as mpl
+from pathlib import Path
 import matplotlib.pyplot as plt
 
 from sklearn.metrics import confusion_matrix
@@ -48,7 +48,7 @@ def eval_rf_training(rf, X, y):
     return score_acc
 
 
-def get_rf_prediction(Dataloader):
+def get_rf_prediction(Dataloader, n_classes):
     ''' Function to get the prediction of the saved random forest (rf).
         In the moment, the rf model has to be saved in the autoencoder
         directory located in saved_models. In addtion, the model has to
@@ -62,7 +62,7 @@ def get_rf_prediction(Dataloader):
 
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "autoencoder")
+                                   "autoencoder" + "_n_" + str(n_classes))
     encoder = dog_rf.get_encoder(model_save_path)
 
     rf_name = 'randomforest.sav'
@@ -129,7 +129,6 @@ def get_true_labels_and_img_paths(dataloader, len_y_predict):
 
     # Check if there was a uncompleted batch
     diff = (y_true.shape[0] - len_y_predict)
-    print(diff)
     if diff is not 0:
         y_true = y_true[:-diff]
         path_to_images = path_to_images[:-diff]
@@ -150,16 +149,25 @@ def get_label_encoder(encoder_model):
     return encoder
 
 
-def create_confusion_matrix(label_encoder, y_true, y_pred):
+def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
+    # I have to put this here, othwise I get a strange error:
+    # File "/home/beckstev/.local/anaconda3/lib/python3.7/site-packages/matplotlib/dviread.py", line 199, in __init__
+    # self.file = open(filename, 'rb')
+    # FileNotFoundError: [Errno 2] No such file or directory:
+    # '/home/user/.cache/matplotlib/tex.cache/4ee3b5cbb5a9a35df6cd457d83904876.dvi'
+    mpl.rcParams.update(mpl.rcParamsDefault)
+
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "autoencoder")
+                                   "autoencoder" + "_n_" + str(n_classes))
 
     cm = confusion_matrix(y_true, y_pred)
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
-    if len(classes) == 120:
+    classes = [cl.replace('_', ' ') for cl in classes]
+
+    if n_classes == 120:
         mpl.rcParams.update({'font.size': 3})
     else:
         mpl.rcParams.update({'font.size': 5})
@@ -173,7 +181,7 @@ def create_confusion_matrix(label_encoder, y_true, y_pred):
     plt.colorbar()
 
     # print text if not 120 classes are given
-    if max(y_true) != 120:
+    if n_classes != 120:
         # Loop over data dimensions and create text annotations.
         fmt = '.2f'
         thresh = cm.max() / 2.
@@ -186,13 +194,13 @@ def create_confusion_matrix(label_encoder, y_true, y_pred):
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     model_save_path = os.path.join(model_save_path, 'build/confusion_matrix.pdf')
-    plt.savefig(model_save_path, dip=600, bbox_inches='tight', pad_inches=0)
+    plt.savefig(model_save_path, dpi=500, pad_inches=0, bbox_inches='tight')
     plt.clf()
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
 
 
-def visualize_rf_preduction(encoder, img_resize):
+def visualize_rf_preduction(encoder, img_resize, n_classes):
     ''' Function to visualize the predictions of the random forest.
         :param encoder: File name of the label encoder
         :param img_resize: Tuple (width, height) which defines the size
@@ -201,10 +209,10 @@ def visualize_rf_preduction(encoder, img_resize):
     '''
 
     test_dataloader = get_test_datagenerator(encoder, img_resize)
-    y_pred = get_rf_prediction(test_dataloader)
+    y_pred = get_rf_prediction(test_dataloader, n_classes)
     y_true, img_paths = get_true_labels_and_img_paths(test_dataloader, y_pred.shape[0])
     label_encoder = get_label_encoder(encoder)
-    create_confusion_matrix(label_encoder, y_true, y_pred)
+    create_confusion_matrix(label_encoder, n_classes, y_true, y_pred)
     for index in range(len(y_pred)):
         race_true = label_encoder.inverse_transform((y_true[index],))[0]
         race_pred = label_encoder.inverse_transform((y_pred[index],))[0]

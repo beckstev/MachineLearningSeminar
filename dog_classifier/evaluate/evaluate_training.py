@@ -157,7 +157,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
     classes = encoder.inverse_transform(classes)
-
+    classes = [cl.replace('_', ' ') for cl in classes]
     # Check if normalize is True, then scale the colorbar accordingly
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]

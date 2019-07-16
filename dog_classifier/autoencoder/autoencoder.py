@@ -4,7 +4,7 @@ from pathlib import Path
 
 from keras.optimizers import Adam
 from keras.models import Sequential
-from keras.callbacks import ReduceLROnPlateau, History, ModelCheckpoint
+from keras.callbacks import ReduceLROnPlateau, History, ModelCheckpoint, EarlyStopping
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape, UpSampling2D
 
 from dog_classifier.evaluate import evaluate_training
@@ -69,7 +69,7 @@ def train_autoencoder(training_parameters):
     '''
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "autoencoder")
+                                   "autoencoder" + "_n_" + str(training_parameters['n_classes']))
 
     if not os.path.isdir(model_save_path):
         os.makedirs(model_save_path)
@@ -83,9 +83,9 @@ def train_autoencoder(training_parameters):
     model = AutoDogEncoder(img_resize, n_classes)
 
     # Set the leranrning rate of adam optimizer
-    Adam(training_parameters['learning_rate'])
+    adam = Adam(training_parameters['learning_rate'])
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam',
+    model.compile(loss='categorical_crossentropy', optimizer=adam,
                   metrics=['accuracy'])
 
     reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2,
@@ -94,6 +94,13 @@ def train_autoencoder(training_parameters):
     # This useful because we can plot/save the history of a model after a
     # KeyboardInterrupt
     hist = History()
+
+    early_stopping_patience = training_parameters['early_stopping_patience']
+    early_stopping_delta = training_parameters['early_stopping_delta']
+    earlystopper = EarlyStopping(monitor='val_loss',
+                                 patience=early_stopping_patience,
+                                 min_delta=early_stopping_delta,
+                                 verbose=1)
 
     modelCheckpoint = ModelCheckpoint(filepath=model_save_path + '/autoencoder_parameter_checkpoint.h5',
                                       verbose=1,
@@ -105,7 +112,7 @@ def train_autoencoder(training_parameters):
         history = model.fit_generator(trainDataloader,
                                       validation_data=valDataloader,
                                       epochs=num_of_epochs,
-                                      callbacks=[reduce_lr, hist, modelCheckpoint])
+                                      callbacks=[reduce_lr, hist, modelCheckpoint, earlystopper])
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt, do you wanna save the model: yes-(y), no-(n)')

@@ -4,12 +4,12 @@ import pickle
 import numpy as np
 from pathlib import Path
 from keras.models import Model
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 
 from dog_classifier.net.train import get_train_and_val_dataloader
 from dog_classifier.evaluate.evaluate_training import model_loader
 from dog_classifier.evaluate import evaluate_randomforest as eval_rf
-
 
 def get_encoder(path_to_autoencoder):
     ''' Function to load a saved autoencoder and convert it into an encoder.
@@ -58,7 +58,7 @@ def get_labels(Dataloader, len_y_predict):
     return y
 
 
-def train_random_forest(training_parameters):
+def train_random_forest(training_parameters, grid_search):
     ''' Function to train and save a random forest. The random forest
         will be saved as binary file with pickle.
         :param training_parameters: Dict object which contains all the required training
@@ -66,8 +66,7 @@ def train_random_forest(training_parameters):
     '''
     model_save_path = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                    "saved_models",
-                                   "autoencoder")
-
+                                   "autoencoder" + "_n_" + str(training_parameters['n_classes']))
     encoder = get_encoder(model_save_path)
     trainDataloader, valDataloader = get_train_and_val_dataloader(training_parameters, is_autoencoder=True)
 
@@ -86,9 +85,43 @@ def train_random_forest(training_parameters):
 
     # With n_jobs=-1 the random forest always uses the maximal available number
     # of cores
-    rf = RandomForestClassifier(n_estimators=400, min_samples_leaf=10, n_jobs=-1)
-    rf.fit(X_train, y)
+    save_best_params_path = os.path.join(model_save_path, 'best_params_rf.json')
+    if grid_search:
+        param_grid = {'bootstrap': [True],
+                      'max_features': ['auto', 'log2'],
+                      'max_depth': [None, 10, 100],
+                      'min_samples_leaf': [1, 10, 31],
+                      'min_samples_split': [2, 8, 10],
+                      'criterion': ['gini', 'entropy'],
+                      'n_estimators': [100, 400, 1000, 1500]}
 
+        rf = RandomForestClassifier()
+        grid_search = GridSearchCV(estimator=rf,
+                                   param_grid=param_grid,
+                                   cv=3,
+                                   n_jobs=-1,
+                                   verbose=2)
+        print('Starting GridSearchCV')
+        grid_search.fit(X_train, y)
+
+        best_params = grid_search.best_params_
+        print(f'Best parameters for Random forest: {best_params}')
+        with open(save_best_params_path, 'w') as json_file:
+            json.dump(best_params, json_file)
+
+        save_tested_params_path = os.path.join(model_save_path, 'tested_params_rf.json')
+        with open(save_tested_params_path, 'w') as json_file:
+            json.dump(param_grid, json_file)
+
+    if os.path.isfile(save_best_params_path):
+        print('Found best parameter file')
+        with open(save_best_params_path) as f:
+            best_params = json.load(f)
+        rf = RandomForestClassifier(**best_params)
+    else:
+        rf = RandomForestClassifier(n_estimators=400, min_samples_leaf=10, n_jobs=-1)
+
+    rf.fit(X_train, y)
     pickle_file = 'randomforest.sav'
     rf_save_path = os.path.join(model_save_path, pickle_file)
 

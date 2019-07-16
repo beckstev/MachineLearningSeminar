@@ -5,6 +5,18 @@ import xmltodict
 from sklearn.model_selection import train_test_split
 from pathlib import Path
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.use('pgf')
+mpl.rcParams.update(
+    {'font.size': 10,
+        'font.family': 'sans-serif',
+        'text.usetex': True,
+        'pgf.rcfonts': False,
+        'pgf.texsystem': 'lualatex',
+        'text.latex.unicode': True,
+        'pgf.preamble': r'\DeclareMathSymbol{.}{\mathord}{letters}{"3B}',
+     })
 
 def generate_dataset(path_to_labels, train_size, val_size, test_size, inital_run=False,):
     ''' This function splits the stanford dataset into a training, validation
@@ -214,6 +226,48 @@ def rename_label_files(path_to_labels):
 
 
 
+def get_height_width_dist(path_to_labels):
+    df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
+    df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
+    df_test = pd.read_csv(path_to_labels + 'test_labels.csv')
+
+    df_all = pd.concat([df_train, df_val, df_test])
+
+    height = df_all['height'].values
+    width = df_all['width'].values
+
+    fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(5.8, 3.58))
+
+    im = ax1.hist2d(height, width, bins=20, range=[[0, 600], [0, 800]])
+    max_bin_content = np.amax(im[0])
+    max_bin = np.where(max_bin_content == im[0])
+    
+    # max_bin includes a tuple of arrays (arrayA, arrayB)
+    bin_x = max_bin[0][0]
+    bin_y = max_bin[1][0]
+
+    most_height = im[1][bin_x]
+    most_width = im[2][bin_y]
+    ax1.text(most_width-32, most_height+60,
+            f'{int(most_width)} x {int(most_height)}', color='C8')
+    ax1.set_xlabel('Height')
+    ax1.set_ylabel('Width')
+    fig.colorbar(im[3], ax=ax1, label='Number of images')
+
+    ax0.scatter(height, width, s=0.5)
+    ax0.set_xlabel('Height')
+    ax0.set_ylabel('Width')
+
+    fig.suptitle(f'Number of images: {int(df_all.shape[0])}, Min Width: {min(width)}, Min height: {min(height)}')
+    plt.savefig('./width_heigt_scatter_hist2d.pdf',
+                bbox_inches='tight', pad_inches=0)
+
+
+
+
 
 if __name__ == '__main__':
-    generate_dataset('../../dataset/Annotation', 0.7, 0.2, 0.1)
+    path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "labels/")
+    #generate_dataset('../../dataset/Annotation', 0.7, 0.2, 0.1)
+    get_height_width_dist(path_to_labels)
