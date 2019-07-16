@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import numpy as np
 from datetime import datetime
 from pathlib import Path
 from keras.optimizers import Adam
@@ -16,18 +15,27 @@ from dog_classifier.evaluate import evaluate_training
 
 
 def get_model(model_name, n_classes, l2_reg, use_rgb):
+    loss_epoch_tracker = False
     if model_name == 'DogNN':
-        return DogNN(n_classes, l2_reg, use_rgb)
+        return DogNN(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'DogNNv2':
-        return DogNNv2(n_classes, l2_reg, use_rgb)
+        return DogNNv2(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'PreBigDogNN':
-        return PreBigDogNN(n_classes)
+        loss_epoch_tracker = True
+        return PreBigDogNN(n_classes), loss_epoch_tracker
+
     elif model_name == 'MiniDogNN':
-        return MiniDogNN(n_classes, l2_reg, use_rgb)
+        return MiniDogNN(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'DogNNv3':
-        return DogNNv3(n_classes, l2_reg, use_rgb)
+        return DogNNv3(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'PreDogNN':
-        return PreDogNN()
+        loss_epoch_tracker = True
+        return PreDogNN(), loss_epoch_tracker
+
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
@@ -134,7 +142,7 @@ def trainNN(training_parameters, grid_search=False):
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    model = get_model(training_parameters['architecture'], n_classes, l2_reg, training_parameters['use_rgb'])
+    model, loss_epoch_tracker = get_model(training_parameters['architecture'], n_classes, l2_reg, training_parameters['use_rgb'])
     # Set the leranrning rate of adam optimizer
     adam = Adam(lr=training_parameters['learning_rate'])
 
@@ -159,13 +167,21 @@ def trainNN(training_parameters, grid_search=False):
                                       period=2,
                                       save_weights_only=False)
 
+    callback_functions = [earlystopper, reduce_lr, hist,
+                          modelCheckpoint]
+
+    if loss_epoch_tracker:
+        train_loss_history_epoch = evaluate_training.HistoryEpoch(trainDataloader)
+        val_loss_history_epoch = evaluate_training.HistoryEpoch(valDataloader)
+        callback_functions += [train_loss_history_epoch, val_loss_history_epoch]
+
+
     # We use try to stop the training whenever we want
     try:
         history = model.fit_generator(trainDataloader,
                                       validation_data=valDataloader,
                                       epochs=num_of_epochs,
-                                      callbacks=[earlystopper, reduce_lr, hist,
-                                                 modelCheckpoint])
+                                      callbacks=callback_functions)
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt, do you wanna save the model: yes-(y), no-(n)')
@@ -187,3 +203,8 @@ def trainNN(training_parameters, grid_search=False):
     # if grid_search, additionally save the final (val-)loss and (val-)accuracy
     if grid_search:
         save_final_loss_and_acc(history, model_save_path)
+
+    if loss_epoch_tracker:
+        evaluate_training.plot_history_epoch(train_loss_history_epoch,
+                                             val_loss_history_epoch,
+                                             path=model_save_path)
