@@ -240,12 +240,14 @@ def get_height_width_dist(path_to_labels):
 
     im = ax1.hist2d(height, width, bins=20, range=[[0, 600], [0, 800]])
     max_bin_content = np.amax(im[0])
-    max_bin = np.where(max_bin_content==im[0])
+    max_bin = np.where(max_bin_content == im[0])
+    
+    # max_bin includes a tuple of arrays (arrayA, arrayB)
     bin_x = max_bin[0][0]
-    bin_y =  max_bin[1][0]
+    bin_y = max_bin[1][0]
 
-    most_width = im[1][bin_x]
-    most_height = im[2][bin_y]
+    most_height = im[1][bin_x]
+    most_width = im[2][bin_y]
     ax1.text(most_width-32, most_height+60,
             f'{int(most_width)} x {int(most_height)}', color='C8')
     ax1.set_xlabel('Height')
