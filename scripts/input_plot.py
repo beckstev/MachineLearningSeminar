@@ -24,7 +24,8 @@ def generate_batch(batch_size):
     encoder_model = 'encoder_2019-06-20_14:43:56.npy'
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     trainDataloader = DataGenerator(df_train, encoder_model,
-                                    batch_size=batch_size)
+                                    batch_size=batch_size,
+                                    use_rgb=False)
     for i in range(batch_size):
         X, y = trainDataloader.__getitem__(i)
 

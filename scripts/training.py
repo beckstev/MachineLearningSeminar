@@ -42,11 +42,6 @@ if __name__ == '__main__':
     if args.early_stopping_delta:
         early_stopping_delta = args.early_stopping_delta
 
-    if args.use_rgb:
-        norm_mean, norm_std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
-    else:
-        norm_mean, norm_std = [0.5], [0.2]
-
     n_classes = 120
     if args.n_classes:
         n_classes = args.n_classes
@@ -63,9 +58,6 @@ if __name__ == '__main__':
                            'encoder_model': args.encoder_model,
                            'early_stopping_patience': early_stopping_patience,
                            'early_stopping_delta': early_stopping_delta,
-                           'normalization': {
-                                            'mean': norm_mean,
-                                            'std': norm_std},
                            'img_resize': img_resize
                            }
 

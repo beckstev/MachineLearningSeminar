@@ -21,9 +21,14 @@ class PRELU(PReLU):
         super(PRELU, self).__init__(**kwargs)
 
 
-def DogNN(n_classes, l2_reg):
+def DogNN(n_classes, l2_reg, use_rgb):
     # K.set_image_dim_ordering('th')
-    shape_input = (None, None, 3)
+    print('use_rgb DogNNv3:', use_rgb)
+    if use_rgb == 1.0:
+        shape_input = (None, None, 3)
+    else:
+        shape_input = (None, None, 1)
+    print('shape input: ', shape_input)
 
     model = Sequential()
     # number of params = ( kernel_size * channels + 1) * filters, +1 is bias
@@ -41,9 +46,14 @@ def DogNN(n_classes, l2_reg):
     return model
 
 
-def DogNNv2(n_classes,l2_reg):
+def DogNNv2(n_classes, l2_reg, use_rgb):
     # K.set_image_dim_ordering('th')
-    shape_input = (None, None, 3)
+    print('use_rgb DogNNv3:', use_rgb)
+    if use_rgb == 1.0:
+        shape_input = (None, None, 3)
+    else:
+        shape_input = (None, None, 1)
+    print('shape input: ', shape_input)
     model = Sequential()
     model.add(Conv2D(filters=4, kernel_size=(3, 3),
                      dilation_rate=(2, 2),
@@ -84,9 +94,14 @@ def DogNNv2(n_classes,l2_reg):
     return model
 
 
-def DogNNv3(n_classes, l2_reg):
+def DogNNv3(n_classes, l2_reg, use_rgb):
     # K.set_image_dim_ordering('th')
-    shape_input = (None, None, 3)
+    print('use_rgb DogNNv3:', use_rgb)
+    if use_rgb == 1.0:
+        shape_input = (None, None, 3)
+    else:
+        shape_input = (None, None, 1)
+    print('shape input: ', shape_input)
     model = Sequential()
     model.add(Conv2D(filters=4, kernel_size=(3, 3),
                      dilation_rate=(2, 2),
@@ -117,9 +132,13 @@ def DogNNv3(n_classes, l2_reg):
     return model
 
 
-
-def MiniDogNN(n_classes, l2_reg):
-    shape_input = (None, None, 3)
+def MiniDogNN(n_classes, l2_reg, use_rgb):
+    print('use_rgb DogNNv3:', use_rgb)
+    if use_rgb == 1.0:
+        shape_input = (None, None, 3)
+    else:
+        shape_input = (None, None, 1)
+    print('shape input: ', shape_input)
     model = Sequential()
     model.add(Conv2D(filters=8, kernel_size=(3, 3),
                      kernel_initializer=he_normal(),
@@ -164,6 +183,7 @@ def MiniDogNN(n_classes, l2_reg):
 
     return model
 
+
 def PreDogNN():
     l2_value = 0.01
     drop_rate = 0.2
@@ -194,6 +214,7 @@ def PreDogNN():
     model.add(Dense(5, activation='softmax'))
 
     return model
+
 
 def PreBigDogNN(n_classes):
     l2_value = 0.01
