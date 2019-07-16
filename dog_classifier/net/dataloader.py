@@ -135,14 +135,9 @@ class DataGenerator(Sequence):
             # plt.savefig('../saved_models/bilder/original_{}.png'.format(i), dpi=500, pad_inches=0, bbox_inches='tight')
             # plt.clf()
             rescaled_image = cv.resize(image, rescale_size)
-
-            # reshape if grayscale
-            if self.use_rgb == 0.0:
-                print(rescaled_image.shape)
-                rescaled_image = rescaled_image.reshape(rescale_size[1],
-                                                        rescale_size[0],
-                                                        n_channels)
-                print(rescaled_image.shape)
+            rescaled_image = rescaled_image.reshape(rescale_size[1],
+                                                    rescale_size[0],
+                                                    n_channels)
 
             if self.is_test is False:
                 # get bboxes
