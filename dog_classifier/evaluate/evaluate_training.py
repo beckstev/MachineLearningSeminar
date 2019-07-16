@@ -36,16 +36,15 @@ class HistoryEpoch(Callback):
 
     :param Callback: object of type Callback
     """
-    def __init__(self, data):
-        self.data = data
+    def __init__(self,  datagenerator):
+        self.datagenerator = datagenerator
 
     def on_train_begin(self, logs={}):
         self.loss = []
         self.acc = []
 
     def on_epoch_end(self, epoch, logs={}):
-        x, y = self.data
-        l, a = self.model.evaluate(x, y, verbose=0)
+        l, a = self.model.evaluate_generator(self.datagenerator, verbose=0)
         self.loss.append(l)
         self.acc.append(a)
 
@@ -60,22 +59,32 @@ def plot_history(network_history, path):
     path = path + '/build/'
     if not os.path.exists(path):
         os.makedirs(path)
-    plt.figure(figsize=(5.8, 3.58))
-    plt.xlabel(r'Epochs')
-    plt.ylabel(r'Loss')
-    plt.plot(network_history.history['loss'])
-    plt.plot(network_history.history['val_loss'])
-    plt.legend([r'Training', r'Validation'])
-    plt.savefig("{}/history_loss.pdf".format(path))
-    plt.clf()
 
-    plt.figure(figsize=(5.8, 3.58))
-    plt.xlabel(r'Epochs')
-    plt.ylabel(r'Accuracy')
-    plt.plot(network_history.history['acc'])
-    plt.plot(network_history.history['val_acc'])
-    plt.legend([r'Training', r'Validation'], loc='lower right')
-    plt.savefig("{}/history_acc.pdf".format(path))
+    num_epochs = len(network_history.history['loss'])
+    epoche = np.arange(1, num_epochs + 1)
+
+    fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(5.8, 3.58), sharex=True)
+
+    ax0.set_ylabel('Loss')
+    ax0.plot(epoche, network_history.history['loss'], label='Training')
+    ax0.plot(epoche, network_history.history['val_loss'], label='Validation')
+
+    ymin, ymax = ax0.get_ylim()
+    y_ticks = np.round(np.linspace(ymin, ymax, 4), 2)
+    ax0.set_yticks(y_ticks)
+    ax0.legend()
+
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('Accuracy')
+    ax1.plot(epoche, network_history.history['acc'])
+    ax1.plot(epoche, network_history.history['val_acc'])
+
+    ymin, ymax = ax1.get_ylim()
+    y_ticks = np.round(np.linspace(ymin, ymax, 4), 2)
+    ax1.set_yticks(y_ticks)
+    plt.tight_layout()
+    plt.savefig("{}/history.pdf".format(path), dpi=500,
+                pad_inches=0, bbox_inches='tight')
     plt.clf()
 
 
@@ -169,7 +178,6 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     else:
         plt.title(title)
 
-
     plt.colorbar()
     tick_marks = np.arange(len(classes))
     plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
@@ -261,7 +269,7 @@ def display_errors(n, Y_cls, Y_true, Y_pred, X_test, height, width, nrows,
     plt.clf()
 
 
-def plot_history_epoch(train_hist, val_hist, test_hist, path):
+def plot_history_epoch(train_hist, val_hist, path):
     """plot train, test and val loss and accuracy for objects of class
     History Epoch
 
@@ -269,30 +277,39 @@ def plot_history_epoch(train_hist, val_hist, test_hist, path):
                         and output data
     :param val_hist: Object of class History Epoch given of validation input
                         and output data
-    :param tets_hist: Object of class History Epoch given of test input
-                        and output data
+
     :param path: name of resulting plot
     """
     print("plot history epoch")
     path = path + '/build/'
     if not os.path.exists(path):
         os.makedirs(path)
-    plt.figure(figsize=(5.8, 3.58))
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.plot(train_hist.loss)
-    plt.plot(val_hist.loss)
-    plt.plot(test_hist.loss)
-    plt.legend(['Training', 'Validation', 'Testing'])
 
-    plt.figure(figsize=(5.8, 3.58))
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.plot(train_hist.acc)
-    plt.plot(val_hist.acc)
-    plt.plot(test_hist.acc)
-    plt.legend(['Training', 'Validation', 'Testing'], loc='lower right')
-    plt.savefig("{}/history_epoch.pdf".format(path))
+    # First x-axis entry should start at 1
+    num_epochs = len((train_hist.loss))
+    epoche = np.arange(1, num_epochs + 1)
+
+    fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(5.8, 3.58), sharex=True)
+    ax0.set_ylabel('Loss')
+    ax0.plot(epoche, train_hist.loss, label='Training')
+    ax0.plot(epoche, val_hist.loss, label='Validation')
+
+    ymin, ymax = ax0.get_ylim()
+    y_ticks = np.round(np.linspace(ymin, ymax, 4), 2)
+    ax0.set_yticks(y_ticks)
+    ax0.legend()
+
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('Accuracy')
+    ax1.plot(epoche, train_hist.acc)
+    ax1.plot(epoche, val_hist.acc)
+
+    ymin, ymax = ax1.get_ylim()
+    y_ticks = np.round(np.linspace(ymin, ymax, 4), 2)
+    ax1.set_yticks(y_ticks)
+    plt.tight_layout()
+    plt.savefig("{}/history_epoch.pdf".format(path), dpi=500,
+                pad_inches=0, bbox_inches='tight')
     plt.clf()
 
 
@@ -487,6 +504,7 @@ def model_loader(path_to_model, main_model, checkpoint_model):
             raise OSError(f'There is no file "{main_model}" or "{checkpoint_model}"!')
 
     return model
+
 
 if __name__ == '__main__':
     enocder = "encoder_2019-06-16_12:45:37.npy"
