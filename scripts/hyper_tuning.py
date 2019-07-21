@@ -13,7 +13,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--early_stopping_delta', type=float)
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('-ir', '--imgage_resize', type=tuple, help='Tuple (width, height) with determines the shape of the resized images')
-    
+
     args = parser.parse_args()
 
     n_epochs = int(5e2)
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     if args.learning_rate:
         learning_rate = args.learning_rate
 
-    bs_size = [2, 5, 10, 15, 17, 25]
+    bs_size = [2, 5, 10, 15, 25]
     if args.batch_size:
         bs_size = args.batch_size
 
