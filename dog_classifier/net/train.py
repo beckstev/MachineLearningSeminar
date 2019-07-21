@@ -50,7 +50,6 @@ def save_training_parameters(training_parameters, model_save_path):
     with open(model_save_path + '/training_parameters.json', 'w') as json_file:
         json.dump(training_parameters, json_file)
 
-
 def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
@@ -60,7 +59,6 @@ def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     n_classes = training_parameters['n_classes']
     img_resize = training_parameters['img_resize']
     use_rgb = training_parameters['use_rgb']
-
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
     with K.tf.device('/cpu:0'):
@@ -100,6 +98,19 @@ def save_final_loss_and_acc(history, model_save_path):
     with open(model_save_path + '/loss_acc.json', 'w') as json_file:
         json.dump(loss_dict, json_file)
 
+def save_epoch_history(trainHistoryEpoch, valHistoryEpoch, model_save_path):
+    loss_df = pd.DataFrame()
+
+    loss_df['val_loss'] = valHistoryEpoch.loss
+    loss_df['val_acc'] = valHistoryEpoch.acc
+    loss_df['loss'] = trainHistoryEpoch.acc
+    loss_df['acc'] = trainHistoryEpoch.acc
+    loss_df['lr'] = trainHistoryEpoch.lr
+
+    loss_df.to_csv(path_or_buf=model_save_path + '/model_history_epoch.csv',
+                   index=False)
+
+
 
 def trainNN(training_parameters, grid_search=False):
     ''' Traning a specific net architecture. Afterwards the paramters of the net
@@ -135,8 +146,6 @@ def trainNN(training_parameters, grid_search=False):
         os.makedirs(model_save_path)
 
     n_classes = training_parameters['n_classes']
-    encoder_model = training_parameters['encoder_model']
-    bs_size = training_parameters['batch_size']
     l2_reg = training_parameters['l2_regularisation']
     num_of_epochs = training_parameters['n_epochs']
     early_stopping_patience = training_parameters['early_stopping_patience']
@@ -205,6 +214,9 @@ def trainNN(training_parameters, grid_search=False):
         save_final_loss_and_acc(history, model_save_path)
 
     if loss_epoch_tracker:
+        save_epoch_history(train_loss_history_epoch,
+                           val_loss_history_epoch,
+                           model_save_path)
         evaluate_training.plot_history_epoch(train_loss_history_epoch,
                                              val_loss_history_epoch,
                                              path=model_save_path)

@@ -10,6 +10,7 @@ from sklearn.metrics import classification_report
 from keras.models import load_model
 from dog_classifier.net.dataloader import DataGenerator
 from keras.utils import to_categorical
+import keras.backend as K
 from pathlib import Path
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
@@ -42,11 +43,14 @@ class HistoryEpoch(Callback):
     def on_train_begin(self, logs={}):
         self.loss = []
         self.acc = []
+        self.lr = []
 
     def on_epoch_end(self, epoch, logs={}):
         l, a = self.model.evaluate_generator(self.datagenerator, verbose=0)
+        lr = K.eval(self.model.optimizer.lr)
         self.loss.append(l)
         self.acc.append(a)
+        self.lr = [lr]
 
 
 def plot_history(network_history, path):
