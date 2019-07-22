@@ -16,7 +16,7 @@ from sklearn.preprocessing import LabelEncoder
 import sys
 from keras.utils.generic_utils import CustomObjectScope
 
-mpl.use('pgf')
+# mpl.use('pgf')
 mpl.rcParams.update(
     {'font.size': 10,
         'font.family': 'sans-serif',
@@ -434,18 +434,13 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
     encoder.classes_ = np.load(encoder_path)
     for index in range(len(Y_pred)):
         # Indices of the array represent the dog race
-        race_index_true = np.where(Y_true[index] == 1)
-
-        if np.shape(race_index_true) == (1, 0):
-            print('\n', race_index_true)
-            print('race_index_true is empty', '\n')
-            sys.exit(1)
-        else:
-            race_true = encoder.inverse_transform(race_index_true)
+        race_index_true = Y_true[index]
+        race_true = encoder.inverse_transform(np.array([race_index_true]))
+        race_true = [cl.replace('_', ' ') for cl in race_true]
 
         # Indicies of the three races with highest prohability
-        # Notice: the last element of races_high_pred  has the highest prob
-        races_high_pred = np.argsort(Y_pred[index])[-3:]
+        # Notice: the last element of races_high_pred has the highest prob
+        races_high_pred = np.argsort(Y_pred[index])[-3:][::-1]
         races_pred = encoder.inverse_transform(races_high_pred)
 
         path_to_image = path_to_images[index]
@@ -459,7 +454,7 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
         for i in range(len(races_pred)):
             race_index_pred = races_high_pred[i]
             prob = Y_pred[index][race_index_pred] * 100
-            text = f"{races_pred[i]}: \n {prob:.2} %"
+            text = f"{races_pred[i].replace('_', ' ')}: \n {prob:.2f} \%"
             plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
 
         plt.title(f'True race: {race_true[0]} ')
