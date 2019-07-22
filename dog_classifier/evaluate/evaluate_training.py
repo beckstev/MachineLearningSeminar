@@ -344,7 +344,7 @@ def plot_predictions(n, model, X_test, height, width, path):
     plt.savefig("{}/plot_predictions.pdf".format(path))
 
 
-def predict(path_to_model, encoder_model, fname, img_resize):
+def predict(path_to_model, encoder_model, fname, img_resize, use_rgb):
     """function will predict with predict_generator from a given, saved model
     and save the result as txt
     :param path_to_model: Path to model
@@ -369,7 +369,8 @@ def predict(path_to_model, encoder_model, fname, img_resize):
                                    encoder_model=encoder_model,
                                    shuffle=True,
                                    is_test=True,
-                                   const_img_resize=img_resize)
+                                   const_img_resize=img_resize,
+                                   use_rgb=use_rgb)
 
     # Test predicten
     Y_pred = model.predict_generator(testDataloader, verbose=1)
@@ -434,7 +435,13 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
     for index in range(len(Y_pred)):
         # Indices of the array represent the dog race
         race_index_true = np.where(Y_true[index] == 1)
-        race_true = encoder.inverse_transform(race_index_true)
+
+        if np.shape(race_index_true) == (1, 0):
+            print('\n', race_index_true)
+            print('race_index_true is empty', '\n')
+            sys.exit(1)
+        else:
+            race_true = encoder.inverse_transform(race_index_true)
 
         # Indicies of the three races with highest prohability
         # Notice: the last element of races_high_pred  has the highest prob

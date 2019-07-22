@@ -11,6 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('--fname_pred', type=str, help='file name of prediction file')
     parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images')
     parser.add_argument('--n', type=int, help='Number of classes. Default is 120')
+    parser.add_argument('--use_rgb', action='store_true')
 
     args = parser.parse_args()
     fname_pred = args.fname_pred if args.fname_pred else 'prediction.txt'
@@ -20,14 +21,14 @@ if __name__ == '__main__':
 
     if not os.path.isfile(args.model_path + '/prediction.txt'):
         eval.predict(args.model_path, args.encoder_model,
-                     fname_pred, img_resize)
+                     fname_pred, img_resize, args.use_rgb)
 
     Y_pred, Y_test, Y_cls, Y_true, path_to_images = eval.preprocess(args.model_path,
                                                     args.encoder_model,
                                                     fname_pred)
 
     # visualize_predictions
-    # eval.visualize_predictions(Y_pred, Y_test, path_to_images, args.encoder_model)
+    eval.visualize_predictions(Y_pred, Y_test, path_to_images, args.encoder_model)
     # Multiclass-Analyse
     # eval.prob_multiclass(Y_pred, Y_test, Y_true, label=1, path=args.model_path)
 
