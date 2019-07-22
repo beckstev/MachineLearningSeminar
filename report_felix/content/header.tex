@@ -1,0 +1,65 @@
+\documentclass[titlepage=firstiscover, bibliography=totoc, captions=tableheading, parskip=half]{scrbook}
+\titlehead{
+  \centering
+  \includegraphics[scale=2.3]{pics/logo.png}
+}
+\author{Felix Geyer \\
+  \texorpdfstring{\href{mailto:felix.geyer@tu-dortmund.de}{felix.geyer@tu-dortmund.de}}{}
+  }
+\title{Projektbericht zum Seminar: Maschinelles Lernen}
+\publishers{TU Dortmund - Fakultät Physik}
+\date{Abgabe: 15. Februar 2019}
+\usepackage[aux]{rerunfilecheck}
+\usepackage{polyglossia}
+\setmainlanguage{german}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{fontspec}
+\usepackage[version=4]{mhchem}
+\usepackage{scrhack}
+\usepackage{float}
+\floatplacement{table}{htbp}
+\floatplacement{figure}{htbp}
+
+\usepackage[locale=DE, separate-uncertainty=true, per-mode=reciprocal, decimalsymbol=comma]{siunitx}
+%\usepackage{siunitx}
+\DeclareSIUnit\px{px}
+
+\usepackage[sorting=none]{biblatex}
+\addbibresource{content/lit.bib}
+
+\usepackage[section, below]{placeins}
+\usepackage[labelfont=bf,
+font=small,
+width=0.9\textwidth,
+format=plain,
+indention=1em]{caption}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{subcaption}
+
+\usepackage[math-style=ISO, bold-style=ISO, sans-style=italic, nabla=upright, partial=upright]{unicode-math}
+\setmathfont{Latin Modern Math}
+
+\usepackage[autostyle]{csquotes}
+
+\usepackage[unicode]{hyperref}
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+
+\usepackage{bookmark}
+
+\usepackage{booktabs}
+
+\usepackage{rotating}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+\newcommand\JPsi{$J/\Psi$}
+\newcommand\zerfall{$\beta$-Zerfall }
+\newcommand\zerfalls{$\beta$-Zerfalls}
+\newcommand\SppS{$\symup{Sp\bar{p}S}$}
+\newcommand\barparen[1]{\overset{(-)}{#1}}
