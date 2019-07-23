@@ -16,7 +16,7 @@ from sklearn.preprocessing import LabelEncoder
 import sys
 from keras.utils.generic_utils import CustomObjectScope
 
-# mpl.use('pgf')
+mpl.use('pgf')
 mpl.rcParams.update(
     {'font.size': 10,
         'font.family': 'sans-serif',
@@ -425,14 +425,22 @@ def preprocess(path_to_model, encoder_model, fname):
     return Y_pred, Y_test, Y_cls, Y_true, path_to_images
 
 
-def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
+def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
+    print('\nvisualize predictions \n')
+    plt.figure(figsize=(5.8, 3.58))
+
+    path = path + '/build/'
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
 
     encoder_path = os.path.join(path_to_labels, encoder_model)
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
-    for index in range(len(Y_pred)):
+
+    for index in range(12, 18):
         # Indices of the array represent the dog race
         race_index_true = Y_true[index]
         race_true = encoder.inverse_transform(np.array([race_index_true]))
@@ -440,27 +448,32 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
 
         # Indicies of the three races with highest prohability
         # Notice: the last element of races_high_pred has the highest prob
-        races_high_pred = np.argsort(Y_pred[index])[-3:][::-1]
+        races_high_pred = np.argsort(Y_pred[index])[-1:][::-1]
         races_pred = encoder.inverse_transform(races_high_pred)
+
+        plt.subplot(2, 3, index-11)
 
         path_to_image = path_to_images[index]
         img = plt.imread(path_to_image)
         plt.imshow(img)
         img_width = img.shape[1]
         img_height = img.shape[0]
-        scale = 6
-        height_steps = img_height / 6
+        # scale = 6
+        # height_steps = img_height / 6
 
         for i in range(len(races_pred)):
             race_index_pred = races_high_pred[i]
             prob = Y_pred[index][race_index_pred] * 100
-            text = f"{races_pred[i].replace('_', ' ')}: \n {prob:.2f} \%"
-            plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
+            text = f"{races_pred[i].replace('_', ' ')}: {prob:.2f} \%"
+            # plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
+            plt.text(img_width * 0.1, img_height + 50, text, fontsize=7)
 
-        plt.title(f'True race: {race_true[0]} ')
+        plt.title(f'True race: {race_true[0]} ', fontsize=7)
         plt.axis('off')
         # plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
-        plt.show()
+        # plt.show()
+    plt.savefig("{}/visualize_predictions.pdf".format(path), dpi=500,
+                pad_inches=0, bbox_inches='tight')
 
 
 def model_loader(path_to_model, main_model, checkpoint_model):
@@ -480,7 +493,8 @@ def model_loader(path_to_model, main_model, checkpoint_model):
             reply = str(input())
             if reply == 'y':
                 print('Using checkpoint model')
-                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
+                checkpoint_model_params = os.path.join(path_to_model,
+                                                       checkpoint_model)
                 model = load_model(checkpoint_model_params)
             else:
                 print('Exiting program')
