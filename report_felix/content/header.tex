@@ -58,6 +58,14 @@ indention=1em]{caption}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
 
+\AtBeginDocument{%
+  \newcaptionname{ngerman}{\figureautorefname}{Abbildung}
+  \newcaptionname{ngerman}{\tableautorefname}{Tabelle}
+  \newcaptionname{ngerman}{\sectionautorefname}{Kapitel}
+  \newcaptionname{ngerman}{\subsectionautorefname}{Kapitel}
+  \newcaptionname{ngerman}{\chapterautorefname}{Kapitel}%
+}
+
 \newcommand\CNN{\texttt{CNN} }
 \newcommand\RF{\texttt{RF} }
 \newcommand\zerfalls{$\beta$-Zerfalls}
