@@ -1,2 +1,14 @@
 \chapter{Datensatz}
-\blindtext[5]
+\label{chap:datensatz}
+Der Datensatz heißt \enquote{Stanford Dogs Dataset}\cite{datensatz} und besteht aus
+20580 Bildern von Hunden, die insgesamt 120 verschiedenen Rassen angehören. Dabei
+entfallen auf jede Klasse ungefähr 150 Bilder, minimal 148 (Redbone) und maximal
+239 (Afghan Hound). Der Datensatz enthält neben den Klassenlabeln auch Bounding
+boxes, mit deren Hilfe der Hund auf den Bildern identifiziert wird. Die Bilder sind
+keine \enquote{biometrischen} Fotos von Hunden, da die Hunde teilweise nicht von vorne
+abgelichtet sind, oder sich Menschen und/oder andere Tiere auf den Bildern befinden,
+was die Klassifikation erschwert.
+
+Aus dem großen Datensatz wurde ein kleinerer Datensatz mit nur fünf Klassen erstellt, namentlich
+Chihuahua, Beagle, Schipperke, Standard Poodle und African hunting dog, da im allgemeinen
+die Klassifikation besser funktioniert, wenn weniger Klassen zur Auswahl stehen.
