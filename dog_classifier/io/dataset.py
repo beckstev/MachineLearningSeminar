@@ -353,3 +353,4 @@ if __name__ == '__main__':
     #get_height_width_dist(path_to_labels, save_path_results)
     #dog_image_cluster(path_to_labels, save_path_results, 7, 5)
     num_img_distribution(path_to_labels, save_path_results)
+    # test
