@@ -50,7 +50,7 @@ class HistoryEpoch(Callback):
         lr = K.eval(self.model.optimizer.lr)
         self.loss.append(l)
         self.acc.append(a)
-        self.lr = [lr]
+        self.lr.append(lr)
 
 
 def plot_history(network_history, path):
