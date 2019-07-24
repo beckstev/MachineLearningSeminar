@@ -255,9 +255,11 @@ if __name__ == '__main__':
     parser.add_argument('--save_model', action='store_true')
 
     l2 = 0.01
+    use_rgb = True
     args = parser.parse_args()
-    model = train.get_model(args.architecture, args.n_classes, l2)
+    model = train.get_model(args.architecture, args.n_classes, l2, use_rgb)
     print(args.architecture)
+    model = model[0]
     filestr = '../../saved_models/{}/'.format(args.architecture)
     if not os.path.exists(filestr):
         os.makedirs(filestr)
