@@ -6,6 +6,8 @@ from sklearn.model_selection import train_test_split
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from tqdm import tqdm
+from collections import Counter
 
 mpl.use('pgf')
 mpl.rcParams.update(
@@ -225,13 +227,18 @@ def rename_label_files(path_to_labels):
             #    os.rename(path_to_image_label, new_path_to_image_label + '.xml')
 
 
-
-def get_height_width_dist(path_to_labels):
+def get_complete_df(path_to_labels):
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
     df_test = pd.read_csv(path_to_labels + 'test_labels.csv')
 
     df_all = pd.concat([df_train, df_val, df_test])
+
+    return df_all
+
+
+def get_height_width_dist(path_to_labels):
+    df_all = get_complete_df(path_to_labels)
 
     height = df_all['height'].values
     width = df_all['width'].values
@@ -241,7 +248,7 @@ def get_height_width_dist(path_to_labels):
     im = ax1.hist2d(height, width, bins=20, range=[[0, 600], [0, 800]])
     max_bin_content = np.amax(im[0])
     max_bin = np.where(max_bin_content == im[0])
-    
+
     # max_bin includes a tuple of arrays (arrayA, arrayB)
     bin_x = max_bin[0][0]
     bin_y = max_bin[1][0]
@@ -259,9 +266,74 @@ def get_height_width_dist(path_to_labels):
     ax0.set_ylabel('Width')
 
     fig.suptitle(f'Number of images: {int(df_all.shape[0])}, Min Width: {min(width)}, Min height: {min(height)}')
-    plt.savefig('./width_heigt_scatter_hist2d.pdf',
+
+
+    save_path_img = os.path.join(save_path_results, 'width_heigt_scatter_hist2d.pdf')
+    plt.savefig(save_path_img,
                 bbox_inches='tight', pad_inches=0)
 
+
+def dog_image_cluster(path_to_labels, save_path_results, img_num_row, img_num_col):
+    np.random.seed(15)
+    df_all = get_complete_df(path_to_labels)
+
+    total_number_of_img = img_num_row * img_num_col
+    img_index = np.random.randint(low=0,
+                                  high=df_all.shape[0],
+                                  size=total_number_of_img)
+
+    img_paths = df_all['path_to_image'].values
+    img_paths = img_paths[img_index]
+    fig, axes = plt.subplots(img_num_col, img_num_row, figsize=(5.8, 3.58))
+
+    for ax, img_path in tqdm(zip(axes.reshape(-1), img_paths)):
+        img_path = img_path.replace('..', '../..')
+        img = plt.imread(img_path)
+        ax.imshow(img)
+        ax.axis('off')
+    fig.subplots_adjust(wspace=0.1, hspace=0.1)
+
+    save_path_img = os.path.join(save_path_results, 'image_cluster.pdf')
+    plt.savefig(save_path_img,
+                bbox_inches='tight', pad_inches=0, dpi=1200)
+
+def num_img_distribution(path_to_labels, save_path_results):
+    df_all = get_complete_df(path_to_labels)
+
+    race_labels = df_all['race_label'].values
+    race_distribution = Counter(race_labels)
+    num_of_img_race = np.array(list(race_distribution.values()))
+
+    max_index = np.where(num_of_img_race == max(num_of_img_race))[0][0]
+    dog_race_of_max_img = list(race_distribution.keys())[max_index]
+    dog_race_of_max_img = dog_race_of_max_img.replace('_', ' ')
+    num_mean = np.mean(num_of_img_race)
+
+    race_placeholder = range(1, len(num_of_img_race)+1, 1)
+
+    plt.figure(figsize=(5.8, 3.58))
+    plt.bar(race_placeholder, num_of_img_race)
+    x_y_annotate = (race_placeholder[max_index],
+                    num_of_img_race[max_index])
+
+    x_y_annotate_text = (race_placeholder[max_index] * 2/3,
+                         num_of_img_race[max_index] + -20)
+    plt.annotate(dog_race_of_max_img,
+                 xy=x_y_annotate,
+                 xytext=x_y_annotate_text,
+                 arrowprops=dict(arrowstyle="->",
+                                 connectionstyle="angle3,angleA=0,angleB=45",
+                                 color='C7'),
+                c='C7')
+
+    plt.axhline(num_mean, c='C1', alpha=0.75, linewidth=1., label='Mean')
+    plt.xlabel('Race placeholder')
+    plt.ylabel('Number of images')
+    plt.legend()
+    plt.xlim(-1, 121)
+    save_path_img = os.path.join(save_path_results, 'image_distribution.pdf')
+    plt.savefig(save_path_img,
+                bbox_inches='tight', pad_inches=0, dpi=500)
 
 
 
@@ -269,5 +341,15 @@ def get_height_width_dist(path_to_labels):
 if __name__ == '__main__':
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
+
+    save_path_results = os.path.join(Path(os.path.abspath(__file__)).parents[2],
+                                  "final_data",
+                                  "general")
+
+    if not os.path.exists(save_path_results):
+        os.makedirs(save_path_results)
+
     #generate_dataset('../../dataset/Annotation', 0.7, 0.2, 0.1)
-    get_height_width_dist(path_to_labels)
+    #get_height_width_dist(path_to_labels, save_path_results)
+    #dog_image_cluster(path_to_labels, save_path_results, 7, 5)
+    num_img_distribution(path_to_labels, save_path_results)
