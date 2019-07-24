@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('-l2', '--regularisation_rate', type=float)
     parser.add_argument('-p', '--early_stopping_patience', type=int)
     parser.add_argument('-d', '--early_stopping_delta', type=float)
-    parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images')
+    parser.add_argument('-ir', '--imgage_resize', type=int, nargs=2, help='Tuple (width, height) with determines the shape of the resized images. The networks "PreDogNN" and "PreBigDogNN" require a image size of 224x244')
     parser.add_argument('-n', '--n_classes', type=int, help='Number of classes to train. Default is 120')
     parser.add_argument('--use_rgb', action='store_true')
 
@@ -47,6 +47,10 @@ if __name__ == '__main__':
         n_classes = args.n_classes
 
     img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
+
+    if args.architecture == ('PreDogNN') or ('PreBigDogNN'):
+        args.use_rgb = True
+        img_resize = (224, 224)
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
