@@ -252,11 +252,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Usage: Check number of parameters of a given architecure')
     parser.add_argument('architecture', type=str, help='Class name of the network')
     parser.add_argument('n_classes', type=int, help='number of classes')
+    parser.add_argument('--use_rgb', action='store_true')
     parser.add_argument('--save_model', action='store_true')
 
     l2 = 0.01
     args = parser.parse_args()
-    model = train.get_model(args.architecture, args.n_classes, l2)
+    model = train.get_model(args.architecture, args.n_classes, l2, use_rgb=args.use_rgb)
     print(args.architecture)
     filestr = '../../saved_models/{}/'.format(args.architecture)
     if not os.path.exists(filestr):
