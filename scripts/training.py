@@ -50,11 +50,12 @@ if __name__ == '__main__':
 
     if args.architecture == ('PreDogNN'):
         args.use_rgb = True
-        img_resize = (125, 138)
+        img_resize = (224, 224)
 
     elif args.architecture == ('PreBigDogNN'):
         args.use_rgb = True
-        img_resize = (96, 96)
+        # Only 71 images are smaller as 125x138
+        img_resize = (224, 224)
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,

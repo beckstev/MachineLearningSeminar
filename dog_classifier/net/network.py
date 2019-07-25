@@ -190,13 +190,13 @@ def PreDogNN():
 
     conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
-                                  input_shape=(138, 125, 3),
+                                  input_shape=(224, 224, 3),
                                   )
     conv_base.trainable = False
 
     model = Sequential()
     model.add(conv_base)
-    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(AveragePooling2D(pool_size=(4, 2)))
     model.add(GlobalMaxPooling2D())
     model.add(Dropout(rate=drop_rate))
     model.add(Dense(30, kernel_initializer=he_normal(),
@@ -222,13 +222,13 @@ def PreBigDogNN(n_classes):
 
     conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
-                                  input_shape=(138, 125, 3),
+                                  input_shape=(224, 224, 3),
                                   )
     conv_base.trainable = False
 
     model = Sequential()
     model.add(conv_base)
-    model.add(AveragePooling2D(pool_size=(2, 2)))
+    model.add(AveragePooling2D(pool_size=(4, 4)))
     model.add(GlobalMaxPooling2D())
     model.add(Dense(150, kernel_initializer=he_normal(),
                     bias_initializer=he_normal(),
