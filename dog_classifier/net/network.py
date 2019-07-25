@@ -190,13 +190,13 @@ def PreDogNN():
 
     conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
-                                  input_shape=(224, 224, 3),
+                                  input_shape=(138, 125, 3),
                                   )
     conv_base.trainable = False
 
     model = Sequential()
     model.add(conv_base)
-    model.add(AveragePooling2D(pool_size=(4, 4)))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     model.add(Dropout(rate=drop_rate))
     model.add(Dense(30, kernel_initializer=he_normal(),
@@ -222,13 +222,13 @@ def PreBigDogNN(n_classes):
 
     conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
-                                  input_shape=(224, 224, 3),
+                                  input_shape=(138, 125, 3),
                                   )
     conv_base.trainable = False
 
     model = Sequential()
     model.add(conv_base)
-    model.add(AveragePooling2D(pool_size=(4, 4)))
+    model.add(AveragePooling2D(pool_size=(2, 2)))
     model.add(GlobalMaxPooling2D())
     model.add(Dense(150, kernel_initializer=he_normal(),
                     bias_initializer=he_normal(),
@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
     l2 = 0.01
     args = parser.parse_args()
-    model = train.get_model(args.architecture, args.n_classes, l2)
+    model, _ = train.get_model(args.architecture, args.n_classes, l2, use_rgb=True)
     print(args.architecture)
     filestr = '../../saved_models/{}/'.format(args.architecture)
     if not os.path.exists(filestr):

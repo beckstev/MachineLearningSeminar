@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if args.learning_rate:
         learning_rate = args.learning_rate
 
-    bs_size = 16
+    bs_size = 5
     if args.batch_size:
         bs_size = args.batch_size
 
@@ -48,9 +48,13 @@ if __name__ == '__main__':
 
     img_resize = tuple(args.imgage_resize) if args.imgage_resize else None
 
-    if args.architecture == ('PreDogNN') or ('PreBigDogNN'):
+    if args.architecture == ('PreDogNN'):
         args.use_rgb = True
-        img_resize = (224, 224)
+        img_resize = (125, 138)
+
+    elif args.architecture == ('PreBigDogNN'):
+        args.use_rgb = True
+        img_resize = (96, 96)
 
     training_parameters = {'n_classes': n_classes,
                            'batch_size': bs_size,
