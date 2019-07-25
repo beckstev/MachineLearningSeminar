@@ -427,7 +427,7 @@ def preprocess(path_to_model, encoder_model, fname):
 
 def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
     print('\nvisualize predictions \n')
-    plt.figure(figsize=(5.8, 3.58))
+    plt.figure(figsize=(6.224, 4))
 
     path = path + '/build/'
     if not os.path.exists(path):
@@ -440,7 +440,7 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
 
-    for index in range(12, 18):
+    for index in range(24, 30):
         # Indices of the array represent the dog race
         race_index_true = Y_true[index]
         race_true = encoder.inverse_transform(np.array([race_index_true]))
@@ -451,7 +451,7 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
         races_high_pred = np.argsort(Y_pred[index])[-1:][::-1]
         races_pred = encoder.inverse_transform(races_high_pred)
 
-        plt.subplot(2, 3, index-11)
+        plt.subplot(2, 3, index-23)
 
         path_to_image = path_to_images[index]
         img = plt.imread(path_to_image)
@@ -466,7 +466,9 @@ def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
             prob = Y_pred[index][race_index_pred] * 100
             text = f"{races_pred[i].replace('_', ' ')}: {prob:.2f} \%"
             # plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
-            plt.text(img_width * 0.1, img_height + 50, text, fontsize=7)
+            # plt.text(img_width * 0.08, img_height * 1.09, text, fontsize=7)
+            plt.annotate(text, (0, 0), (0, -1), xycoords='axes fraction',
+                         textcoords='offset points', va='top', fontsize=7)
 
         plt.title(f'True race: {race_true[0]} ', fontsize=7)
         plt.axis('off')
