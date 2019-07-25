@@ -154,30 +154,66 @@ in Abbildung \ref{fig:beispielhafte_netz_architecture}.
 \label{fig:beispielhafte_netz_architecture}
 \end{figure}
 
-% \subsubsection{MiniDogNN}
-% Die \textsc{MiniDogNN}-Architektur ist eine einfach gehaltenes Netzwerk, welches
-% in Abbildung \ref{fig:MiniNN} schmeatisch dargestellt ist. In der Abbildung sind
-% die Aktivierungsfunktionen nicht mit eingezeichnet. Die Anzahl der Neuronen
-% hängt von der Anzahl der Hunderassen $N\ua{dr}$ ab, die klassifiziert werden sollen.
-% Darüberhinaus hängt die Anzahl der tranierbaren Parameter $n\ua{train}$ auch davon ab, ob \textsc{RGB} oder
-% Graustufen Bilder verwendet werden sollen:
-% \begin{align}
-%   \begin{aligned}
-%     \label{eq: ntrain_MiniDogNN}
-%   n\ua{train}\left(N\ua{dr}=5, \, \mathrm{grau}\right) &= 21411, & n\ua{train}\left(N\ua{dr}=120, \, \mathrm{grau}\right) & = 58096 \\
-%   n\ua{train}\left(N\ua{dr}=5, \, \mathrm{rgb}\right) &= 21555, & n\ua{train}\left(N\ua{dr}=120, \, \mathrm{rgb}\right) & = 58240
-%   \end{aligned}
-% \end{align}
-% Zwar ist Variabelenenraum gegeben durch die Bildgröße und nicht durch das Bild, wie
-% bei einem FCN, jedoch wird in den Gleichungen \eqref{eq:ntrain_MiniDogNN} deutlich,
-% dass es deutlich das eine Regularisierung notwendig. Eine Regularisierung
-% erfolgt bei der \textsc{MiniDogNN}-Architektur mit Hilfe eine $l2$-Architektur.
-% \begin{figure}
-% \centering
-% \includegraphics[width=\the\textwidth]{../../final_data/general/MiniDogNN.pdf}
-% \caption{Schmatische Darstellung der \textsc{MiniDogNN}-Architektur, wobei
-%          die Aktivierungsfunktionen nicht mit eingezeichnet sind. Das FCN
-%          ist schmatisch angedeutet.
-%          Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
-% \label{fig:MiniDogNN}
-% \end{figure}
+ \subsubsection{MiniDogNN}
+ Die \textsc{MiniDogNN}-Architektur ist eine einfach gehaltenes Netzwerk, welches
+ in Abbildung \ref{fig:MiniNN} schmeatisch dargestellt ist. In der Abbildung sind
+ die Aktivierungsfunktionen nicht mit eingezeichnet. Die Anzahl der Neuronen
+ hängt von der Anzahl der Hunderassen $N\ua{dr}$ ab, die klassifiziert werden sollen.
+ Darüberhinaus hängt die Anzahl der tranierbaren Parameter $n\ua{train}$ auch davon ab, ob \textsc{RGB} oder
+ Graustufen Bilder verwendet werden sollen:
+ \begin{align}
+   \begin{aligned}
+     \label{eq: ntrain_MiniDogNN}
+   n\ua{train}\left(N\ua{dr}=5, \, \mathrm{grau}\right) &= 21411, & n\ua{train}\left(N\ua{dr}=120, \, \mathrm{grau}\right) & = 58096 \\
+   n\ua{train}\left(N\ua{dr}=5, \, \mathrm{rgb}\right) &= 21555, & n\ua{train}\left(N\ua{dr}=120, \, \mathrm{rgb}\right) & = 58240
+   \end{aligned}
+ \end{align}
+ Zwar ist Variabelenenraum gegeben durch die Bildgröße und nicht durch das Bild, wie
+ bei einem FCN, jedoch wird in den Gleichungen \eqref{eq:ntrain_MiniDogNN} deutlich,
+ dass es deutlich das eine Regularisierung notwendig. Eine Regularisierung
+ erfolgt bei der \textsc{MiniDogNN}-Architektur mit Hilfe eine $l2$-Architektur.
+ \begin{figure}
+ \centering
+ \includegraphics[width=\the\textwidth]{../../final_data/general/MiniDogNN.pdf}
+ \caption{Schmatische Darstellung der \textsc{MiniDogNN}-Architektur, wobei
+          die Aktivierungsfunktionen nicht mit eingezeichnet sind. Das FCN
+          ist schmatisch angedeutet.
+          Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
+ \label{fig:MiniDogNN}
+ \end{figure}
+
+\subsubsection{PreDogNN \& PreBigDogNN}
+Wie im obigen Kapitel angesprochen, ist die Hauptaufgabe eines CNN die Generierung
+von Features aus einem Bild. Jedoch limitiert die Größe des Datensatz stark
+die maximale Größe der \textsc{MiniDogNN}-Architektur. Diese Limitation
+kann durch vortrainierte Modelle umgangen werden. Wichtig ist hierbei, dass wir
+ein Modell verwenden, dass auf die Klassifizierung von Bilder ausgelegt ist.
+Die Idee ist, den FCN-Anteil des Modells zu entferenen und lediglich den CNN-Anteil
+zur generierung von Features zu verwenden. Hierbei werden die Paramter des CNN
+festgehalten sind somit nicht tranierbar. An das vortranierte CNN schließt, dann
+ein tranierbares FCN an, welches die generierten Features für die eigentliche
+Klassifizierung verwendet.
+
+Die Modelle \textsc{PreDogNN \& PreBigDogNN} verwenden das CNN der
+\textsc{InceptionResNetV2}-Architektur \cite{InceptionResNetV2}. Das Netzwerk
+ist in \textsc{keras} vorimplementiert und kann mittels eines Funktionsparamters
+ein CNN umgewandelt werden \cite{keras_InceptionResNetV2}.
+
+Der Unterschied zwischen \textsc{PreDogNN \& PreBigDogNN} liegt in der Anzahl
+an Hunderasssen die klassifiziert werden können - $N\ua{dr, PreDogNN}=5, \quad N\ua{dr, PreBigDogNN}=120$. Die Klassifizierung von $5$ Hunderassen
+soll an dieser Stelle lediglich mit der Ersparnis an Analysezeit und -hardware
+motiviert werden. Bedingt wird die Anzahl durch die FCN-Architektur der beiden
+Netzwerk. Beim \textsc{PreDogNN} besteht das FCN aus drei Lagen mit $30-30-5$
+Neuronen, im Gegensatz dazu verwendet das \textsc{PreBigDogNN} deutlich
+mehr Neuronen innerhalb seiner drei Lagen: $150-120-120$. Die Reduzierung von
+$150$ auf $120$ Neuronen in der zweiten Lage ist mit der Anzahl an Paramtern
+zu erklären. Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
+$1536$ Features, signifikant mehr als die $64$ Features der \textsc{MiniDogNN}-Architektur,
+welche zu einer Vielzahl von Gewichten innheralb der FCN führt:
+\begin{align}
+  \begin{aligned}
+  \label{eq:ntrain_PreDogNN_PreBigDogNN}
+  n\ua{train}(\mathrm{rgb}) &= 47255 \quad \mathrm{PreDogNN} \\
+  n\ua{train}(\mathrm{rgb}) &= 249545 \quad \mathrm{PreBigDogNN}
+\end{aligned}
+\end{align}
