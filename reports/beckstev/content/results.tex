@@ -1,4 +1,20 @@
 \section{Ergebnisse}
+Im folgenden Kapitel soll Testresultate der einzelnen Netzwerke präsentiert
+werden. Als Leistungsmaß wird die Genauigkeit des jeweiligen Modells präsentiert.
+Hierfür wird neben eines Genauigkeit-\#Epochen-Plots eine \emph{Confusionmatrix}
+verwendet. Zusätzlich soll anhand der \emph{Loss}-Kurven vom Test- und Validierungsdatensatz
+Overtraning festgemacht werden.
+
+\subsection{Traningsweise}
+Wie bereits im letzten Kaptiel erwähnt werden die
+Bilder batchweise geladen und verarbeitet. Hierbei erfolgt auch eine Normierung
+der Pixelwerte. Vor dem Beginn eines Tranings werden \emph{Batch-Größe} und
+\emph{Learningrate} festgelegt. Letztere wird jedoch, während des Tranings dynamisch
+durch die in \textsc{keras} implementierte Funtkion \textsc{ReduceLROnPlateau}
+angepasst \cite{keras_ReduceLROnPlateau}. Die Anzahl der Traningsepochen
+wird nicht festgelegt, da hier eine \emph{EarlyStopper} eingestetzt wird \cite{keras_EarlyStopping}.
+Zusätzlich muss die Anzahl angegeben werden ob $5$ oder $120$ Hunderassen
+klassifiziert werden sollen.
 
 \subsection{NN für 5 Hunderassen}
 

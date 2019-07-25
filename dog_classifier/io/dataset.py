@@ -245,6 +245,11 @@ def get_height_width_dist(path_to_labels, save_path_results):
 
     fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(6.224, 2))
 
+    mask_height = height < 224
+    mask_width = width < 244
+
+    print(f'Smaller in height and width: {sum((mask_height) | (mask_width))}')
+
     im = ax1.hist2d(height, width, bins=20, range=[[0, 600], [0, 800]])
     max_bin_content = np.amax(im[0])
     max_bin = np.where(max_bin_content == im[0])
@@ -351,6 +356,6 @@ if __name__ == '__main__':
         os.makedirs(save_path_results)
 
     #generate_dataset('../../dataset/Annotation', 0.7, 0.2, 0.1)
-    #get_height_width_dist(path_to_labels, save_path_results)
+    get_height_width_dist(path_to_labels, save_path_results)
     dog_image_cluster(path_to_labels, save_path_results, 6, 4)
     num_img_distribution(path_to_labels, save_path_results)
