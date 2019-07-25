@@ -95,7 +95,67 @@ einer Stärke von 0.2 (\PreDog) bzw. 0.15 (\PreBig) zwischen den
 Methode durchgeführt \cite{tensowflow-he}, so wie in \cite{he-ini} empfohlen.
 Auch die Gewichte des Kernels der \texttt{Dense}-Layer wurden nach der von
 Kaiming He entwickelten Methode initialisiert. \texttt{PReLU} ist eine
-modifizierte Version von \texttt{ReLU}, die sich dadurch auszeichnent, dass die
+modifizierte Version von \texttt{ReLU}, die sich dadurch auszeichnet, dass die
 Funktion $f(y)$ für negative $y$ nicht 0 ist wie bei \texttt{ReLU}, sondern $ay$
 mit einem Koeffizienten $a$, der adaptiv angepasst wird \cite{prelu}. Die
 Aktivierungsfunktion des letzten \texttt{Dense}-Layers ist \texttt{softmax}.
+
+Außerdem wurde ein Neuronales Netz ohne vortrainiertes Netz verwendet, dies heißt
+\MiniDog. Die Struktur ist in \autoref{fig:struktur_minidognn} abgebildet.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{pics/nn.pdf}
+  \caption{Struktur des Neuronalen Netzes \MiniDog. Die Dimensionalität
+  der \texttt{Dense}-Layer richtet sich nach der Anzahl der Klassen im verwendeten Datensatz.}
+  \label{fig:struktur_minidognn}
+\end{figure}
+
+Wie schon bei \PreDog und \PreBig wird für die \texttt{Dense}-Layer und auch
+für die \texttt{Convolutional}-Layer wird die von Kaiming He entwickelte Methode
+zur Initialisierung der Gewichte verwendet. Ebenso wird \texttt{PReLU} als
+Aktivierungsfunktion genutzt für beide Arten von Layern. Außerdem wird
+\texttt{L2-Regularisierung} für alle Arten von Layern genutzt.
+
+Als letzte Netzwerkstruktur wird der Autoencoder und der dazugehörige Random
+Forest vorgestellt. Der Encoder des Autoencoders besteht aus vier
+\texttt{Convolutional}-Layern mit drei \texttt{MaxPooling}-Layern dazwischen,
+die die Anzahl der Parameter reduzieren, sodass die Bilder am Ende des Encoders
+statt als dreidimensionales Array als Vektor vorliegen. Der Decoder besteht aus
+fünf \texttt{Convolutional}-Layern und drei \texttt{UpSampling2D}-Layern, die
+zwischen den ersten vier \texttt{Convolutional}-Layern platziert sind. Auf diese
+Weise wird aus dem Vektor mit den Features wieder ein dreidimensionales Array.
+Die Aktivierungsfunktionen der \texttt{Convolutional}-Layer ist \texttt{ReLU},
+bis auf den letzten, dort wird \texttt{Sigmoid} verwendet. Zu den
+Hyperparametern lässt sich nicht viel sagen an dieser Stelle, da ein
+\texttt{Grid Search} verwendet wurde, um diese zu optimieren, siehe
+\autoref{sec:hyperparam}.
+
+\section{Hyperparameter-Optimierung}
+\label{sec:hyperparam}
+Für \MiniDog und der Random Forest wurde eine Hyperparameter-Optimierung in Form
+eines \texttt{Grid Search} durchgeführt. Allerdings wurde im Falle von \MiniDog
+eine selbgeschriebene Funktion verwendet, die aus Zeitgründen auf die
+\texttt{Cross Validation} verzichtet. Auch werden nur drei Hyperparameter
+optimiert: Die Stärke der \texttt{L2-Re\-gu\-la\-ri\-sier\-ung}, die
+\texttt{Batch-Size} und das Verwenden der Farbinformationen. Beim letzten Punkt
+werden die Bilder einmal in schwarz-weiß und einmal mit Farbinformationen
+eingelesen, um zu prüfen, wie wichtig dieser Parameter für das Neuronale Netz
+ist.
+
+Für den RF wurden \texttt{GridSearchCV} mit einer dreifachen Kreuzvalidierung genutzt.
+Unter anderem wurde die maximale Tiefe oder die Anzahl an Schätzern optimiert.
+
+% \begin{table}
+%   \caption{Optimierte Hyperparameter für den RF}
+%   \label{tab:hyper_rf}
+%   \begin{tabular}{c c c c c c}
+%     \toprule
+%     max\_features & max\_depth & min\_samples\_leaf & min\_samples\_split & criterion & n\_estimators \\
+%     \midrule
+%     auto, log2 & None, 10, 100 & 1, 10 31 & 2, 8, 10 & gini, entropy & 100, 400, 1000, 1500 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+Für eine Hyperparameteroptimierung von \PreBig und \PreDog war die Hardware nicht stark genug.
