@@ -5,3 +5,4 @@ labels/
 saved_models/
 dog_classifier.egg-info/
 mini_dataset/
+*.h5
