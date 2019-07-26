@@ -1,0 +1,1 @@
+{"n_classes": 120, "batch_size": 16, "learning_rate": 0.001, "l2_regularisation": 0.01, "n_epochs": 500, "architecture": "PreBigDogNN", "use_rgb": true, "encoder_model": "encoder_2019-06-16_12:45:37.npy", "early_stopping_patience": 7, "early_stopping_delta": 0.0001, "img_resize": [224, 224]}

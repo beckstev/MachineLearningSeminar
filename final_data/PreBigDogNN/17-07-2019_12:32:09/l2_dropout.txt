@@ -1,0 +1,2 @@
+l2_value = 0.007
+ drop_rate = 0.15
