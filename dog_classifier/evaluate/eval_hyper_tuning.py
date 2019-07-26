@@ -74,14 +74,10 @@ def create_3d_subplot(df, score, figure, position, polar, azimut):
 
     ax.scatter(xs=bs[mask_max], ys=np.log(l2[mask_max]), zs=use_rgb[mask_max],
                c='r', marker='*', label=f'Acc: {score[mask_max][0]:.2}')
-
-    # yticks = ax.get_yticks()
-    # ylabels = [f'{exp_str(tick):.2e}' for tick in yticks]
-    # ax.set_yticklabels(ylabels)
-
-    # zticks = ax.get_zticks()
-    # zlabels = [f'{exp_str(tick):.2e}' for tick in zticks]
-    # ax.set_zticklabels(zlabels)
+    # 0 = False, 1 = True
+    z_ticks = np.array([0, 1])
+    ax.set_zticks(z_ticks)
+    ax.set_zticklabels(['False', 'True'])
 
     ax.view_init(azimut, polar)
     return ax, scatter_plot

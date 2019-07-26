@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import numpy as np
 from datetime import datetime
 from pathlib import Path
 from keras.optimizers import Adam
@@ -16,18 +15,27 @@ from dog_classifier.evaluate import evaluate_training
 
 
 def get_model(model_name, n_classes, l2_reg, use_rgb):
+    loss_epoch_tracker = False
     if model_name == 'DogNN':
-        return DogNN(n_classes, l2_reg, use_rgb)
+        return DogNN(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'DogNNv2':
-        return DogNNv2(n_classes, l2_reg, use_rgb)
+        return DogNNv2(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'PreBigDogNN':
-        return PreBigDogNN(n_classes)
+        loss_epoch_tracker = True
+        return PreBigDogNN(n_classes), loss_epoch_tracker
+
     elif model_name == 'MiniDogNN':
-        return MiniDogNN(n_classes, l2_reg, use_rgb)
+        return MiniDogNN(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'DogNNv3':
-        return DogNNv3(n_classes, l2_reg, use_rgb)
+        return DogNNv3(n_classes, l2_reg, use_rgb), loss_epoch_tracker
+
     elif model_name == 'PreDogNN':
-        return PreDogNN()
+        loss_epoch_tracker = True
+        return PreDogNN(), loss_epoch_tracker
+
     else:
         raise NameError(f'There is no such Network: {model_name}')
 
@@ -42,7 +50,6 @@ def save_training_parameters(training_parameters, model_save_path):
     with open(model_save_path + '/training_parameters.json', 'w') as json_file:
         json.dump(training_parameters, json_file)
 
-
 def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
@@ -52,7 +59,6 @@ def get_train_and_val_dataloader(training_parameters, is_autoencoder=False):
     n_classes = training_parameters['n_classes']
     img_resize = training_parameters['img_resize']
     use_rgb = training_parameters['use_rgb']
-
     df_train = pd.read_csv(path_to_labels + 'train_labels.csv')
     df_val = pd.read_csv(path_to_labels + 'val_labels.csv')
     with K.tf.device('/cpu:0'):
@@ -92,6 +98,19 @@ def save_final_loss_and_acc(history, model_save_path):
     with open(model_save_path + '/loss_acc.json', 'w') as json_file:
         json.dump(loss_dict, json_file)
 
+def save_epoch_history(trainHistoryEpoch, valHistoryEpoch, model_save_path):
+    loss_df = pd.DataFrame()
+
+    loss_df['val_loss'] = valHistoryEpoch.loss
+    loss_df['val_acc'] = valHistoryEpoch.acc
+    loss_df['loss'] = trainHistoryEpoch.acc
+    loss_df['acc'] = trainHistoryEpoch.acc
+    loss_df['lr'] = trainHistoryEpoch.lr
+
+    loss_df.to_csv(path_or_buf=model_save_path + '/model_history_epoch.csv',
+                   index=False)
+
+
 
 def trainNN(training_parameters, grid_search=False):
     ''' Traning a specific net architecture. Afterwards the paramters of the net
@@ -127,14 +146,12 @@ def trainNN(training_parameters, grid_search=False):
         os.makedirs(model_save_path)
 
     n_classes = training_parameters['n_classes']
-    encoder_model = training_parameters['encoder_model']
-    bs_size = training_parameters['batch_size']
     l2_reg = training_parameters['l2_regularisation']
     num_of_epochs = training_parameters['n_epochs']
     early_stopping_patience = training_parameters['early_stopping_patience']
     early_stopping_delta = training_parameters['early_stopping_delta']
 
-    model = get_model(training_parameters['architecture'], n_classes, l2_reg, training_parameters['use_rgb'])
+    model, loss_epoch_tracker = get_model(training_parameters['architecture'], n_classes, l2_reg, training_parameters['use_rgb'])
     # Set the leranrning rate of adam optimizer
     adam = Adam(lr=training_parameters['learning_rate'])
 
@@ -159,13 +176,21 @@ def trainNN(training_parameters, grid_search=False):
                                       period=2,
                                       save_weights_only=False)
 
+    callback_functions = [earlystopper, reduce_lr, hist,
+                          modelCheckpoint]
+
+    if loss_epoch_tracker:
+        train_loss_history_epoch = evaluate_training.HistoryEpoch(trainDataloader)
+        val_loss_history_epoch = evaluate_training.HistoryEpoch(valDataloader)
+        callback_functions += [train_loss_history_epoch, val_loss_history_epoch]
+
+
     # We use try to stop the training whenever we want
     try:
         history = model.fit_generator(trainDataloader,
                                       validation_data=valDataloader,
                                       epochs=num_of_epochs,
-                                      callbacks=[earlystopper, reduce_lr, hist,
-                                                 modelCheckpoint])
+                                      callbacks=callback_functions)
 
     except KeyboardInterrupt:
         print('KeyboardInterrupt, do you wanna save the model: yes-(y), no-(n)')
@@ -187,3 +212,11 @@ def trainNN(training_parameters, grid_search=False):
     # if grid_search, additionally save the final (val-)loss and (val-)accuracy
     if grid_search:
         save_final_loss_and_acc(history, model_save_path)
+
+    if loss_epoch_tracker:
+        save_epoch_history(train_loss_history_epoch,
+                           val_loss_history_epoch,
+                           model_save_path)
+        evaluate_training.plot_history_epoch(train_loss_history_epoch,
+                                             val_loss_history_epoch,
+                                             path=model_save_path)

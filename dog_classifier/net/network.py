@@ -196,7 +196,7 @@ def PreDogNN():
 
     model = Sequential()
     model.add(conv_base)
-    model.add(AveragePooling2D(pool_size=(4, 4)))
+    model.add(AveragePooling2D(pool_size=(4, 2)))
     model.add(GlobalMaxPooling2D())
     model.add(Dropout(rate=drop_rate))
     model.add(Dense(30, kernel_initializer=he_normal(),
@@ -217,8 +217,8 @@ def PreDogNN():
 
 
 def PreBigDogNN(n_classes):
-    l2_value = 0.01
-    drop_rate = 0.2
+    l2_value = 0.007
+    drop_rate = 0.15
 
     conv_base = InceptionResNetV2(weights='imagenet',
                                   include_top=False,
@@ -235,14 +235,14 @@ def PreBigDogNN(n_classes):
                     kernel_regularizer=l2(l2_value)))
     model.add(PRELU(alpha_initializer=he_normal(),
                     weights=None))
-    #model.add(Dropout(rate=drop_rate))
+    model.add(Dropout(rate=drop_rate))
     model.add(Dense(120, kernel_initializer=he_normal(),
                     bias_initializer=he_normal(),
                     kernel_regularizer=l2(l2_value)))
     model.add(PRELU(alpha_initializer=he_normal(),
                     weights=None))
 
-    #model.add(Dropout(rate=drop_rate))
+    model.add(Dropout(rate=drop_rate))
     model.add(Dense(n_classes, activation='softmax'))
 
     return model
