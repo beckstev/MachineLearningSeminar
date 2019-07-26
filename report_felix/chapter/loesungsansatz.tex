@@ -1,7 +1,7 @@
 \chapter{Lösungsansatz zur Klassifikation}
 In diesem Kapitel geht es um die Strategie, wie eine Klassifikation der
 Hunderassen für den großen (120 Klassen) und den kleinen (5 Klassen) Datensatz
-mittels mehrerer Neuronaler Netze erreicht werden kann.
+mittels mehrerer Neuronaler Netze und eines Random Forest erreicht werden kann.
 
 \section{Größe der Bilder}
 Höhe und Breite der Bilder sind unterschiedlich im großen Datensatz, wie in
@@ -17,15 +17,17 @@ Höhe und Breite der Bilder sind unterschiedlich im großen Datensatz, wie in
   \label{fig:scatter_groß}
 \end{figure}
 
-Die minimale Breite liegt bei 97 Pixeln und die minimale Höhe bei 100 Pixeln.
-Prinzipiell arbeiten die verwendeten Neuronalen Netze ohne definierte Input
-size, allerdings müssen die Bilder auf eine Größe gebracht werden, da
-\texttt{numpy arrays} eine definierte Größe haben müssen. Eine Möglichkeit wäre
-es nun, alle Bilder auf diese minimale Größe zu resizen. Damit würde allerdings
-ein Informationsverlust einhergehen. Aus diesem Grund wurde ein zu Teilen
+Die minimale Breite liegt bei 97 Pixeln und die minimale Höhe bei 100 Pixeln
+bzw. für den kleinen Datensatz bei 125x138 Pixeln. Prinzipiell arbeiten die
+verwendeten Neuronalen Netze ohne definierte Input size, allerdings müssen die
+Bilder auf eine Größe gebracht werden, da \texttt{numpy arrays} eine definierte
+Größe haben müssen und im Verlaufe des Trainings \texttt{numpy arrays} verwendet
+werden. Eine Möglichkeit wäre es nun, alle Bilder auf diese minimale Größe zu
+resizen. Damit würde allerdings ein Informationsverlust einhergehen. Aus diesem
+Grund wurde für \MiniDog (mehr dazu in \autoref{sec:netzwerk}) ein zu Teilen
 selbstgeschriebener \texttt{Datagenerator} verwendet, der die Bilder batchwise
 lädt und batchwise auf das Minimum im Batch resized. Auf diese Weise ist der
-Informationsverlust geringer als alle Bilder auf 97x100 zu resizen.
+Informationsverlust geringer als alle Bilder auf 125x138 zu resizen.
 
 In \autoref{fig:scatter_klein} ist die Höhen- und Breitenverteilung auch für
 den kleinen Datensatz dargestellt.
@@ -41,8 +43,12 @@ den kleinen Datensatz dargestellt.
   \label{fig:scatter_klein}
 \end{figure}
 
-Auch für den kleinen Datensatz wird der oben erwähnte \texttt{Datagenerator}
-verwendet. Somit wird auch hier batchwise auf das Minimum resized.
+Für \PreDog und \PreBig (mehr in \autoref{sec:netzwerk}) muss aufgrund der
+vortrainierten Netze eine feste Größe der Bilder gewählt werden. Wegen
+technischen Schwierigkeiten konnte nicht auf die minimale Größe des großen
+Datensatzes trainiert  werden. Stattdessen wurde auf die minimale Größe des
+kleinen Datensatzes resized. Da nur maximal 71 Bilder des großen Datensatzes
+eine kleinere Größe haben als 125x138, fällt dies nicht allzu sehr ins Gewicht.
 
 \section{Data Augmentation}
 Wie bereits in \autoref{chap:datensatz} dargestellt, entfallen auf jede Klasse
@@ -73,6 +79,7 @@ Trainingsbilder in jeder Epoche anders aus, was allgemein die Robustheit des
 Statistik generiert, da die Bilder immer anders aussehen.
 
 \section{Netzwerkstrukturen}
+\label{sec:netzwerk}
 Insgesamt wurden drei verschiedene Netzwerkarchitekturen verwendet, namentlich
 \MiniDog, \PreDog und \PreBig. Die letzten beiden Architekturen verwenden dabei
 ein vortrainiertes Netz mit Namen \texttt{InceptionResNetV2}. Dieses ist bei
