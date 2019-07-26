@@ -98,7 +98,7 @@ def eval_3d(df, save_path, score):
     mask_max = (sc == max(sc))
     best_hyp = (int(bs[mask_max][0]), l2[mask_max][0], use_rgb[mask_max][0])
 
-    fig = plt.figure(figsize=(7.2, 4.45))
+    fig = plt.figure(figsize=(6.224, 4.3))
 
     ax0, scatter_plot = create_3d_subplot(df, sc, fig, 121, 64, 20)
     ax1, _ = create_3d_subplot(df, sc, fig, 122, -64, 20)
@@ -123,16 +123,17 @@ def eval_3d(df, save_path, score):
     # bins = np.linspace(min(sc)-0.01, max(sc)+0.01, int(len(sc)/5))
     bins = np.array([0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6])
     bincenters = 0.5 * (bins[1:] + bins[:-1])
+
     save_path_acc_hist = os.path.join(save_path, 'acc_hist.pdf')
     plt.clf()
-    fig = plt.figure(figsize=(7.2, 4.45))
+    fig = plt.figure(figsize=(6.224, 2))
     ax = fig.add_subplot(111)
     ax.hist(sc, bins=bincenters)
     ax.set_xlabel(cbar_label)
     ax.set_ylabel('Number of models')
 
     details = f'Total number of models: {len(sc)} \n Minimal accuracy: {min(sc):.2} \n Maximal accuracy {max(sc):.2}'
-    ax.text(0.67, 0.85, details, transform=ax.transAxes)
+    ax.text(0.64, 0.67, details, transform=ax.transAxes)
     plt.savefig(save_path_acc_hist, pad_inches=0, bbox_inches='tight')
 
 
