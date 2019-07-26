@@ -217,6 +217,8 @@ $1536$ Features, signifikZur Featuregenerierung wird ein Autoencoder verwendet, 
   n\ua{train}(\mathrm{rgb}) &= 249545 \quad \mathrm{PreBigDogNN}
 \end{aligned}
 \end{align}
+Aus diesem Grund ist hier Regularisierung entscheidend, hierfür wird neben der
+$l2$-Regularisierung zusätzlich noch \emph{Dropout} verwendet.
 
 Die \textsc{keras}-Implementierung von \textsc{InceptionResNetV2} benötigt
 eine vordefinierte Bildgröße \cite{keras_InceptionResNetV2}.
