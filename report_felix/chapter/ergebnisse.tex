@@ -31,16 +31,30 @@ Loss und Accuracy Kurven sind im Anhang zu finden.
 
 \section{\PreBig}
 
+In \autoref{fig:loss-acc-prebig} sind die Loss und Accuracy Kurven für \PreBig
+zu sehen. Ungefähr ab Epoche 14 ist leichtes Overtraining zu erkennen. Hier
+wäre eine Anpassung der \texttt{dropout-rate} und/oder der Stärke der \texttt{L2-Regularisierung}
+Mögliche Stellschrauben, um das Overtraining zu beseitigen, möglicherweise im Zuge
+einer umfassenden Hyperparameter-Optimierung.
+
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{pics/ergebnisse/PreBigDogNN/history_epoch.pdf}
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/history_epoch.pdf}
   \caption{Loss und Accuracy Kurven für \PreBig.}
   \label{fig:loss-acc-prebig}
 \end{figure}
 
+Die Confusion-Matrix zeigt eine deutliche Diagonale, was als gut zu bewerten ist.
+Allerdings werden einzelne Klassen noch häufig falsch klassifiziert, zum Beispiel
+ist ein vom Netz als American Staffordshire Terrier klassifizierter Hund zu ungefähr
+\SI{80}{\percent} ein Staffordshire Bullterrier. Die Ähnlichkeit der beiden Rassen
+steckt schon im Namen und wird bei genauerer Betrachtung der Bilder beider Klassen
+deutlich. Alles in allem funktioniert die Klassifikation gut, einzelne Klassen
+wie z.\.B. der African Hunting Dog werden (fast) immer richtig klassifiziert.
+
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{pics/ergebnisse/PreBigDogNN/confusion_matrix.pdf}
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/confusion_matrix.pdf}
   \caption{Confusion Matrix für \PreBig.}
   \label{fig:confusion-prebig}
 \end{figure}
