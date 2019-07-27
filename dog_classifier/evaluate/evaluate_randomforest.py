@@ -6,12 +6,14 @@ import pandas as pd
 import matplotlib as mpl
 from pathlib import Path
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedLocator, FormatStrFormatter
 
 from sklearn.metrics import confusion_matrix
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import make_scorer, accuracy_score
 
+from dog_classifier.evaluate.tab2tex import make_table
 from dog_classifier.net.dataloader import DataGenerator
 import dog_classifier.autoencoder.randomforest as dog_rf
 
@@ -165,18 +167,39 @@ def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
     cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     classes = label_encoder.inverse_transform(np.arange(max(y_true)+1))
-    classes = [cl.replace('_', ' ') for cl in classes]
+
 
     if n_classes == 120:
         mpl.rcParams.update({'font.size': 3})
     else:
+        classes = [cl.replace('_', ' ') for cl in classes]
         mpl.rcParams.update({'font.size': 5})
     tick_marks = np.arange(max(y_true)+1)
 
     plt.figure(figsize=(5.8, 3.58))
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
-    plt.yticks(tick_marks, classes)
+
+
+    if n_classes == 120:
+        ticks = range(1, n_classes+1)
+        plt.axes().xaxis.set_major_locator(FixedLocator(ticks[0::2]))
+        plt.axes().xaxis.set_minor_locator(FixedLocator(ticks[1::2]))
+        plt.axes().xaxis.set_minor_formatter(FormatStrFormatter("%d"))
+        plt.axes().tick_params(which='major', pad=6, axis='x', rotation=90)
+        plt.axes().tick_params(which='minor', pad=0.5, axis='x', rotation=90)
+
+        plt.axes().yaxis.set_major_locator(FixedLocator(ticks[0::2]))
+        plt.axes().yaxis.set_minor_locator(FixedLocator(ticks[1::2]))
+        plt.axes().yaxis.set_minor_formatter(FormatStrFormatter("%d"))
+        plt.axes().tick_params(which='major', pad=6, axis='y')
+        plt.axes().tick_params(which='minor', pad=0.5, axis='y')
+        #plt.xticks(horizontalalignment='right')
+
+    else:
+        plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
+        plt.yticks(tick_marks, classes)
+
+
     plt.title('Confusion matrix random forest\n')
     plt.colorbar()
 
@@ -193,12 +216,21 @@ def create_confusion_matrix(label_encoder, n_classes, y_true, y_pred):
     plt.tight_layout()
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    model_save_path = os.path.join(model_save_path, 'build/confusion_matrix.pdf')
-    plt.savefig(model_save_path, dpi=500, pad_inches=0, bbox_inches='tight')
+    model_save_path_matrix = os.path.join(model_save_path, 'build/confusion_matrix.pdf')
+    plt.savefig(model_save_path_matrix, dpi=500, pad_inches=0, bbox_inches='tight')
     plt.clf()
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
 
+
+    if n_classes==120:
+        header = ['$\map{Label}$', '$\map{Hunderasse}$']
+        places = [1.0, 1.0]
+        data = [ticks, classes]
+        caption = 'Legende: Label - Hunderasse'
+        label = 'tab:legende_rf'
+        filename = os.path.join(model_save_path, 'build/legende.tex')
+        make_table(header, places, data, caption, label, filename)
 
 def visualize_rf_preduction(encoder, img_resize, n_classes):
     ''' Function to visualize the predictions of the random forest.
