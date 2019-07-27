@@ -98,15 +98,41 @@ z.\,B. durch eine umfassende Hyperparameter-Optimierung.
   \label{fig:visualize-pred}
 \end{figure}
 
-In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog
-für 120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
-nicht gut funktioniert hat, da alle Bilder einer einzelnen Klasse zugeordnet werden.
-Damit wird auch klar, dass nicht mit dem gleichen Netz 5 und 120 Klassen gut klassifiziert
-werden können.
+In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog für
+120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
+nicht gut funktioniert hat, da alle Bilder einer einzelnen Klasse zugeordnet
+werden. Damit wird auch klar, dass nicht mit dem gleichen Netz 5 und 120 Klassen
+gut klassifiziert werden können.
 
 \begin{figure}
   \centering
   \includegraphics{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
   \caption{Confusion Matrix für \MiniDog, trainiert auf 120 Klassen.}
   \label{fig:confusion-mini-120}
+\end{figure}
+
+\section{\PreDog}
+
+In \autoref{loss-acc-predog} sind die Loss und Accuracy Kurven für \PreDog zu sehen.
+Es ist kein Overtraining zu erkennen, was als positiv zu bewerten ist.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreDogNN/history_epoch.pdf}
+  \caption{Loss und Accuracy Kurven für \PreDog.}
+  \label{loss-acc-predog}
+\end{figure}
+
+Die Confusion-Matrix in \autoref{confusion-predog} zeigt, dass das Training sehr gut
+verlaufen ist. Beagle, Schipperke und Standard Poodle werden mit \SI{100}{\percent}-tiger
+Wahrscheinlichkeit richtig erkannt; bei African Hunting Dog und Beagle werden teilweise
+noch falsche Klassifizierungen vorgenommen, allerdings nur \SI{3}{\percent} bzw.
+\SI{12}{\percent}. Somit lässt sich sagen, dass unter Verwendung des vortraininerten
+Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreDogNN/confusion_matrix.pdf}
+  \caption{Confusion-Matrix für \PreDog.}
+  \label{confusion-predog}
 \end{figure}
