@@ -171,5 +171,39 @@ Verwendung von \textbf{Anzahl Paramter} ohne Regularisierung zurückzuführen.
 \subsubsection{Randomforest}
 Mit Hilfe der Features generiert vom Autoencoder soll der
 Randomforest (RF) fähig sein Hunderassen zu klassifizieren.
-Hierfür wird zunächst eine HPO an einem RF der fünf Hunderassen klassifizieren soll
-durchgeführt. Die zu optimierenen Paramter wurden dem Online-Guide \cite{RF_parameterraum} entommen.
+Hierfür wird zunächst eine HPO an einem RF der fünf Hunderassen klassifizieren kann
+durchgeführt. Die zu optimierenen Paramter
+wurden dem Online-Guide \cite{RF_parameterraum} entommen. Ingesamt
+wurd die maximale Tiefe $max_d$, die Methode zu Bestimmung der maximale Anzahl die pro Schnitt verwendet werden
+$n\ua{feat}$, die mindest Anzahl an Bildern die einen Ast haben muss, um berücksichtigt zu werden
+$min\ua{leaf}$, die mindest  Anzahl an Bildern um einen neuen Ast zueröffnen $min\ua{split}$,
+das Bewerungskrietrim $crit$ und die Anzahl der Bäume $n\ua{est}$.
+Eine vollständige Auflistung des Parameterraums findet sich in der Gleichung \eqref{eq: rf_parameter_raum}.
+\begin{align}
+  \begin{aligned}
+    \label{eq: rf_parameter_raum}
+    max_d &\in \left\{\infty, 10, 100\right\} & n\ua{feat}&\in\left\{auto, log2\right\}\\
+    min\ua{leaf} &\in \left\{1, 10, 31\right\} & min\ua{split}&\in\left\{2, 8, 10\right\}\\
+    crit &\in \left\{gini, entropy\right\} & n\ua{est}&\in\left\{100, 400, 1000, 1500 \right\}
+  \end{aligned}
+\end{align}
+Als optimale Parmeter gehenen hervor:
+\begin{equation*}
+  max_d = 100,\, n\ua{feat}= log2, \, min\ua{leaf}= 1, min\ua{split}=10, \,   crit= gini, \, n\ua{est}=1000
+\end{equation*}
+Für die Bestimmung der Genauigkeit des RF wird eine CrossValidation mit
+drei Iterationen verwendet. Unter der Verwendung der Standartparamter wird eine
+erzielt der RF eien Genauigkeit von $acc\ua{default}=43\pm6\%$ erreicht.
+Im Vergleich dazu erzielte das optimierte Modell eine Genauigkeit von $acc\ua{opt}=44\pm4\%$.
+Die HPO hat in diesem Fall einen geringen Einfluss auf die Genauigkeit des RF,
+und sorgt lediglich für eien Verbesserung von $1\%$ und eine geringere Streung
+der mittleren Genauigkeit.
+Die Confusionmatrix für die $120$ Rassen klassifzierung ist in Abbildung
+\ref{fig:Confusionmatrix_rf} gezeigt.
+\begin{figure}
+\centering
+\includegraphics[width=\the\textwidth]{../../final_data/autoencoder_n_120/build/confusion_matrix.pdf}
+\caption{Konfusionmatrix des Randomforest. Der Legendenschlüssel findet sich in
+Abbildung \ref{tab:legende_rf}.}
+\label{fig:Confusionmatrix_rf}
+\end{figure}
