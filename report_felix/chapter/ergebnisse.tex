@@ -61,9 +61,52 @@ wie z.\.B. der African Hunting Dog werden (fast) immer richtig klassifiziert.
 
 \section{\MiniDog}
 
+In \autoref{fig:loss-acc-minidog} sind die Loss und Accuracy Kurven für \MiniDog
+trainiert auf 5 Klassen zu sehen. Auch hier ist ab Periode 25 leichtes
+Overtraining zu erkennen, welches mit stärkerer \texttt{L2-Regularisierung} oder
+früherem Abbruch beseitigt werden könnte.
+
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{pics/MiniDogNN/confusion_matrix}
+  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/history.pdf}
+  \caption{Loss und Accuracy Kurven für \MiniDog.}
+  \label{fig:loss-acc-minidog}
+\end{figure}
+
+\autoref{fig:confusion-mini} zeigt die Confusion-Matrix des Trainings aus
+\autoref{fig:loss-acc-minidog}. Es zeigt sich, dass der African Hunting Dog im
+Vergleich zu den anderen Klassen sehr gut, am schlechtesten ist der Schipperke
+zu klassifizieren. Dies zeigt sich auch in \autoref{fig:visualize-pred}. Dort
+wurde der Schipperke am wahrscheinlichsten als African Hunting Dog
+klassifiziert, was sich auch in der Confusion-Matrix zeigt. Bis auf den African
+Hunting Dog in \autoref{fig:visualize-pred} entsprechen die wahrscheinlichsten
+Predictions nicht den True Labeln. Hier ist also noch Verbesserungspotential,
+z.\,B. durch eine umfassende Hyperparameter-Optimierung.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/confusion_matrix}
   \caption{Confusion-Matrix für das Training von MiniDogNN.}
   \label{fig:confusion-mini}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/visualize_predictions.pdf}
+  \caption{Auswahl von sechs Bilder aus dem Testdatensatz für \MiniDog mit den
+  jeweilig wahrscheinlichsten Predictions.}
+  \label{fig:visualize-pred}
+\end{figure}
+
+In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog
+für 120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
+nicht gut funktioniert hat, da alle Bilder einer einzelnen Klasse zugeordnet werden.
+Damit wird auch klar, dass nicht mit dem gleichen Netz 5 und 120 Klassen gut klassifiziert
+werden können.
+
+\begin{figure}
+  \centering
+  \includegraphics{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
+  \caption{Confusion Matrix für \MiniDog, trainiert auf 120 Klassen.}
+  \label{fig:confusion-mini-120}
 \end{figure}
