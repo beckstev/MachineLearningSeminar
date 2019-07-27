@@ -136,3 +136,46 @@ Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog.
   \caption{Confusion-Matrix für \PreDog.}
   \label{confusion-predog}
 \end{figure}
+
+\section{RF}
+
+In \autoref{loss-acc-rf} sind die Loss und Accuracy Kurven für den Autoencoder
+des Random Forest dargestellt. Dabei wurde der Autoencoder auf 120 Klassen trainiert.
+Aus der Loss-Kurve wird ersichtlich, dass Overtraining vom Start weg gegeben ist.
+Die Accuracy kann das nicht unterstützen. Allerdings ist das Overtraining klein,
+weswegen es in der Accuracy wahrscheinlich nicht sichtbar ist.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/RF/history.pdf}
+  \caption{Loss und Accuracy Kurven für den Autoencoder des Random Forest,
+  trainiert auf 120 Klassen.}
+  \label{loss-acc-rf}
+\end{figure}
+
+Die Confusion-Matrizen aus \autoref{fig:confusion-rf} zeigen, dass einerseits
+die Klassifizierung in \autoref{sub:confusion-rf-120} besser funktioniert hat
+als in \autoref{fig:confusion-mini-120}, aber andererseits schlechter als in
+\autoref{fig:confusion-prebig}. Die Confusion-Matrizen für den kleinen Datensatz
+sind schwieriger zu vergleichen im Hinblick auf \MiniDog, allerdings wird auch
+hier ersichtlich, dass die Klassifikation mit einem vortrainierten Netz deutlich
+besser funktioniert als in \autoref{fig:confusion-mini} und
+\autoref{sub:confusion-rf-5}.
+
+\begin{figure}
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/ergebnisse/RF/confusion_matrix_rf.pdf}
+    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 5 Klassen.}
+    \label{sub:confusion-rf-5}
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/ergebnisse/RF/confusion_matrix_big.pdf}
+    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 120 Klassen.}
+    \label{sub:confusion-rf-120}
+  \end{subfigure}
+  \caption{Darstellung der Confusion-Matrizen für 5 und 120 Klassen.}
+  \label{fig:confusion-rf}
+\end{figure}
