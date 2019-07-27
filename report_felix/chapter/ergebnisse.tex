@@ -1,5 +1,5 @@
-\chapter{Ergebnisse der Hyperparameter-Optimierung und des Trainings}
-\section{Hyperparameter-Optimierung von \MiniDog}
+\section{Ergebnisse der Hyperparameter-Optimierung und des Trainings}
+\subsection{Hyperparameter-Optimierung von \MiniDog}
 
 In \autoref{fig:hyper-param} ist das Ergebnis der Hyperparameter-Optimierung von \MiniDog
 dargestellt. Die optimalen Hyperparameter sind eine \texttt{Batch Size} von 2,
@@ -19,7 +19,7 @@ Allgemein wird ersichtlich, dass in den meisten Fällen die Verwendung von Farbi
 zu einer höheren Validation Accuracy führt. Also kann eine der Fragen, ob die Verwendung
 von Farbinformationen einen Vorteil in der Klassifikation bringt, mit Ja beantwortet werden.
 
-\section{Verschiedene Bildgrößen beim  Training von \PreDog und \PreBig}
+\subsection{Verschiedene Bildgrößen beim  Training von \PreDog und \PreBig}
 
 Wie bereits in \autoref{sec:größe-bilder} beschrieben, wurde für die beiden
 Neuronalen Netze, die ein vortrainiertes Netz nutzen, alle Bilder 125x138
@@ -29,20 +29,20 @@ auf ungefähr \SI{95}{\percent}. Da im kleinen Datensatz nur maximal 74 Bilder
 kleiner sind als 224x224, die Validation Accuracy aber deutlich besser ist, wird diese Methode zum Training verwendet.
 Loss und Accuracy Kurven sind im Anhang zu finden.
 
-\section{\PreBig}
+\subsection{\PreBig}
 
-In \autoref{fig:loss-acc-prebig} sind die Loss und Accuracy Kurven für \PreBig
-zu sehen. Ungefähr ab Epoche 14 ist leichtes Overtraining zu erkennen. Hier
-wäre eine Anpassung der \texttt{dropout-rate} und/oder der Stärke der \texttt{L2-Regularisierung}
-Mögliche Stellschrauben, um das Overtraining zu beseitigen, möglicherweise im Zuge
-einer umfassenden Hyperparameter-Optimierung.
-
-\begin{figure}
+\begin{wrapfigure}{r}{11.2cm}
   \centering
   \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/history_epoch.pdf}
   \caption{Loss und Accuracy Kurven für \PreBig.}
   \label{fig:loss-acc-prebig}
-\end{figure}
+\end{wrapfigure}
+
+In \autoref{fig:loss-acc-prebig} sind die Loss und Accuracy Kurven für \PreBig
+zu sehen. Ungefähr ab Epoche 14 ist leichtes Overtraining zu erkennen. Hier
+wäre eine Anpassung der \texttt{dropout-rate} und der Stärke der \texttt{L2-Regularisierung}
+Mögliche Stellschrauben, um das Overtraining zu beseitigen, möglicherweise im Zuge
+einer umfassenden Hyperparameter-Optimierung.
 
 Die Confusion-Matrix zeigt eine deutliche Diagonale, was als gut zu bewerten ist.
 Allerdings werden einzelne Klassen noch häufig falsch klassifiziert, zum Beispiel
@@ -59,7 +59,7 @@ wie z.\.B. der African Hunting Dog werden (fast) immer richtig klassifiziert.
   \label{fig:confusion-prebig}
 \end{figure}
 
-\section{\MiniDog}
+\subsection{\MiniDog}
 
 In \autoref{fig:loss-acc-minidog} sind die Loss und Accuracy Kurven für \MiniDog
 trainiert auf 5 Klassen zu sehen. Auch hier ist ab Periode 25 leichtes
@@ -111,7 +111,7 @@ gut klassifiziert werden können.
   \label{fig:confusion-mini-120}
 \end{figure}
 
-\section{\PreDog}
+\subsection{\PreDog}
 
 In \autoref{fig:loss-acc-predog} sind die Loss und Accuracy Kurven für \PreDog zu sehen.
 Es ist kein Overtraining zu erkennen, was als positiv zu bewerten ist.
@@ -137,7 +137,7 @@ Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog.
   \label{fig:confusion-predog}
 \end{figure}
 
-\section{RF}
+\subsection{RF}
 
 In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den Autoencoder
 des Random Forest dargestellt. Dabei wurde der Autoencoder auf 120 Klassen trainiert.

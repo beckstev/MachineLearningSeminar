@@ -1,9 +1,9 @@
-\chapter{Lösungsansatz zur Klassifikation}
+\section{Lösungsansatz zur Klassifikation}
 In diesem Kapitel geht es um die Strategie, wie eine Klassifikation der
 Hunderassen für den großen (120 Klassen) und den kleinen (5 Klassen) Datensatz
 mittels mehrerer Neuronaler Netze und eines Random Forest erreicht werden kann.
 
-\section{Größe der Bilder}
+\subsection{Größe der Bilder}
 \label{sec:größe-bilder}
 Höhe und Breite der Bilder sind unterschiedlich im großen Datensatz, wie in
 \autoref{fig:scatter_groß} dargestellt.
@@ -51,7 +51,7 @@ Datensatzes trainiert  werden. Stattdessen wurde auf die minimale Größe des
 kleinen Datensatzes resized. Da nur maximal 71 Bilder des großen Datensatzes
 eine kleinere Größe haben als 125x138, fällt dies nicht allzu sehr ins Gewicht.
 
-\section{Data Augmentation}
+\subsection{Data Augmentation}
 Wie bereits in \autoref{chap:datensatz} dargestellt, entfallen auf jede Klasse
 nur ungefähr 150 Bilder, was eine sehr geringe Statistik darstellt. Aus diesem
 Grund wurde Data Augmentation verwendet. Das bedeutet, dass bei jedem neuen
@@ -79,7 +79,7 @@ Trainingsbilder in jeder Epoche anders aus, was allgemein die Robustheit des
 \CNN gegenüber Translation, Rotation, etc. der Bilder erhöht und nebenbei mehr
 Statistik generiert, da die Bilder immer anders aussehen.
 
-\section{Netzwerkstrukturen}
+\subsection{Netzwerkstrukturen}
 \label{sec:netzwerk}
 Insgesamt wurden drei verschiedene Netzwerkarchitekturen verwendet, namentlich
 \MiniDog, \PreDog und \PreBig. Die letzten beiden Architekturen verwenden dabei
@@ -139,7 +139,7 @@ Hyperparametern lässt sich nicht viel sagen an dieser Stelle, da ein
 \texttt{Grid Search} verwendet wurde, um diese zu optimieren, siehe
 \autoref{sec:hyperparam}.
 
-\section{Hyperparameter-Optimierung}
+\subsection{Hyperparameter-Optimierung}
 \label{sec:hyperparam}
 Für \MiniDog und der Random Forest wurde eine Hyperparameter-Optimierung in Form
 eines \texttt{Grid Search} durchgeführt. Allerdings wurde im Falle von \MiniDog
