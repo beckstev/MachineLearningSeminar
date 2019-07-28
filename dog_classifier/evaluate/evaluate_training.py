@@ -448,7 +448,7 @@ def preprocess(path_to_model, encoder_model, fname):
 
 def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
     print('\nvisualize predictions \n')
-    plt.figure(figsize=(6.224, 4))
+    plt.figure(figsize=(6.224, 3.3))
 
     path = path + '/build/'
     if not os.path.exists(path):

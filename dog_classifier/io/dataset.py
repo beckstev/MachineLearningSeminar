@@ -289,7 +289,7 @@ def dog_image_cluster(path_to_labels, save_path_results, img_num_row, img_num_co
 
     img_paths = df_all['path_to_image'].values
     img_paths = img_paths[img_index]
-    fig, axes = plt.subplots(img_num_col, img_num_row, figsize=(6.224, 3.5))
+    fig, axes = plt.subplots(img_num_col, img_num_row, figsize=(6.224, 2))
 
     for ax, img_path in tqdm(zip(axes.reshape(-1), img_paths)):
         img_path = img_path.replace('..', '../..')
