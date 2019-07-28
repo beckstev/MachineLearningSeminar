@@ -8,7 +8,7 @@ der Farbinformationen.
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{pics/ergebnisse/hyper_raum.pdf}
+  \includegraphics[scale=0.6]{pics/ergebnisse/hyper_raum.pdf}
   \caption{Darstellung der Ergebnisse der Hyperparameter-Optimierung
   von \MiniDog. Die beste Kombination ist als Stern dargestellt und wurde auch
   für das Training verwendet.}
@@ -83,21 +83,6 @@ Hunting Dog in \autoref{fig:visualize-pred} entsprechen die wahrscheinlichsten
 Predictions nicht den True Labeln. Hier ist also noch Verbesserungspotential,
 z.\,B. durch eine umfassende Hyperparameter-Optimierung.
 
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/confusion_matrix}
-  \caption{Confusion-Matrix für das Training von MiniDogNN.}
-  \label{fig:confusion-mini}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/visualize_predictions.pdf}
-  \caption{Auswahl von sechs Bilder aus dem Testdatensatz für \MiniDog mit den
-  jeweilig wahrscheinlichsten Predictions.}
-  \label{fig:visualize-pred}
-\end{figure}
-
 In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog für
 120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
 nicht gut funktioniert hat, da alle Bilder einer einzelnen Klasse zugeordnet
@@ -105,20 +90,52 @@ werden. Damit wird auch klar, dass nicht mit dem gleichen Netz 5 und 120 Klassen
 gut klassifiziert werden können.
 
 \begin{figure}
-  \centering
-  \includegraphics{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
-  \caption{Confusion Matrix für \MiniDog, trainiert auf 120 Klassen.}
-  \label{fig:confusion-mini-120}
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/ergebnisse/MiniDogNN/confusion_matrix}
+    \caption{Confusion-Matrix für das Training von MiniDogNN.}
+    \label{fig:confusion-mini}
+  \end{subfigure}
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
+    \caption{Confusion Matrix für \MiniDog, trainiert auf 120 Klassen.}
+    \label{fig:confusion-mini-120}
+  \end{subfigure}
+  \caption{Confusion-Matrizen für \MiniDog für den kleinen und den großen Datensatz.}
+  \label{fig:confusion-mini-gesamt}
 \end{figure}
+
+% \begin{figure}
+%   \centering
+%   \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/confusion_matrix}
+%   \caption{Confusion-Matrix für das Training von MiniDogNN.}
+%   \label{fig:confusion-mini}
+% \end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/visualize_predictions.pdf}
+  \caption{Auswahl von sechs Bilder aus dem Testdatensatz des kleinen
+  Datensatzes für \MiniDog mit den jeweilig wahrscheinlichsten Predictions.}
+  \label{fig:visualize-pred}
+\end{figure}
+
+% \begin{figure}
+%   \centering
+%   \includegraphics{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
+%   \caption{Confusion Matrix für \MiniDog, trainiert auf 120 Klassen.}
+%   \label{fig:confusion-mini-120}
+% \end{figure}
 
 \subsection{\PreDog}
 
-\begin{wrapfigure}{r}{11.2cm}
+\begin{figure}
   \centering
   \includegraphics[scale=0.8]{pics/ergebnisse/PreDogNN/history_epoch.pdf}
   \caption{Loss und Accuracy Kurven für \PreDog.}
   \label{fig:loss-acc-predog}
-\end{wrapfigure}
+\end{figure}
 
 In \autoref{fig:loss-acc-predog} sind die Loss und Accuracy Kurven für \PreDog zu sehen.
 Es ist kein Overtraining zu erkennen, was als positiv zu bewerten ist.
@@ -139,13 +156,13 @@ Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog.
 
 \subsection{RF}
 
-\begin{wrapfigure}{r}{11.2cm}
+\begin{figure}
   \centering
   \includegraphics[scale=0.8]{pics/ergebnisse/RF/history.pdf}
   \caption{Loss und Accuracy Kurven für den Autoencoder des Random Forest,
   trainiert auf 120 Klassen.}
   \label{fig:loss-acc-rf}
-\end{wrapfigure}
+\end{figure}
 
 In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den Autoencoder
 des Random Forest dargestellt. Dabei wurde der Autoencoder auf 120 Klassen trainiert.
