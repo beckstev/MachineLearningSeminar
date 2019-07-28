@@ -171,11 +171,11 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
     classes = encoder.inverse_transform(classes)
+    classes = [cl.replace('_', ' ') for cl in classes]
 
     if n_classes == 120:
         mpl.rcParams.update({'font.size': 3})
     else:
-        classes = [cl.replace('_', ' ') for cl in classes]
         mpl.rcParams.update({'font.size': 5})
 
     # Check if normalize is True, then scale the colorbar accordingly
@@ -228,7 +228,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
     if n_classes == 120:
-        header = ['$\map{Label}$', '$\map{Hunderasse}$']
+        header = ['Label', 'Hunderasse']
         places = [1.0, 1.0]
         data = [ticks, classes]
         caption = 'Legende: Label - Hunderasse'
