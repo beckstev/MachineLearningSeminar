@@ -1,5 +1,34 @@
 \section{Diskussion}
+Im folgenden Abschnitt werden die erzielten Ergebnisse diskutiert und
+ein Ausblick gegeben.
 
-\subsection{Limitierung}
-\subsection{Reproduzierbarkeit}
+Bei dem Vergleich der \textsc{MiniDogNN} mit den vortranierten Modellen,
+zeigt sich deutlich, welchen Einfluss die FCN auf die Genauigkeiten der
+Klassifizier haben. Die Genauigkeit ist somit deutlich mit der Anzahl an Features
+die das FCN klasssifiziert korreliert. Desweiteren zeigt sich bei \textsc{MiniDoggNN}-Architektur
+für $120$ Rassen, dass die Anzahl der Neuronen pro Lage eine geringe Anzahl an
+Features scheinbar nicht ausgleichen kann.
+
+Die Verwendung eines AutoEncoders und eines RF hat für $5$ Hunderassen bereiteis
+eine schlechtere Performance, als die zugehörige \textsc{MiniDogNN}-Architektur.
+Die schlechte Genaugkeit, ist vermutlich auf die geringe Bildgöße von $96\times96$
+zurückzuführen. Ein Eigenschaft die, wie getestet, selbst der \textsc{PreDogNN}-Architektur
+die Klassifizierung erschwert und die Genauigkeit auf $60\%$. Diese Abhäbgigkeit
+lässt sich auf die Informationsreduzierung bei Runterskalierung zurückführen.
+
+Die durchgeführt HPO für das \textsc{MiniDogNN} zeigen, dass bei NN eine HPO
+sich positiv auf die Genauigkeitsteigerung auswirken kann. Durch die Vergrößerung
+des Parameterraumes oder einer zufälligen Paramertwahl kann eventuell noch eine
+weitere an Genauigkeit gewonnen werden. Insbesondere sollten die vortranierten
+Modelle eine HPO erfahren. Bei dieser wäre der Hyperparamter der Bildgröße,
+wie oben besprochen, ein interessanter Parameter.Jedoch verdeutlich
+die HPO des RF, dass HPOs im Allgemeinen keine Universallösung sein müssen.
+
+Bei der Betrachtung der Konfusionmatrizen, insbeonsdere für $5$ Hunderassen,
+fällt auf, dass beim \textsc{MiniDogNN} Poodle hauptsächlich mit Beagle verwechselt
+werden. 
+
+
+
+
 \subsection{Ausblick}
