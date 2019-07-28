@@ -28,7 +28,7 @@ if __name__ == '__main__':
                                                     fname_pred)
 
     # visualize_predictions
-    eval.visualize_predictions(Y_pred, Y_true, path_to_images, args.encoder_model, path=args.model_path)
+    # eval.visualize_predictions(Y_pred, Y_true, path_to_images, args.encoder_model, path=args.model_path)
     # Multiclass-Analyse
     # eval.prob_multiclass(Y_pred, Y_test, Y_true, label=1, path=args.model_path)
 

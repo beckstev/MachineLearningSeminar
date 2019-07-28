@@ -16,6 +16,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import sys
 from keras.utils.generic_utils import CustomObjectScope
+from matplotlib.ticker import FixedLocator, FormatStrFormatter
+from dog_classifier.evaluate.tab2tex import make_table
 
 mpl.use('pgf')
 mpl.rcParams.update(
@@ -151,10 +153,9 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     # Set figsize
     plt.figure(figsize=(5.8, 3.58))
     # change font size according to number of classes
-    if len(classes) == 120:
-        mpl.rcParams.update({'font.size': 3})
-    else:
-        mpl.rcParams.update({'font.size': 5})
+    n_classes = len(classes)
+    print(n_classes)
+
 
     print("plot confusion matrix")
 
@@ -170,25 +171,47 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
     classes = encoder.inverse_transform(classes)
-    classes = [cl.replace('_', ' ') for cl in classes]
+
+    if n_classes == 120:
+        mpl.rcParams.update({'font.size': 3})
+    else:
+        classes = [cl.replace('_', ' ') for cl in classes]
+        mpl.rcParams.update({'font.size': 5})
+
     # Check if normalize is True, then scale the colorbar accordingly
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
 
-    if len(classes) == 120:
-        plt.title(title, fontsize=12)
+    if n_classes == 120:
+        plt.title(title, fontsize=10)
     else:
         plt.title(title)
 
     plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
-    plt.yticks(tick_marks, classes)
+    tick_marks = np.arange(n_classes)
+    if n_classes == 120:
+        ticks = range(1, n_classes+1)
+        plt.axes().xaxis.set_major_locator(FixedLocator(ticks[0::2]))
+        plt.axes().xaxis.set_minor_locator(FixedLocator(ticks[1::2]))
+        plt.axes().xaxis.set_minor_formatter(FormatStrFormatter("%d"))
+        plt.axes().tick_params(which='major', pad=6, axis='x', rotation=90, labelsize=2)
+        plt.axes().tick_params(which='minor', pad=0.5, axis='x', rotation=90, labelsize=4)
+
+        plt.axes().yaxis.set_major_locator(FixedLocator(ticks[0::2]))
+        plt.axes().yaxis.set_minor_locator(FixedLocator(ticks[1::2]))
+        plt.axes().yaxis.set_minor_formatter(FormatStrFormatter("%d"))
+        plt.axes().tick_params(which='major', pad=6, axis='y', labelsize=2)
+        plt.axes().tick_params(which='minor', pad=0.5, axis='y', labelsize=4)
+        #plt.xticks(horizontalalignment='right')
+
+    else:
+        plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
+        plt.yticks(tick_marks, classes)
 
     # print text if not 120 classes are given
-    if len(classes) != 120:
+    if n_classes != 120:
         # Loop over data dimensions and create text annotations.
         fmt = '.2f' if normalize else 'd'
         thresh = cm.max() / 2.
@@ -204,6 +227,14 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     plt.clf()
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
+    if n_classes == 120:
+        header = ['$\map{Label}$', '$\map{Hunderasse}$']
+        places = [1.0, 1.0]
+        data = [ticks, classes]
+        caption = 'Legende: Label - Hunderasse'
+        label = 'tab:legende_rf'
+        filename = os.path.join(path, 'legende.tex')
+        make_table(header, places, data, caption, label, filename)
 
 
 def display_errors(n, Y_cls, Y_true, Y_pred, X_test, height, width, nrows,
