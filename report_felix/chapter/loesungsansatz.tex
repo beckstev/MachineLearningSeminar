@@ -25,7 +25,7 @@ Bilder auf eine Größe gebracht werden, da \texttt{numpy arrays} eine definiert
 Größe haben müssen und im Verlaufe des Trainings \texttt{numpy arrays} verwendet
 werden. Eine Möglichkeit wäre es nun, alle Bilder auf diese minimale Größe zu
 resizen. Damit würde allerdings ein Informationsverlust einhergehen. Aus diesem
-Grund wurde für \MiniDog (mehr dazu in \autoref{sec:netzwerk}) ein zu Teilen
+Grund wurde für \MiniDog{} (mehr dazu in \autoref{sec:netzwerk}) ein zu Teilen
 selbstgeschriebener \texttt{Datagenerator} verwendet, der die Bilder batchwise
 lädt und batchwise auf das Minimum im Batch resized. Auf diese Weise ist der
 Informationsverlust geringer als alle Bilder auf 125x138 zu resizen.
@@ -44,7 +44,7 @@ den kleinen Datensatz dargestellt.
   \label{fig:scatter_klein}
 \end{figure}
 
-Für \PreDog und \PreBig (mehr in \autoref{sec:netzwerk}) muss aufgrund der
+Für \PreDog{} und \PreBig{} (mehr in \autoref{sec:netzwerk}) muss aufgrund der
 vortrainierten Netze eine feste Größe der Bilder gewählt werden. Wegen
 technischen Schwierigkeiten konnte nicht auf die minimale Größe des großen
 Datensatzes trainiert  werden. Stattdessen wurde auf die minimale Größe des
@@ -76,28 +76,28 @@ Drei Beispiele sind in \autoref{fig:data_augmentation} zu sehen.
 
 Da der Datagenerator nach jeder Epoche neu aufgerufen wird, sehen die
 Trainingsbilder in jeder Epoche anders aus, was allgemein die Robustheit des
-\CNN gegenüber Translation, Rotation, etc. der Bilder erhöht und nebenbei mehr
+\CNN{} gegenüber Translation, Rotation, etc. der Bilder erhöht und nebenbei mehr
 Statistik generiert, da die Bilder immer anders aussehen.
 
 \subsection{Netzwerkstrukturen}
 \label{sec:netzwerk}
 Insgesamt wurden drei verschiedene Netzwerkarchitekturen verwendet, namentlich
-\MiniDog, \PreDog und \PreBig. Die letzten beiden Architekturen verwenden dabei
+\MiniDog{}, \PreDog{} und \PreBig{}. Die letzten beiden Architekturen verwenden dabei
 ein vortrainiertes Netz mit Namen \texttt{InceptionResNetV2}. Dieses ist bei
 Keras vorimplementiert \cite{inception} und wurde auf \texttt{ImageNet}
 trainiert, einem Datensatz insgesamt bestehend aus 14197122 Bildern
 \cite{imagenet}.
 
 Da \texttt{InceptionResNetV2} alleine bereits 55873736 freie Parameter hat, muss
-bei \PreBig und \PreDog Regularisierung verwendet werden. Die Struktur ist für
+bei \PreBig{} und \PreDog{} Regularisierung verwendet werden. Die Struktur ist für
 beide Neuronalen Netze die gleiche: An \texttt{InceptionResNetV2} ist eine Lage
 \texttt{AveragePooling2D} mit einer \texttt{Poolsize=(4, 4)} und eine Lage
 \texttt{GlobalMaxPooling2D} angeschlossen, um die Anzahl der freien Parametern
 zu reduzieren. Danach kommen drei \texttt{Dense}-Layer, mit den
-Dimensionalitäten 30, 30, 5 (für \PreDog) und 150, 120, 120 für \PreBig. Die
-Layern sind \texttt{L2-Regularisiert} mit einem Wert von 0.01 für \PreDog und
-0.007 für \PreBig. Außerdem befinden sich je ein \texttt{Dropout}-Layer mit
-einer Stärke von 0.2 (\PreDog) bzw. 0.15 (\PreBig) zwischen den
+Dimensionalitäten 30, 30, 5 (für \PreDog{}) und 150, 120, 120 für \PreBig{}. Die
+Layern sind \texttt{L2-Regularisiert} mit einem Wert von 0.01 für \PreDog{} und
+0.007 für \PreBig{}. Außerdem befinden sich je ein \texttt{Dropout}-Layer mit
+einer Stärke von 0.2 (\PreDog{}) bzw. 0.15 (\PreBig{}) zwischen den
 \texttt{Dense}-Layern. Die Aktivierungsfunktion der \texttt{Dense}-Layer ist
 \texttt{PReLU}, die Initialisierung wurde nach der von Kaiming He entwickelten
 Methode durchgeführt \cite{tensowflow-he}, so wie in \cite{he-ini} empfohlen.
@@ -109,17 +109,17 @@ mit einem Koeffizienten $a$, der adaptiv angepasst wird \cite{prelu}. Die
 Aktivierungsfunktion des letzten \texttt{Dense}-Layers ist \texttt{softmax}.
 
 Außerdem wurde ein Neuronales Netz ohne vortrainiertes Netz verwendet, dies heißt
-\MiniDog. Die Struktur ist in \autoref{fig:struktur_minidognn} abgebildet.
+\MiniDog{}. Die Struktur ist in \autoref{fig:struktur_minidognn} abgebildet.
 
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{pics/nn.pdf}
-  \caption{Struktur des Neuronalen Netzes \MiniDog. Die Dimensionalität
+  \caption{Struktur des Neuronalen Netzes \MiniDog{}. Die Dimensionalität
   der \texttt{Dense}-Layer richtet sich nach der Anzahl der Klassen im verwendeten Datensatz.}
   \label{fig:struktur_minidognn}
 \end{figure}
 
-Wie schon bei \PreDog und \PreBig wird für die \texttt{Dense}-Layer und auch
+Wie schon bei \PreDog{} und \PreBig{} wird für die \texttt{Dense}-Layer und auch
 für die \texttt{Convolutional}-Layer wird die von Kaiming He entwickelte Methode
 zur Initialisierung der Gewichte verwendet. Ebenso wird \texttt{PReLU} als
 Aktivierungsfunktion genutzt für beide Arten von Layern. Außerdem wird
@@ -141,8 +141,8 @@ Hyperparametern lässt sich nicht viel sagen an dieser Stelle, da ein
 
 \subsection{Hyperparameter-Optimierung}
 \label{sec:hyperparam}
-Für \MiniDog und der Random Forest wurde eine Hyperparameter-Optimierung in Form
-eines \texttt{Grid Search} durchgeführt. Allerdings wurde im Falle von \MiniDog
+Für \MiniDog{} und der Random Forest wurde eine Hyperparameter-Optimierung in Form
+eines \texttt{Grid Search} durchgeführt. Allerdings wurde im Falle von \MiniDog{}
 eine selbgeschriebene Funktion verwendet, die aus Zeitgründen auf die
 \texttt{Cross Validation} verzichtet. Auch werden nur drei Hyperparameter
 optimiert: Die Stärke der \texttt{L2-Re\-gu\-la\-ri\-sier\-ung}, die
@@ -151,11 +151,11 @@ werden die Bilder einmal in schwarz-weiß und einmal mit Farbinformationen
 eingelesen, um zu prüfen, wie wichtig dieser Parameter für das Neuronale Netz
 ist.
 
-Für den RF wurden \texttt{GridSearchCV} mit einer dreifachen Kreuzvalidierung genutzt.
+Für den \RF{} wurden \texttt{GridSearchCV} mit einer dreifachen Kreuzvalidierung genutzt.
 Unter anderem wurde die maximale Tiefe oder die Anzahl an Schätzern optimiert.
 
 % \begin{table}
-%   \caption{Optimierte Hyperparameter für den RF}
+%   \caption{Optimierte Hyperparameter für den \RF}
 %   \label{tab:hyper_rf}
 %   \begin{tabular}{c c c c c c}
 %     \toprule
@@ -166,4 +166,4 @@ Unter anderem wurde die maximale Tiefe oder die Anzahl an Schätzern optimiert.
 %   \end{tabular}
 % \end{table}
 
-Für eine Hyperparameteroptimierung von \PreBig und \PreDog war die Hardware nicht stark genug.
+Für eine Hyperparameteroptimierung von \PreBig{} und \PreDog{} war die Hardware nicht stark genug.
