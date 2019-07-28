@@ -365,7 +365,7 @@ def plot_predictions(n, model, X_test, height, width, path):
     plt.savefig("{}/plot_predictions.pdf".format(path))
 
 
-def predict(path_to_model, encoder_model, fname, img_resize):
+def predict(path_to_model, encoder_model, fname, img_resize, use_rgb):
     """function will predict with predict_generator from a given, saved model
     and save the result as txt
     :param path_to_model: Path to model
@@ -390,7 +390,8 @@ def predict(path_to_model, encoder_model, fname, img_resize):
                                    encoder_model=encoder_model,
                                    shuffle=True,
                                    is_test=True,
-                                   const_img_resize=img_resize)
+                                   const_img_resize=img_resize,
+                                   use_rgb=use_rgb)
 
     # Test predicten
     Y_pred = model.predict_generator(testDataloader, verbose=1)
@@ -445,41 +446,57 @@ def preprocess(path_to_model, encoder_model, fname):
     return Y_pred, Y_test, Y_cls, Y_true, path_to_images
 
 
-def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model):
+def visualize_predictions(Y_pred, Y_true, path_to_images, encoder_model, path):
+    print('\nvisualize predictions \n')
+    plt.figure(figsize=(6.224, 4))
+
+    path = path + '/build/'
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     path_to_labels = os.path.join(Path(os.path.abspath(__file__)).parents[2],
                                   "labels/")
 
     encoder_path = os.path.join(path_to_labels, encoder_model)
     encoder = LabelEncoder()
     encoder.classes_ = np.load(encoder_path)
-    for index in range(len(Y_pred)):
+
+    for index in range(24, 30):
         # Indices of the array represent the dog race
-        race_index_true = np.where(Y_true[index] == 1)
-        race_true = encoder.inverse_transform(race_index_true)
+        race_index_true = Y_true[index]
+        race_true = encoder.inverse_transform(np.array([race_index_true]))
+        race_true = [cl.replace('_', ' ') for cl in race_true]
 
         # Indicies of the three races with highest prohability
-        # Notice: the last element of races_high_pred  has the highest prob
-        races_high_pred = np.argsort(Y_pred[index])[-3:]
+        # Notice: the last element of races_high_pred has the highest prob
+        races_high_pred = np.argsort(Y_pred[index])[-1:][::-1]
         races_pred = encoder.inverse_transform(races_high_pred)
+
+        plt.subplot(2, 3, index-23)
 
         path_to_image = path_to_images[index]
         img = plt.imread(path_to_image)
         plt.imshow(img)
         img_width = img.shape[1]
         img_height = img.shape[0]
-        scale = 6
-        height_steps = img_height / 6
+        # scale = 6
+        # height_steps = img_height / 6
 
         for i in range(len(races_pred)):
             race_index_pred = races_high_pred[i]
             prob = Y_pred[index][race_index_pred] * 100
-            text = f"{races_pred[i]}: \n {prob:.2} %"
-            plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
+            text = f"{races_pred[i].replace('_', ' ')}: {prob:.2f} \%"
+            # plt.text(img_width * 51/50, (i + scale/2 - 1) * height_steps, text)
+            # plt.text(img_width * 0.08, img_height * 1.09, text, fontsize=7)
+            plt.annotate(text, (0, 0), (0, -1), xycoords='axes fraction',
+                         textcoords='offset points', va='top', fontsize=7)
 
-        plt.title(f'True race: {race_true[0]} ')
+        plt.title(f'True race: {race_true[0]} ', fontsize=7)
         plt.axis('off')
         # plt.savefig('test.png', bbox_inches='tight', pad_inches=0.05)
-        plt.show()
+        # plt.show()
+    plt.savefig("{}/visualize_predictions.pdf".format(path), dpi=500,
+                pad_inches=0, bbox_inches='tight')
 
 
 def model_loader(path_to_model, main_model, checkpoint_model):
@@ -499,7 +516,8 @@ def model_loader(path_to_model, main_model, checkpoint_model):
             reply = str(input())
             if reply == 'y':
                 print('Using checkpoint model')
-                checkpoint_model_params = os.path.join(path_to_model, checkpoint_model)
+                checkpoint_model_params = os.path.join(path_to_model,
+                                                       checkpoint_model)
                 model = load_model(checkpoint_model_params)
             else:
                 print('Exiting program')
