@@ -21,13 +21,13 @@ auf einer Nvidia Grafikarte statt.
 Die NN werden auch auf einem kleineren Datensatz mit lediglich $5$ Hunderassen
 getestet, um Verarbeitungszeiten zu reduzieren. Dies ist insbesondere bei
 der Hyperparamteroptimierung von \textsc{MiniDogNN} wichtig.
-\subsubsection{MiniDogNN -- Hyperparamteroptimerung}
+\subsubsection{MiniDogNN}
 Bei der Hyperparamteroptimerung (HPO) wurden die Einstellung für die $l2$-Regularisierung $l2\ua{value}$,
 die Batchgröße $bs$ und die Farbinformation $color$ der Bilder variiert. Der vollständige
 Parameterraum lautet, wie folgt:
 \begin{equation}
   \label{eq:Parameterraum_MiniDogNN}
-  bs\in\left\{2, 5, 10, 15, 17, 25\right\}, \quad l2\ua{value}\in\left\{0.01, 0.001, 0.005, 0.0001\right\}, \quad color\in\left\{rgb, grey\right\}
+  bs\in\left\{2,\, 5, \,10, \,15,\, 17,\, 25\right\}, \quad l2\ua{value}\in\left\{0.01, \,0.001,\, 0.005,\, 0.0001\right\}, \quad color\in\left\{rgb, \,grey\right\}
 \end{equation}
 Die maximale Größe der Batchgröße wurde durch den Grafikspeicher limitiert.
 Als anfängliche Lernrate wird $lr=0.001$ gewählt.
@@ -36,7 +36,7 @@ deutlich ist der positive Einfluss der Farbinformation $color=rgb=\map{True}=1.0
 zu erkennen.
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/hyper_raum.pdf}
+\includegraphics[width=0.5\textwidth]{../../final_data/MiniNN_n5/hyper_raum.pdf}
 \caption{Ergebniss der HPO, die $z$-Achse \emph{Use RGB} gibt an, ob Farbinformation
           verwendet wurden. Aus den möglichen Paramtern ist die bestmögliche Kombination
          lautet: $bs=2, \, l2\ua{value}=0.001, \, color=rgb$.}
@@ -46,16 +46,9 @@ Von den $48$ möglichen Kombinationen wurden $43$ erfolgreich beendet, die Restl
 wurden auf Grund von Grafikspeicherproblem von \textsc{keras} abgebrochen. Eine
 Genauigkeitsverteilung ist in Abbildung \ref{fig:Genauigkeitverteilung_MiniDogNN} zu erkennen und verdeutlicht,
 dass HPO einer signififikante Genauigkeitsteigerung verursachen kann.
-\begin{figure}
-\centering
-\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/acc_hist.pdf}
-\caption{Genauigkeitverteilung der erfolgreich tranierten Modelle der HPO.}
-\label{fig:Genauigkeitverteilung_MiniDogNN}
-\end{figure}
 Es wird der Einfachheit angenommen, dass das Ergebnis der HPO, trotz anderem
 FCN, sowohl für das fünf als auch für das 120 Rassen MiniDogNN gilt.
 
-\subsubsection{MiniDogNN}
 Die Traningsparameter werden nach der HPO gewählt.
 In Abbildung \ref{fig:MiniDogNN_Loss_Acc} findet sich die Traningsdokumentation.
 In dem Plot ist zu erkennen, dass die Architektur geringfügig Übertraniert
@@ -71,7 +64,7 @@ Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Konfusionmat
 \end{subfigure}
 \begin{subfigure}{0.48\textwidth}
 \centering
-\includegraphics[width = \textwidth]{../../final_data/MiniNN_n5/confusion_matrix_mini.pdf}
+\includegraphics[width = \textwidth]{../../final_data/MiniNN_n5/confusion_matrix.pdf}
 \caption{Konfusionmatrix des \textsc{MiniDogNN}.}
 \label{fig:MiniDogNN_Konfusionmatrix}
 \end{subfigure}
@@ -113,21 +106,7 @@ Verwendebarkeit der Architektur auswirkt. Bei dem Vergleich mit der Konfusionmat
 (vgl. Abb. \ref{fig:MiniDogNN_120_Konfusionmatrix}) und
 der Loss- und Genauigkeitsdokumentation (vgl. Abb. \ref{fig:MiniDogNN_120_Loss_Acc})
 wir deutlich, dass die Architektur kein verwendbare Aussage trifft.
-\begin{figure}
-\centering
-\begin{subfigure}{0.48\textwidth}
-\centering
-\includegraphics[width = \textwidth]{../../final_data/MiniNN_n120/08-07-2019_21:08:09_n_120/build/history_loss.pdf}
-\caption{Traningsfortschritt des \textsc{MiniDogNN}.}
-\label{fig:MiniDogNN_120_Loss_Acc}
-\end{subfigure}
-\begin{subfigure}{0.48\textwidth}
-\centering
-\includegraphics[width = \textwidth]{../../final_data/MiniNN_n120/08-07-2019_21:08:09_n_120/build/confusion_matrix.pdf}
-\caption{Konfusionmatrix des \textsc{MiniDogNN}.}
-\label{fig:MiniDogNN_120_Konfusionmatrix}
-\end{subfigure}
-\end{figure}
+
 \subsubsection{PreBigDogNN}
 Die enorme Anzahl an Features in Verbindung mit der Regularisierung führen dazu,
 dass \textsc{PreBigDogNN} eine Genauigkeit deutlich über der Rategenauigkeit
@@ -149,12 +128,11 @@ wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.s
 \end{subfigure}
 \end{figure}
 
-\subsection{Alternative Methode}
+\subsection{Alternative Methode-- AutoEncoder \& Randomforest}
 Wie in vorherigen Kapitel erwähnt, wird als Alternativer Ansatz ein Randomforest
 in Verbindung mit einem Autoencoder verwendet. In diesem Kapitel sollen nun
 Einzelheiten bzgl. Traning und Optimierung und Ergebnisse präsentiert werden.
 
-\subsubsection{AutoEncoder}
 Der schematische Aufbau des Autoencoder findet sich in Abbildung \ref{fig:Autoencoder}.
 Wie dort angedeutet, werden die Bilder auf eine Größe von $96x96$ runterskaliert,
 hierdurch wird kein Bild hochskaliert. Ein weiterer Effekt der im zum vergleich
@@ -168,7 +146,6 @@ der Genauigkeit nicht auf overtraning hindeuten, zeigt sich bei der Losskurve
 (vgl. Abb. \ref{}) deutliches overtraning. Dies ist wahrscheinlicha auf die
 Verwendung von \textbf{Anzahl Paramter} ohne Regularisierung zurückzuführen.
 
-\subsubsection{Randomforest}
 Mit Hilfe der Features generiert vom Autoencoder soll der
 Randomforest (RF) fähig sein Hunderassen zu klassifizieren.
 Hierfür wird zunächst eine HPO an einem RF der fünf Hunderassen klassifizieren kann
@@ -182,14 +159,14 @@ Eine vollständige Auflistung des Parameterraums findet sich in der Gleichung \e
 \begin{align}
   \begin{aligned}
     \label{eq: rf_parameter_raum}
-    max_d &\in \left\{\infty, 10, 100\right\} & n\ua{feat}&\in\left\{auto, log2\right\}\\
-    min\ua{leaf} &\in \left\{1, 10, 31\right\} & min\ua{split}&\in\left\{2, 8, 10\right\}\\
-    crit &\in \left\{gini, entropy\right\} & n\ua{est}&\in\left\{100, 400, 1000, 1500 \right\}
+    max_d &\in \left\{\infty,\, 10,\, 100\right\} & n\ua{feat}&\in\left\{auto, \,log2\right\}\\
+    min\ua{leaf} &\in \left\{1,\, 10,\, 31\right\} & min\ua{split}&\in\left\{2,\, 8,\, 10\right\}\\
+    crit &\in \left\{gini,\, entropy\right\} & n\ua{est}&\in\left\{100,\, 400,\, 1000,\, 1500 \right\}
   \end{aligned}
 \end{align}
 Als optimale Parmeter gehenen hervor:
 \begin{equation*}
-  max_d = 100,\, n\ua{feat}= log2, \, min\ua{leaf}= 1, min\ua{split}=10, \,   crit= gini, \, n\ua{est}=1000
+  max_d = 100,\,\, n\ua{feat}= log2, \,\, min\ua{leaf}= 1,\,\, min\ua{split}=10, \,\,   crit= gini, \,\, n\ua{est}=1000
 \end{equation*}
 Für die Bestimmung der Genauigkeit des RF wird eine CrossValidation mit
 drei Iterationen verwendet. Unter der Verwendung der Standartparamter wird eine
@@ -198,11 +175,12 @@ Im Vergleich dazu erzielte das optimierte Modell eine Genauigkeit von $acc\ua{op
 Die HPO hat in diesem Fall einen geringen Einfluss auf die Genauigkeit des RF,
 und sorgt lediglich für eien Verbesserung von $1\%$ und eine geringere Streuung
 der mittleren Genauigkeit.
-Die Confusionmatrix für die $120$ Rassen klassifzierung ist in Abbildung
-\ref{fig:Confusionmatrix_rf} gezeigt.
+Die Confusionmatrix für die $120$ Rassenklassifzierung ist in Abbildung
+\ref{fig:Confusionmatrix_rf} gezeigt. Die mittlere Genauigkeit für den
+RF beträgt in diesem Fall $acc\ua{mean,120}=5\pm0.1\%$.
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{../../final_data/autoencoder_n_120/build/confusion_matrix.pdf}
+\includegraphics[width=0.5\textwidth]{../../final_data/autoencoder_n_120/build/confusion_matrix.pdf}
 \caption{Konfusionmatrix des Randomforest. Der Legendenschlüssel findet sich in
 Abbildung \ref{tab:legende_rf}.}
 \label{fig:Confusionmatrix_rf}

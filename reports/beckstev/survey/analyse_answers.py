@@ -42,7 +42,7 @@ print(f'Mean acc: {mean_acc}')
 plt.figure(figsize=(5.8, 3.58))
 plt.bar(counter_num_dog_races_keys, height=counter_num_dog_races_items)
 
-x_ticks = range(1, int(max(counter_num_dog_races_keys))+2, 2)
+x_ticks = range(1, int(max(counter_num_dog_races_keys))+2, 3)
 x_ticks_strings = [str(x) for x in x_ticks]
 plt.xticks(x_ticks, x_ticks_strings)
 
@@ -51,8 +51,8 @@ y_ticks_strings = [str(y) for y in y_ticks]
 plt.yticks(y_ticks, y_ticks_strings)
 
 text = f'Total number\n  of participants {num_participants}'
-x_pos_text = max(counter_num_dog_races_keys) - 6
-y_pos_text = max(counter_num_dog_races_items) + 0.25
+x_pos_text = max(counter_num_dog_races_keys) - 12
+y_pos_text = max(counter_num_dog_races_items)
 plt.text(x_pos_text, y_pos_text, s=text)
 plt.xlabel('Number of nameable dog races')
 plt.ylabel('Number of participants')
