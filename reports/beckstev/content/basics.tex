@@ -152,7 +152,7 @@ in Abbildung \ref{fig:beispielhafte_netz_architecture}.
 
  \subsubsection{MiniDogNN}
  Die \textsc{MiniDogNN}-Architektur ist eine einfach gehaltenes Netzwerk, welches
- in Abbildung \ref{fig:MiniNN} schmeatisch dargestellt ist. In der Abbildung sind
+ in Abbildung \ref{fig:MiniDogNN} schmeatisch dargestellt ist. In der Abbildung sind
  die Aktivierungsfunktionen nicht mit eingezeichnet. Die Anzahl der Neuronen
  hängt von der Anzahl der Hunderassen $N\ua{dr}$ ab, die klassifiziert werden sollen.
  Darüberhinaus hängt die Anzahl der tranierbaren Parameter $n\ua{train}$ auch davon ab, ob \textsc{RGB} oder
@@ -165,7 +165,7 @@ in Abbildung \ref{fig:beispielhafte_netz_architecture}.
    \end{aligned}
  \end{align}
  Zwar ist Variabelenenraum gegeben durch die Bildgröße und nicht durch das Bild, wie
- bei einem FCN, jedoch wird in den Gleichungen \eqref{eq:ntrain_MiniDogNN} deutlich,
+ bei einem FCN, jedoch wird in den Gleichungen \eqref{eq: ntrain_MiniDogNN} deutlich,
  dass es deutlich das eine Regularisierung notwendig. Eine Regularisierung
  erfolgt bei der \textsc{MiniDogNN}-Architektur mit Hilfe eine $l2$-Architektur.
  \begin{figure}
@@ -206,13 +206,11 @@ $150$ auf $120$ Neuronen in der zweiten Lage ist mit der an der zu tranierenden 
 erklären: Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
 $1536$ Features (\textsc{MiniDogNN} $64$) was zu einer Vielzahl von
 tranierbaren Gewichten innheralb des FCN führt:
-\begin{align}
-  \begin{aligned}
+\begin{equation}
   \label{eq:ntrain_PreDogNN_PreBigDogNN}
-  n\ua{train}(\mathrm{rgb}) &= 47255 \quad \mathrm{PreDogNN} \\
-  n\ua{train}(\mathrm{rgb}) &= 249545 \quad \mathrm{PreBigDogNN}
-\end{aligned}
-\end{align}
+  n\ua{train}(\mathrm{rgb}) = 47255 \quad \mathrm{PreDogNN}, \qquad
+  n\ua{train}(\mathrm{rgb}) = 249545 \quad \mathrm{PreBigDogNN}
+\end{equation}
 Aus diesem Grund ist hier Regularisierung entscheidend, hierfür wird neben der
 $l2$-Regularisierung zusätzlich noch \emph{Dropout} verwendet.
 
@@ -222,7 +220,9 @@ Aus diesem Grund werden, alle Bilder auf $244\times 244$ skaliert.
 Der komplette Datensatz enthält $1735$ Bilder die hierdurch hochskaliert werden.
 Es wird der Einfachheit halber angenommen, dass das hochskalieren nur einen
 geringen Einfluss auf die Genauigkeit hat. Würde die minimale
-Bildgröße der beiden Datensätze verwendet werden (vgl. Abb \ref{} und. \ref{})
+Bildgröße (vgl. Abb \ref{fig:Bildverteilung_Datensatz} und
+ \ref{fig:Bildverteilung_Datensatz_MiniDataset})
+der beiden Datensätze verwendet werden
 würde sich dies negativ auf die Genauigkeit auswirken.
 
 \subsection{Alternative Methode: Autoencoder \& Randomforest}

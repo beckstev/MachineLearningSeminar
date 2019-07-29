@@ -1,7 +1,7 @@
 \section{Ergebnisse}
 Im folgenden Kapitel werden die Traningsresultate präsentiert
-Als Leistungsmaß wird die Genauigkeit, mittels Genauigkeit-\#Epochen-Plots
-und \emph{Confusionmatrzen}, der jeweiligen Modells präsentiert.
+Als Leistungsmaß wird die Genauigkeit, mittels Genauigkeit-Epochen-Plots
+und \emph{Confusionmatritzen}, der jeweiligen Modells präsentiert.
 
 \subsection{Traningsweise}
 Wie bereits im letzten Kaptiel erwähnt werden die
@@ -21,19 +21,18 @@ für die $l2$-Regularisierung $l2\ua{value}$, die Batchgröße $bs$
 und die Farbinformation $color$ der Bilder:
 \begin{equation}
   \label{eq:Parameterraum_MiniDogNN}
-  bs\in\left\{2,\, 5, \,10, \,15,\, 17,\, 25\right\}, \quad l2\ua{value}\in\left\{0.01, \,0.001,\, 0.005,\, 0.0001\right\}, \quad color\in\left\{rgb, \,grey\right\}
+  bs\in\left\{2,\, 5, \,10, \,15,\, 17,\, 25\right\}, \quad l2\ua{value}\in\left\{0.01, \,0.001,\, 0.005,\, 0.0001\right\}, \quad color\in\left\{\map{rgb}, \,\map{grey}\right\}
 \end{equation}
 Die maximale Größe der Batchgröße wurde durch den Grafikspeicher limitiert.
 Als anfängliche Lernrate wird $lr=0.001$ gewählt.
 Das Ergebnis der HPO ist in Abbildung \ref{fig:Hyperraum_MiniDogNN} dargestellt,
-deutlich ist der positive Einfluss der Farbinformation $color=rgb=\map{True}=1.0$
+deutlich ist der positive Einfluss der Farbinformation $color=\map{rgb}=\map{True}=1.0$
 zu erkennen.
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{../../final_data/MiniNN_n5/hyper_raum.pdf}
 \caption{Ergebniss der HPO, die $z$-Achse \emph{Use RGB} gibt an, ob Farbinformation
-          verwendet wurden. Aus den möglichen Paramtern ist die bestmögliche Kombination
-         lautet: $bs=2, \, l2\ua{value}=0.001, \, color=rgb$.}
+        verwendet wurden.}
 \label{fig:Hyperraum_MiniDogNN}
 \end{figure}
 Von den $48$ möglichen Kombinationen wurden $43$ erfolgreich beendet, die Restlichen
@@ -54,7 +53,7 @@ Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Konfusionmat
 \centering
 \includegraphics[width = \textwidth]{../../final_data/MiniNN_n5/history.pdf}
 \caption{Traningsfortschritt des \textsc{MiniDogNN}.}
-\label{fig:MiniDog8NN_Loss_Acc}
+\label{fig:MiniDogNN_Loss_Acc}
 \end{subfigure}
 \begin{subfigure}{0.48\textwidth}
 \centering
@@ -67,7 +66,7 @@ Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Konfusionmat
 \subsubsection{PreDogNN -- $5$ Hunderassen}
 Die \textsc{PreDogNN}-Architektur wurde mit einer Batachgröße von $16$, einer
 $l2$-Regularisierungsstärke von $l2\ua{value}=0.01$, einer Lernrate von
-$lr=0.001$, einer Dropourate von $dr=0.2$ und als Farbmodus $color=rgb$ gewählt.
+$lr=0.001$, einer Dropourate von $dr=0.2$ und als Farbmodus $color=\map{rgb}$ gewählt.
 Auf Grund der Verwendung von Dropout muss der Loss und die Genauigkeit nach jeder
 Epoche berechnet werden, da sich durch Dropout die Struktur des Netzes epochenweise
 ändert. Die resultierenden Loss- und Genauigkeitverläufe befinden sich in Abbildung
@@ -100,10 +99,16 @@ der Loss- und Genauigkeitsdokumentation (vgl. Abb. \ref{fig:MiniDogNN_120_Loss_A
 wir deutlich, dass die Architektur kein verwendbare Aussage trifft.
 
 \subsubsection{PreBigDogNN -- $120$ Hunderassen}
-Die enorme Anzahl an Features in Verbindung mit der Regularisierung führen dazu,
-dass \textsc{PreBigDogNN} eine Genauigkeit deutlich über der Rategenauigkeit
+Die enorme Anzahl an Features in Verbindung mit der Regularisierung ($l2\ua{value}=0.01, \, dr=0.2$)
+führen dazu, dass \textsc{PreBigDogNN} eine Genauigkeit deutlich über der Rategenauigkeit
 von $0.83\%$ erreicht wird. Hierbei läuft das Modell nur geringfügig in Overtraning,
-wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.s
+wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.
+Das in der Konfusionmatrix eine Diagonle ersichtlich ist, spricht für ein genaues Modell.
+Jedoch ist die Genauigkeit beschränkt, was sich durch die Nebendiagonalelementen
+äußert. Zum Beispiel wird die Rasse \emph{American Staffordshire Terrier}
+zu ungefährt 80 \% aller Fälle als ein \emph{Staffordshire Bullterrier} klassifiziert.
+Wie der Name schon vermuten lässt, handelt es sich hier um Unterrassen die
+selbst wir nicht im direkten Veregleich unterscheiden können.
 \begin{figure}
 \centering
 \begin{subfigure}{0.48\textwidth}
@@ -119,7 +124,6 @@ wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.s
 \label{fig:PreBigDogNN_Konfusionmatrix}
 \end{subfigure}
 \end{figure}
-\section{batchgröße und sigmoid aktivierungsfunktion erklären}
 \subsection{Alternative Methode-- AutoEncoder \& Randomforest -- $120$ Hunderassen}
 Der schematische Aufbau des Autoencoder findet sich in Abbildung \ref{fig:Autoencoder}.
 Wie dort angedeutet, werden die Bilder auf eine Größe von $96x96$ runterskaliert.
@@ -127,10 +131,11 @@ Das Skalierung führt zu einem kleineren Featurevektor und zu gernigeren
 Traningszeiten. Analog zu den NN verwendet der Autoencoder \textsc{EarlyStopping}
 und eine adaptive Lernrate. Der Autoencoder wird mit einer Batchgröße
 von $bs=16$ und einer anfänglichen Lernrate von $lr=0.001$ traniert. Der Autoencoder
-erreicht eine Genauigkeit von $78\%$ (vgl. Abb. \ref{}). Obwohl der Epochenverlauf
+erreicht eine Genauigkeit von $78\%$ (vgl. Abb. \ref{fig:Autoencoder_loss}). Obwohl der Epochenverlauf
 der Genauigkeit nicht auf overtraning hindeuten, zeigt sich bei der Losskurve
-(vgl. Abb. \ref{}) deutliches overtraning. Dies ist wahrscheinlicha auf die
-Verwendung von \textbf{Anzahl Paramter} ohne Regularisierung zurückzuführen.
+(vgl. Abb. \ref{fig:Autoencoder_loss}) deutliches overtraning. Dies ist wahrscheinlich auf die
+Verwendung von $24899$ tranierbaren Parametern ohne die gleichzeitige
+Nutzung von Regularisierung zurückzuführen.
 
 Mit Hilfe der Features generiert vom Autoencoder soll der
 Randomforest (RF) fähig sein Hunderassen zu klassifizieren.
@@ -142,15 +147,7 @@ $n\ua{feat}$, die mindest Anzahl an Bildern die einen Ast haben muss, um berück
 $min\ua{leaf}$, die mindest  Anzahl an Bildern um einen neuen Ast zueröffnen $min\ua{split}$,
 das Bewerungskrietrim $crit$ und die Anzahl der Bäume $n\ua{est}$.
 Eine vollständige Auflistung des Parameterraums findet sich in der Gleichung \eqref{eq: rf_parameter_raum}.
-\begin{align}
-  \begin{aligned}
-    \label{eq: rf_parameter_raum}
-    max_d &\in \left\{\infty,\, 10,\, 100\right\} & n\ua{feat}&\in\left\{auto, \,log2\right\}\\
-    min\ua{leaf} &\in \left\{1,\, 10,\, 31\right\} & min\ua{split}&\in\left\{2,\, 8,\, 10\right\}\\
-    crit &\in \left\{gini,\, entropy\right\} & n\ua{est}&\in\left\{100,\, 400,\, 1000,\, 1500 \right\}
-  \end{aligned}
-\end{align}
-Als optimale Parmeter gehenen hervor:
+Als optimale Parmeterkombination gehet hervor:
 \begin{equation*}
   max_d = 100,\,\, n\ua{feat}= log2, \,\, min\ua{leaf}= 1,\,\, min\ua{split}=10, \,\,   crit= gini, \,\, n\ua{est}=1000
 \end{equation*}

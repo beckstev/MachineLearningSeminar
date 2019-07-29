@@ -3,12 +3,34 @@
 \subsubsection{Umfrageergebnis}
 \begin{figure}
 \centering
+\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n120/width_heigt_scatter_hist2d.pdf}
+\caption{Oben: Scatter-Plot der Höhen- und Breitenverteilung der Bilder aus dem
+großen Datensatz. Unten: Zweidimensionales Histogramm der Höhen- und Breiten-
+verteilung. Die gelbe Größe entspricht der am häufigsten auftretenden Kombination
+aus Breite und Höhe.}
+\label{fig:Bildverteilung_Datensatz}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/width_heigt_scatter_hist2d.pdf}
+\caption{Oben: Scatter-Plot der Höhen- und Breitenverteilung der Bilder aus dem
+kleinen Datensatz. Unten: Zweidimensionales Histogramm der Höhen- und Breiten-
+verteilung. Die gelbe Größe entspricht der am häufigsten auftretenden Kombination
+aus Breite und Höhe.}
+\label{fig:Bildverteilung_Datensatz_MiniDataset}
+\end{figure}
+\FloatBarrier
+\FloatBarrier
+\subsection{Bildgrößenverteilung}
+\begin{figure}
+\centering
 \includegraphics[width=\the\textwidth]{./survey/answers_plot.pdf}
 \caption{Antwortverteilung der Umfrage unter Physikstudierenden.}
 \label{fig:Antwortverteilung}
 \end{figure}
-
+\FloatBarrier
 \subsubsection{Beispielhafte Netzarchitektur}
+\FloatBarrier
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/general/sample_network.pdf}
@@ -17,8 +39,9 @@
          Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
 \label{fig:beispielhafte_netz_architecture}
 \end{figure}
-
+\FloatBarrier
 \subsubsection{Ergebnisse MiniDogNN für $120$ Hunderassen}
+\FloatBarrier
 \begin{figure}
 \centering
 \centering
@@ -32,15 +55,38 @@
 \caption{Konfusionmatrix des \textsc{MiniDogNN}.}
 \label{fig:MiniDogNN_120_Konfusionmatrix}
 \end{figure}
-
+\FloatBarrier
 \subsubsection{Genauigkeitverteilung MiniDogNN}
+\FloatBarrier
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/acc_hist.pdf}
 \caption{Genauigkeitverteilung der erfolgreich tranierten Modelle der HPO.}
 \label{fig:Genauigkeitverteilung_MiniDogNN}
 \end{figure}
-\subsection{Legende}
+\subsubsection{Legende}
 \input{../../final_data/autoencoder_n_120/build/legende.tex}
+\FloatBarrier
+\subsubsection{Traningsdokumentation Autoencoder}
+\FloatBarrier
+\begin{figure}
+\centering
+\centering
+\includegraphics[width = \textwidth]{../../final_data/autoencoder_n_120/build/history.pdf}
+\caption{Traningsfortschritt des Autoencoders.}
+\label{fig:Autoencoder_loss}
+\end{figure}
+\FloatBarrier
 
+\subsubsection{HPO des Randomforests}
+\FloatBarrier
+Paramterraum für die HPO:
+\begin{align}
+  \begin{aligned}
+    \label{eq: rf_parameter_raum}
+    max_d &\in \left\{\infty,\, 10,\, 100\right\} & n\ua{feat}&\in\left\{auto, \,log2\right\}\\
+    min\ua{leaf} &\in \left\{1,\, 10,\, 31\right\} & min\ua{split}&\in\left\{2,\, 8,\, 10\right\}\\
+    crit &\in \left\{gini,\, entropy\right\} & n\ua{est}&\in\left\{100,\, 400,\, 1000,\, 1500 \right\}
+  \end{aligned}
+\end{align}
 \FloatBarrier
