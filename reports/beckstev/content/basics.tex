@@ -234,11 +234,15 @@ Die Features werden in Form eines Vektors an den RF übergeben,
 dieser wird mit einem vorab tranierten Autoencoder generiert.
 
 Der Autoencoder verwendet \textsc{ReLU}-Aktivierungsfunktionen
-keine spezielle und keine Gewichtsinitalisierung.
-Im Gegensatz zu den bisher vorgestellten NN wird hier
+keine spezielle und keine Gewichtsinitalisierung. Alsk Aktivierungsfunktion
+für die Ausgabelage wird eine \textsc{sigmoid}-Funktion verwendet, da diese
+einen Ausgabewert zwischen Null und Eins besitzt. Diese Eigenschaft ist nützlich,
+weil die normierten Pixelwerte in diesem Bereich liegen und das Bild mit dieser
+Lage rekonstuiert sein sollte.
+Im Gegensatz zu den bisher vorgestellten NN, wird hier
 \emph{padding} verwendet. Durch das \emph{padding} bleibt die Bildgröße
-bei Konvolutionallagen erhalten.
-Eine schematische Darstellung des Autoencoders findet sich in Abbildung \ref{fig:Autoencoder}.
+bei Konvolutionallagen erhalten. Eine schematische Darstellung des Autoencoders
+findet sich in Abbildung \ref{fig:Autoencoder}.
 Der Autoencoder basiert somit auf Convolutional-Lagen die in Verbindung mit
 \textsc{MaxPooling}-Lagen das Bild herunterskalieren. Anschließend wird
 mittels \textsc{Flatten} ein Featurevektor generiert der daraufhin durch

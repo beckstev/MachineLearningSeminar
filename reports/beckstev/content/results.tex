@@ -119,17 +119,14 @@ wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.s
 \label{fig:PreBigDogNN_Konfusionmatrix}
 \end{subfigure}
 \end{figure}
-
+\section{batchgröße und sigmoid aktivierungsfunktion erklären}
 \subsection{Alternative Methode-- AutoEncoder \& Randomforest -- $120$ Hunderassen}
 Der schematische Aufbau des Autoencoder findet sich in Abbildung \ref{fig:Autoencoder}.
 Wie dort angedeutet, werden die Bilder auf eine Größe von $96x96$ runterskaliert.
-Hierdurch wird kein Bild hochskaliert und die Größe des Featurevektor
-
-
-. Hiemit soll die Traningszeit des Autoencoders
-minimiert werden. Analog zu NN verwendet der Autoencoder auch \textsc{EarlyStopping}
-und eine adaptive Lernrate. Der Autoencoder wird traniert mit einer Batchgröße
-von $bs=16$ und einer anfänglichen Lernrate von $lr=0.001$. Der Autoencoder
+Das Skalierung führt zu einem kleineren Featurevektor und zu gernigeren
+Traningszeiten. Analog zu den NN verwendet der Autoencoder \textsc{EarlyStopping}
+und eine adaptive Lernrate. Der Autoencoder wird mit einer Batchgröße
+von $bs=16$ und einer anfänglichen Lernrate von $lr=0.001$ traniert. Der Autoencoder
 erreicht eine Genauigkeit von $78\%$ (vgl. Abb. \ref{}). Obwohl der Epochenverlauf
 der Genauigkeit nicht auf overtraning hindeuten, zeigt sich bei der Losskurve
 (vgl. Abb. \ref{}) deutliches overtraning. Dies ist wahrscheinlicha auf die
