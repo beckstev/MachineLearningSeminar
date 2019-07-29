@@ -57,6 +57,10 @@ Es ist deutlich zuerkennen, dass einzelne Bilder schwieriger zu klassifizieren s
 da Menschen, Hindernisse oder andere Hunde im Bild enthalten sind. Außerdem
 fältt auf, dass die Auflösung der Bilder nicht homogen ist.
 
+Ein Teil der NN werden auch auf einem kleineren Datensatz mit lediglich $5$ Hunderassen
+getestet, um Verarbeitungszeiten zu reduzieren. Dies ist insbesondere bei
+der Hyperparamteroptimierung von \textsc{MiniDogNN} wichtig.
+
 \subsubsection{Verarbeitung der Daten}
 Um den Datensatz für das tranieren der verschiedenen Algorithmen zu verwenden,
 muss er zunächst in einen Tranings-, Validierungs- und Testdatensatz aufgeteilt
@@ -176,32 +180,32 @@ in Abbildung \ref{fig:beispielhafte_netz_architecture}.
 
 \subsubsection{PreDogNN \& PreBigDogNN}
 Wie im obigen Kapitel angesprochen, ist die Hauptaufgabe eines CNN die Generierung
-von Features aus einem Bild. Jedoch limitiert die Größe des Datensatz stark
-die maximale Größe der \textsc{MiniDogNN}-Architektur. Diese Limitation
-kann durch vortrainierte Modelle umgangen werden. Wichtig ist hierbei, dass wir
-ein Modell verwenden, dass auf die Klassifizierung von Bilder ausgelegt ist.
-Die Idee ist, den FCN-Anteil des Modells zu entferenen und lediglich den CNN-Anteil
-zur generierung von Features zu verwenden. Hierbei werden die Paramter des CNN
-festgehalten sind somit nicht tranierbar. An das vortranierte CNN schließt, dann
-ein tranierbares FCN an, welches die generierten Features für die eigentliche
-Klassifizierung verwendet.
+von Features aus einem Bild. Jedoch limitiert die Größe des Datensatzes stark
+die maximalen Größe der \textsc{MiniDogNN}-Architektur. Diese Limitation
+kann durch vortrainierte Modelle umgangen werden. Wichtig ist hierbei, dass
+ein Modell verwendet wird, dass auch auf Bildklassifizierung ausgelegt ist.
+Die Idee ist, den FCN-Anteil des vortrainierten Modells zu entfernen und lediglich den CNN-Anteil
+zur Featuregenerierung zu verwenden. Hierbei werden die Paramter des CNN
+festgehalten und sind somit nicht tranierbar. An das vortranierte CNN schließt, dann
+ein tranierbares FCN an.
 
 Die Modelle \textsc{PreDogNN \& PreBigDogNN} verwenden das CNN der
 \textsc{InceptionResNetV2}-Architektur \cite{InceptionResNetV2}. Das Netzwerk
 ist in \textsc{keras} vorimplementiert und kann mittels eines Funktionsparamters
-ein CNN umgewandelt werden \cite{keras_InceptionResNetV2}.
+in ein CNN umgewandelt werden \cite{keras_InceptionResNetV2}.
 
 Der Unterschied zwischen \textsc{PreDogNN \& PreBigDogNN} liegt in der Anzahl
 an Hunderasssen die klassifiziert werden können -
 $N\ua{dr, PreDogNN}=5,\, N\ua{dr, PreBigDogNN}=120$. Die Klassifizierung von $5$ Hunderassen
 soll an dieser Stelle lediglich mit der Ersparnis an Analysezeit und -hardware
-motiviert werden. Bedingt wird die Anzahl durch die FCN-Architektur der beiden
-Netzwerk. Beim \textsc{PreDogNN} besteht das FCN aus drei Lagen mit $30-30-5$
-Neuronen, im Gegensatz dazu verwendet das \textsc{PreBigDogNN} deutlich
+motiviert werden. Bedingt wird die Anzahl an möglichen Hundereassen druch die
+FCN-Architektur der beiden Netzwerk. Beim \textsc{PreDogNN} besteht das FCN aus
+drei Lagen mit $30-30-5$ Neuronen, im Gegensatz dazu verwendet das \textsc{PreBigDogNN} deutlich
 mehr Neuronen innerhalb seiner drei Lagen: $150-120-120$. Die Reduzierung von
-$150$ auf $120$ Neuronen in der zweiten Lage ist mit der Anzahl an Paramtern
-zu erklären. Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
-$1536$ Features, signifikZur Featuregenerierung wird ein Autoencoder verwendet, ant mehr als die $64$ Features der \textsc{MiniDogNN}-Architektur, welche zu einer Vielzahl von Gewichten innheralb der FCN führt:
+$150$ auf $120$ Neuronen in der zweiten Lage ist mit der an der zu tranierenden Paramtern
+erklären: Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
+$1536$ Features (\textsc{MiniDogNN} $64$) was zu einer Vielzahl von
+tranierbaren Gewichten innheralb des FCN führt:
 \begin{align}
   \begin{aligned}
   \label{eq:ntrain_PreDogNN_PreBigDogNN}
@@ -217,21 +221,30 @@ eine vordefinierte Bildgröße \cite{keras_InceptionResNetV2}.
 Aus diesem Grund werden, alle Bilder auf $244\times 244$ skaliert.
 Der komplette Datensatz enthält $1735$ Bilder die hierdurch hochskaliert werden.
 Es wird der Einfachheit halber angenommen, dass das hochskalieren nur einen
-geringen Einfluss auf die Genauigkeit hat.
+geringen Einfluss auf die Genauigkeit hat. Würde die minimale
+Bildgröße der beiden Datensätze verwendet werden (vgl. Abb \ref{} und. \ref{})
+würde sich dies negativ auf die Genauigkeit auswirken.
 
 \subsection{Alternative Methode: Autoencoder \& Randomforest}
-Als alternativen Klassifizierer verwenden wir einem \textsc{Randomforest} (RF).
+Als alternativen Ansatz wird ein \textsc{Randomforest} (RF)
+in Verbindung mit einem Autoencoder verwendet.
 Die hinterliegende Techniken eines RF werden als bekannt vorrausgesetzt und können
 gegebenfalls im Buch \cite[S. 181]{hands_on_machine_learning} nachgelesen werden.
 Die Features werden in Form eines Vektors an den RF übergeben,
-hierbei wird dieser Feature Vektor von einem, vorab tranierten,
-Autoencoder generiert. Dieser verwendet als Aktivierungsfunktionen
-die bekannte \textsc{ReLU}-Funktion und keine spezielle Gewichtsinitalisierung.
-Zusätzlich wird hier im Gegensatz zu den bisher vorgestellten NN auch \emph{padding}
-genutzt. Dabei wurd ein \emph{padding} gewählt was
-die Bildgröße erhählt, damit ist sichergestellt, dass die Kernelgröße keinen Einfluss
-auf die Größe der nachfolgenden Lage hat. Eine schematische Darstellung des Autoencoders
-findet sich in Abbildung \ref{fig:Autoencoder}.
+dieser wird mit einem vorab tranierten Autoencoder generiert.
+
+Der Autoencoder verwendet \textsc{ReLU}-Aktivierungsfunktionen
+keine spezielle und keine Gewichtsinitalisierung.
+Im Gegensatz zu den bisher vorgestellten NN wird hier
+\emph{padding} verwendet. Durch das \emph{padding} bleibt die Bildgröße
+bei Konvolutionallagen erhalten.
+Eine schematische Darstellung des Autoencoders findet sich in Abbildung \ref{fig:Autoencoder}.
+Der Autoencoder basiert somit auf Convolutional-Lagen die in Verbindung mit
+\textsc{MaxPooling}-Lagen das Bild herunterskalieren. Anschließend wird
+mittels \textsc{Flatten} ein Featurevektor generiert der daraufhin durch
+\textsc{Reshape} wieder in eine Matrixform umgewandlert wird. Diese wird dann
+in den Decoder gegeben, welcher aus \textsc{UpSampling}-Lagen verbundene
+Convolutional-Lagen besteht.
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/general/autoencoder.pdf}

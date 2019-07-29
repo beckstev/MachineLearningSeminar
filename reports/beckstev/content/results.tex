@@ -1,9 +1,7 @@
 \section{Ergebnisse}
-Im folgenden Kapitel soll Testresultate der einzelnen Netzwerke präsentiert
-werden. Als Leistungsmaß wird die Genauigkeit des jeweiligen Modells präsentiert.
-Hierfür wird neben eines Genauigkeit-\#Epochen-Plots eine \emph{Confusionmatrix}
-verwendet. Zusätzlich soll anhand der \emph{Loss}-Kurven vom Test- und Validierungsdatensatz
-Overtraning festgemacht werden.
+Im folgenden Kapitel werden die Traningsresultate präsentiert
+Als Leistungsmaß wird die Genauigkeit, mittels Genauigkeit-\#Epochen-Plots
+und \emph{Confusionmatrzen}, der jeweiligen Modells präsentiert.
 
 \subsection{Traningsweise}
 Wie bereits im letzten Kaptiel erwähnt werden die
@@ -14,17 +12,13 @@ durch die in \textsc{keras} implementierte Funtkion \textsc{ReduceLROnPlateau}
 angepasst \cite{keras_ReduceLROnPlateau}. Die Anzahl der Traningsepochen
 wird nicht festgelegt, da hier eine \emph{EarlyStopper} eingestetzt wird \cite{keras_EarlyStopping}.
 Zusätzlich muss angegeben werden ob $5$ oder $120$ Hunderassen
-klassifiziert werden sollen. Alle Traningseinheiten
-auf einer Nvidia Grafikarte statt.
+klassifiziert werden sollen. Alle Traningseinheiten werden auf einer Nvidia-Grafikarte
+durchgeführt.
 
-\subsection{NN für 5 Hunderassen}
-Die NN werden auch auf einem kleineren Datensatz mit lediglich $5$ Hunderassen
-getestet, um Verarbeitungszeiten zu reduzieren. Dies ist insbesondere bei
-der Hyperparamteroptimierung von \textsc{MiniDogNN} wichtig.
-\subsubsection{MiniDogNN}
-Bei der Hyperparamteroptimerung (HPO) wurden die Einstellung für die $l2$-Regularisierung $l2\ua{value}$,
-die Batchgröße $bs$ und die Farbinformation $color$ der Bilder variiert. Der vollständige
-Parameterraum lautet, wie folgt:
+\subsubsection{MiniDogNN--$5$ Hunderassen}
+Die Hyperparamteroptimerung (HPO) varriert die Einstellung
+für die $l2$-Regularisierung $l2\ua{value}$, die Batchgröße $bs$
+und die Farbinformation $color$ der Bilder:
 \begin{equation}
   \label{eq:Parameterraum_MiniDogNN}
   bs\in\left\{2,\, 5, \,10, \,15,\, 17,\, 25\right\}, \quad l2\ua{value}\in\left\{0.01, \,0.001,\, 0.005,\, 0.0001\right\}, \quad color\in\left\{rgb, \,grey\right\}
@@ -44,15 +38,15 @@ zu erkennen.
 \end{figure}
 Von den $48$ möglichen Kombinationen wurden $43$ erfolgreich beendet, die Restlichen
 wurden auf Grund von Grafikspeicherproblem von \textsc{keras} abgebrochen. Eine
-Genauigkeitsverteilung ist in Abbildung \ref{fig:Genauigkeitverteilung_MiniDogNN} zu erkennen und verdeutlicht,
-dass HPO einer signififikante Genauigkeitsteigerung verursachen kann.
-Es wird der Einfachheit angenommen, dass das Ergebnis der HPO, trotz anderem
-FCN, sowohl für das fünf als auch für das 120 Rassen MiniDogNN gilt.
+Genauigkeitsverteilung ist in Abbildung \ref{fig:Genauigkeitverteilung_MiniDogNN}
+dargestellt. Diese verdeutlicht, dass mit HPO
+eine Genauigkeitssteigerung bewirkt werden kann. Der Einfachheit halber wird
+angenommen, dass das Ergebnis der HPO, trotz anderem
+FCN, sowohl für das fünf als auch für das $120$ Rassen \textsc{MiniDogNN} gilt.
 
-Die Traningsparameter werden nach der HPO gewählt.
-In Abbildung \ref{fig:MiniDogNN_Loss_Acc} findet sich die Traningsdokumentation.
-In dem Plot ist zu erkennen, dass die Architektur geringfügig Übertraniert
-wurde.
+In Abbildung \ref{fig:MiniDogNN_Loss_Acc} findet sich die Traningsdokumentation,
+des optimierten Modells. In dem Plot \ref{fig:MiniDogNN_Loss_Acc} ist zu erkennen,
+dass die Architektur geringfügig Übertraniertwurde.
 Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Konfusionmatrix} fällt auf, \textbf{dass}
 \begin{figure}
 \centering
@@ -69,17 +63,17 @@ Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Konfusionmat
 \label{fig:MiniDogNN_Konfusionmatrix}
 \end{subfigure}
 \end{figure}
-\subsubsection{PreDogNN}
+
+\subsubsection{PreDogNN -- $5$ Hunderassen}
 Die \textsc{PreDogNN}-Architektur wurde mit einer Batachgröße von $16$, einer
 $l2$-Regularisierungsstärke von $l2\ua{value}=0.01$, einer Lernrate von
 $lr=0.001$, einer Dropourate von $dr=0.2$ und als Farbmodus $color=rgb$ gewählt.
 Auf Grund der Verwendung von Dropout muss der Loss und die Genauigkeit nach jeder
-Epoche traniert werden, da sich durch Dropout die Struktur des Netzes epochenweise
+Epoche berechnet werden, da sich durch Dropout die Struktur des Netzes epochenweise
 ändert. Die resultierenden Loss- und Genauigkeitverläufe befinden sich in Abbildung
-\ref{fig:PreDogNN_Loss_Acc} und die Konfusionmatrix in Abbildung \ref{fig:PreDogNN_Konfusionmatrix}
+\ref{fig:PreDogNN_Loss_Acc}. Die Konfusionmatrix ist in Abbildung \ref{fig:PreDogNN_Konfusionmatrix}
 dargestellt. Bemerkenswert ist die Genauigkeit der Architektur welche fast
-fast bei $100\%$ liegt und somit das \textsc{MiniDogNN} überbietet.
-
+ bei $100\%$ liegt und somit das \textsc{MiniDogNN} überbietet.
 \begin{figure}
 \centering
 \begin{subfigure}{0.48\textwidth}
@@ -95,10 +89,8 @@ fast bei $100\%$ liegt und somit das \textsc{MiniDogNN} überbietet.
 \label{fig:PreDogNN_Konfusionmatrix}
 \end{subfigure}
 \end{figure}
-\subsection{NN für 120 Hunderassen}
-Im Vergleich zu der fünf Hunderassenklassifizierung, ist die Klassifizierung
-von $120$ Rassen deutlich komplexer.
-\subsubsection{MiniDogNN}
+
+\subsubsection{MiniDogNN -- $120$ Hunderassen}
 Wie in der Abbildung \ref{fig:MiniDogNN} zu erkennen, ändert sich mit der
 Anzahl der Hunderassen die Anzahl der Neuornen im FCN. Die Anzahl der generierten
 Featuers bleibt jedoch konstant. Ein Fakt der sich siginifikant auf die
@@ -107,7 +99,7 @@ Verwendebarkeit der Architektur auswirkt. Bei dem Vergleich mit der Konfusionmat
 der Loss- und Genauigkeitsdokumentation (vgl. Abb. \ref{fig:MiniDogNN_120_Loss_Acc})
 wir deutlich, dass die Architektur kein verwendbare Aussage trifft.
 
-\subsubsection{PreBigDogNN}
+\subsubsection{PreBigDogNN -- $120$ Hunderassen}
 Die enorme Anzahl an Features in Verbindung mit der Regularisierung führen dazu,
 dass \textsc{PreBigDogNN} eine Genauigkeit deutlich über der Rategenauigkeit
 von $0.83\%$ erreicht wird. Hierbei läuft das Modell nur geringfügig in Overtraning,
@@ -128,16 +120,13 @@ wie die Traningsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.s
 \end{subfigure}
 \end{figure}
 
-\subsection{Alternative Methode-- AutoEncoder \& Randomforest}
-Wie in vorherigen Kapitel erwähnt, wird als Alternativer Ansatz ein Randomforest
-in Verbindung mit einem Autoencoder verwendet. In diesem Kapitel sollen nun
-Einzelheiten bzgl. Traning und Optimierung und Ergebnisse präsentiert werden.
-
+\subsection{Alternative Methode-- AutoEncoder \& Randomforest -- $120$ Hunderassen}
 Der schematische Aufbau des Autoencoder findet sich in Abbildung \ref{fig:Autoencoder}.
-Wie dort angedeutet, werden die Bilder auf eine Größe von $96x96$ runterskaliert,
-hierdurch wird kein Bild hochskaliert. Ein weiterer Effekt der im zum vergleich
-der vortranierten Modelle geringeren Auflösung, ist dass weniger Features
-vom Autoencoder generiert werden. Hiemit soll die Traningszeit des Autoencoders
+Wie dort angedeutet, werden die Bilder auf eine Größe von $96x96$ runterskaliert.
+Hierdurch wird kein Bild hochskaliert und die Größe des Featurevektor
+
+
+. Hiemit soll die Traningszeit des Autoencoders
 minimiert werden. Analog zu NN verwendet der Autoencoder auch \textsc{EarlyStopping}
 und eine adaptive Lernrate. Der Autoencoder wird traniert mit einer Batchgröße
 von $bs=16$ und einer anfänglichen Lernrate von $lr=0.001$. Der Autoencoder
