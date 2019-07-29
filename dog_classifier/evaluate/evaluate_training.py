@@ -152,10 +152,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     """
     # Set figsize
     plt.figure(figsize=(5.8, 3.58))
-    # change font size according to number of classes
     n_classes = len(classes)
-    print(n_classes)
-
 
     print("plot confusion matrix")
 
@@ -173,6 +170,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     classes = encoder.inverse_transform(classes)
     classes = [cl.replace('_', ' ') for cl in classes]
 
+    # change font size according to classes
     if n_classes == 120:
         mpl.rcParams.update({'font.size': 3})
     else:
@@ -191,6 +189,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
 
     plt.colorbar()
     tick_marks = np.arange(n_classes)
+    # Set ticks as numbers if one uses 120 classes
     if n_classes == 120:
         ticks = range(1, n_classes+1)
         plt.axes().xaxis.set_major_locator(FixedLocator(ticks[0::2]))
@@ -204,7 +203,7 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
         plt.axes().yaxis.set_minor_formatter(FormatStrFormatter("%d"))
         plt.axes().tick_params(which='major', pad=6, axis='y', labelsize=2)
         plt.axes().tick_params(which='minor', pad=0.5, axis='y', labelsize=4)
-        #plt.xticks(horizontalalignment='right')
+        # plt.xticks(horizontalalignment='right')
 
     else:
         plt.xticks(tick_marks, classes, rotation=45, horizontalalignment='right')
@@ -227,6 +226,8 @@ def plot_confusion_matrix(cm, classes, path, encoder_model,
     plt.clf()
     # reset rcParams
     mpl.rcParams.update(mpl.rcParamsDefault)
+
+    # prepare legen table
     if n_classes == 120:
         header = ['Label', 'Hunderasse']
         places = [1.0, 1.0]
