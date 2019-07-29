@@ -74,14 +74,14 @@ Overtraining zu erkennen, welches mit stärkerer \texttt{L2-Regularisierung} ode
 früherem Abbruch beseitigt werden könnte.
 
 \autoref{fig:confusion-mini} zeigt die Confusion-Matrix des Trainings aus
-\autoref{fig:loss-acc-minidog}. Es zeigt sich, dass der African Hunting Dog im
-Vergleich zu den anderen Klassen sehr gut, am schlechtesten ist der Schipperke
-zu klassifizieren. Dies zeigt sich auch in \autoref{fig:visualize-pred}. Dort
-wurde der Schipperke am wahrscheinlichsten als African Hunting Dog
-klassifiziert, was sich auch in der Confusion-Matrix zeigt. Bis auf den African
-Hunting Dog in \autoref{fig:visualize-pred} entsprechen die wahrscheinlichsten
-Predictions nicht den True Labeln. Hier ist also noch Verbesserungspotential,
-z.\,B. durch eine umfassende Hyperparameter-Optimierung.
+\autoref{fig:loss-acc-minidog}. Es zeigt sich, dass der African Hunting Dog am
+besten und der Chihuahua am schlechtesten klassifiziert wurde. Dies zeigt sich
+auch in \autoref{fig:visualize-pred}. Dort wurde der Chihuahua am
+wahrscheinlichsten als Beagle klassifiziert, was sich auch in der
+Confusion-Matrix zeigt, da dort Chihuahuas mit gleicher Wahrscheinlichkeit als
+Chihuahua oder als Beagle klassifiziert werden. Durch Optimierung z.\,B. der
+Netzwerkarchitektur könnte man das Ergebnis noch verbessern, vor allem die Rassen
+außer dem African Hunting Dog haben noch Verbesserungsbedarf.
 
 In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog{} für
 120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
