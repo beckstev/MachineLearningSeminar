@@ -7,15 +7,15 @@
 
 # Stevens Anmerkungen
 ## Einleitung
-* nicht nur CNN genommen
-* nicht unterschieden, sondern klassifiziert
-* Satz kürzen
-* Farbinformationen Klassifikation verbessern
-* Weiterhin wird erörtert, wie ein vortrainiertes Netz beitragen kann oder so
-* vielleicht kommt weg, sogar auch
-* "gleiche" ändern
-* unter anderem weg
-* letzten teilsatz wegstreichen
+<!-- * nicht nur CNN genommen -->
+<!-- * nicht unterschieden, sondern klassifiziert -->
+<!-- * Satz kürzen -->
+<!-- * Farbinformationen Klassifikation verbessern -->
+<!-- * Weiterhin wird erörtert, wie ein vortrainiertes Netz beitragen kann oder so -->
+<!-- * vielleicht kommt weg, sogar auch -->
+<!-- * "gleiche" ändern -->
+<!-- * unter anderem weg -->
+<!-- * letzten teilsatz wegstreichen -->
 
 ## Datensatz
 * Mit Dem Datenstaz

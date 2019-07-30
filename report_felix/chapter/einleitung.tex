@@ -1,28 +1,25 @@
 \section{Einleitung}
-In diesem Projekt zum Seminar \enquote{Maschinelles Lernen} wurde ein
-\texttt{Convolutional Neural Network (CNN)} trainiert, um 5 bzw. 120 verschiedene
-Hunderassen voneinander zu unterscheiden. Der Datensatz besteht aus 20580
-Bildern\cite{datensatz}. Die Motivation hinter diesem Projekt ist, eine Klassifikation von
-Hunderassen ohne Vorwissen zu ermöglichen, da es einfacher ist, z.\,B. einen
-Labrador von einem Pudel zu unterscheiden, aber die genauen Unterrassen des
-Labradors oder des Terriers, welcher in unserem Datensatz mit 18 verschiedenen
-Unterrassen vertreten ist, sind schwieriger zu unterscheiden, zumindest für die meisten
-Menschen. Deswegen stellt sich die Frage, wie gut ein \CNN{} diese Aufgabe bewältigen kann.
+In diesem Projekt zum Seminar \enquote{Maschinelles Lernen} wurden mehrere
+\texttt{Neuronale Netze (NN)} trainiert, um fünf bzw. 120 verschiedene
+Hunderassen zu klassifizieren. Der Datensatz besteht aus 20580 Bildern
+\cite{datensatz}. Die Motivation hinter diesem Projekt ist die Klassifikation
+von Hunderassen mit ihren Unterrassen ohne Vorwissen zu ermöglichen.
+Beispielsweise kann ein Mensch einfacher einen Labrador von einem Pudel
+unterscheiden, als die Unterrassen des Terriers voneinander, von denen in diesem
+Datensatz 18 verschiedene vertreten sind. Deswegen stellt sich die Frage, wie
+gut ein \texttt{Neuronales Netz} diese Aufgabe bewältigen kann.
 
-Spezieller stellt sich auch die Frage, ob die Farbinformationen des Bildes zur
-Klassifikation beitragen oder ob nur Formen entscheidend sind. Weiterhin wird
-erörtert, inwiefern ein bereits vortrainiertes Netz zur Objektidentifizierung,
-welches um einige Lagen erweitert wird, die Performance verbessert. Außerdem
-soll erörtert werden, inwiefern sich die Performance der Klassifizierung des
-großen Datensatzes mit 120 Klassen hinsichtlich des kleinen Datensatzes
-unterscheidet und ob es vielleicht sogar möglich ist, dass \enquote{gleiche}
-(mit ein paar kleinen Anpassungen) Netz für beide Klassifizierungen zu
-verwenden.
+Spezieller stellt sich auch die Frage, ob die Farbinformationen des Bildes die
+Klassifikation verbessern oder ob nur Formen entscheidend sind. Weiterhin wird
+erörtert, inwiefern ein bereits vortrainiertes Netz zur Klassifikation beitragen
+kann. Außerdem soll untersucht werden, inwiefern sich die Performance der
+Klassifizierung des großen Datensatzes mit 120 Klassen hinsichtlich des kleinen
+Datensatzes unterscheidet und ob es möglich ist, ein geringfügig modifiziertes
+Netz für beide Klassifizierungen zu verwenden.
 
 Als Alternativ-Methode wird ein \texttt{Autoencoder} kombiniert mit einem
 \texttt{Random Forest (RF)} verwendet. Dabei generiert der Autoencoder Features
 aus den Bildern, die dann der Random Forest zur Klassifizierung nutzt. Als
-\texttt{Performance Measure} wird unter anderem eine Confusion-Matrix verwendet.
-Es wird verglichen, wie gut ein \RF{} im Vergleich zu einem \texttt{Neuronalen
-Netz} Bildklassifikationen vornehmen kann, wenn er Features nutzt, die aus einem
-Autoencoder generiert wurden.
+\texttt{Performance Measure} wird eine Confusion-Matrix verwendet.
+Es wird verglichen, wie gut ein \RF{} im Vergleich zu einem \texttt{NN}
+Bildklassifikationen vornehmen kann.
