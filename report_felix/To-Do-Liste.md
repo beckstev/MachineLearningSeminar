@@ -56,28 +56,28 @@
 * Alternativ-Methode Sklaierung 96x96 verwenden?
 
 ## Ergebnisse
-* Dann erst MiniDogNN
-* Hyperparamter als Einleitung
-* Folgerichtig optimiert Farbinformationen die Genauigkeit
-* Statt Neuronale Netze Architekturen, 60% nur auf PreDog
-* dann weg
-* für den großen Datensatz ungefähr 1000 Bilder zu klein, deswegen verwenden
-* möglich klein
-* Hyperparameter weg lassen
-* Confusion Matrix Schreibweise
-* was für eine hohe Genauigkeit spricht
-* noch weg
-* beider Klassen weg
-* alles in allem -> Zusammenfassend zeigt eine hohe Genauigkeit
-* Prozente African Hunting Dog
-* Nur 64 Feature aus CNN, und damit dann 120 Klassen klassifizieren
+<!-- * Dann erst MiniDogNN -->
+<!-- * Hyperparamter als Einleitung mach ich nicht -->
+<!-- * Folgerichtig optimiert Farbinformationen die Genauigkeit -->
+<!-- * Statt Neuronale Netze Architekturen, 60% nur auf PreDog -->
+<!-- * dann weg -->
+<!-- * für den großen Datensatz ungefähr 1000 Bilder zu klein, deswegen verwenden -->
+<!-- * möglich klein -->
+<!-- * Hyperparameter weg lassen -->
+<!-- * Confusion Matrix Schreibweise -->
+<!-- * was für eine hohe Genauigkeit spricht -->
+<!-- * noch weg -->
+<!-- * beider Klassen weg -->
+<!-- * alles in allem -> Zusammenfassend zeigt eine hohe Genauigkeit -->
+<!-- * Prozente African Hunting Dog -->
+<!-- * Nur 64 Feature aus CNN, und damit dann 120 Klassen klassifizieren -->
 * vspace nutzen
-* noch raus
-* statt besser verläuft präziser oder so
-* Random Forest ausschreiben
-* statt 120 Klassen: Auf dem gesamten Datensatz
-* Skalierungsproblem der Achsen
-* Architekturen dazu schreiben
+<!-- * noch raus -->
+<!-- * statt besser verläuft präziser oder so -->
+<!-- * Random Forest ausschreiben -->
+<!-- * statt 120 Klassen: Auf dem gesamten Datensatz -->
+<!-- * Skalierungsproblem der Achsen -->
+<!-- * Architekturen dazu schreiben -->
 
 ## Zusammenfassung
 * Bildklassifikation

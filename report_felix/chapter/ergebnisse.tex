@@ -16,57 +16,19 @@ der Farbinformationen.
 \end{figure}
 
 Allgemein wird ersichtlich, dass in den meisten Fällen die Verwendung von Farbinformationen
-zu einer höheren Validation Accuracy führt. Also kann eine der Fragen, ob die Verwendung
-von Farbinformationen einen Vorteil in der Klassifikation bringt, mit Ja beantwortet werden.
-
-\subsection{Verschiedene Bildgrößen beim  Training von \PreDog{} und \PreBig{}}
-
-Wie bereits in \autoref{sec:größe-bilder} beschrieben, wurde für die beiden
-Neuronalen Netze, die ein vortrainiertes Netz nutzen, alle Bilder auf 125x138
-reskaliert. Dies erreichte eine Validation Accuracy von ungefähr \SI{60}{\percent}.
-Falls die Bilder aber auf 224x224 reskaliert werden, dann steigt die Accuracy
-auf ungefähr \SI{95}{\percent}. Da im kleinen Datensatz nur maximal 74 Bilder
-kleiner sind als 224x224, die Validation Accuracy aber deutlich besser ist, wird diese Methode zum Training verwendet.
-Loss und Accuracy Kurven sind im Anhang zu finden.
-
-\subsection{\PreBig{}}
-
-\begin{wrapfigure}{r}{11.2cm}
-  \centering
-  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/history_epoch.pdf}
-  \caption{Loss und Accuracy Kurven für \PreBig{}.}
-  \label{fig:loss-acc-prebig}
-\end{wrapfigure}
-
-In \autoref{fig:loss-acc-prebig} sind die Loss und Accuracy Kurven für \PreBig{}
-zu sehen. Ungefähr ab Epoche 14 ist leichtes Overtraining zu erkennen. Hier
-wäre eine Anpassung der \texttt{dropout-rate} und der Stärke der \texttt{L2-Regularisierung}
-Mögliche Stellschrauben, um das Overtraining zu beseitigen, möglicherweise im Zuge
-einer umfassenden Hyperparameter-Optimierung.
-
-Die Confusion-Matrix zeigt eine deutliche Diagonale, was als gut zu bewerten ist.
-Allerdings werden einzelne Klassen noch häufig falsch klassifiziert, zum Beispiel
-ist ein vom Netz als American Staffordshire Terrier klassifizierter Hund zu ungefähr
-\SI{80}{\percent} ein Staffordshire Bullterrier. Die Ähnlichkeit der beiden Rassen
-steckt schon im Namen und wird bei genauerer Betrachtung der Bilder beider Klassen
-deutlich. Alles in allem funktioniert die Klassifikation gut, einzelne Klassen
-wie z.\.B. der African Hunting Dog werden (fast) immer richtig klassifiziert.
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/confusion_matrix.pdf}
-  \caption{Confusion Matrix für \PreBig{}.}
-  \label{fig:confusion-prebig}
-\end{figure}
+zu einer höheren Validation Accuracy führt. Folgerichtig optimiert die Verwendung
+von Farbinformationen die Genauigkeit.
 
 \subsection{\MiniDog}
 
-\begin{wrapfigure}{r}{11.2cm}
+% \begin{wrapfigure}{r}{11.2cm}
+\begin{figure}
   \centering
   \includegraphics[scale=0.8]{pics/ergebnisse/MiniDogNN/history.pdf}
   \caption{Loss und Accuracy Kurven für \MiniDog{}.}
   \label{fig:loss-acc-minidog}
-\end{wrapfigure}
+\end{figure}
+% \end{wrapfigure}
 
 In \autoref{fig:loss-acc-minidog} sind die Loss und Accuracy Kurven für \MiniDog{}
 trainiert auf 5 Klassen zu sehen. Auch hier ist ab Periode 25 leichtes
@@ -87,7 +49,9 @@ In \autoref{fig:confusion-mini-120} ist die Confusion-Matrix von \MiniDog{} für
 120 Klassen dargestellt ist. Es wird sofort ersichtlich, dass die Klassifikation
 nicht gut funktioniert hat, da alle Bilder einer einzelnen Klasse zugeordnet
 werden. Damit wird auch klar, dass nicht mit dem gleichen Netz 5 und 120 Klassen
-gut klassifiziert werden können.
+gut klassifiziert werden können. Der Grund dafür liegt hauptsächlich darin, dass
+der \CNN{}-Anteil von \MiniDog{} 64 Features generiert und trotz der Variation
+des \FNC{} somit zu wenige Gewichte für eine 120-Klassen-Klassifikation vorliegen.
 
 \begin{figure}
   \begin{subfigure}{0.49\textwidth}
@@ -99,7 +63,7 @@ gut klassifiziert werden können.
   \begin{subfigure}{0.49\textwidth}
     \centering
     \includegraphics[width=\textwidth]{pics/ergebnisse/MiniDogNN/confusion_matrix_mini120.pdf}
-    \caption{Confusion Matrix für \MiniDog{}, trainiert auf 120 Klassen.}
+    \caption{Confusion-Matrix für \MiniDog{}, trainiert auf 120 Klassen.}
     \label{fig:confusion-mini-120}
   \end{subfigure}
   \caption{Confusion-Matrizen für \MiniDog{} für den kleinen und den großen Datensatz.}
@@ -128,6 +92,53 @@ gut klassifiziert werden können.
 %   \label{fig:confusion-mini-120}
 % \end{figure}
 
+\subsection{Verschiedene Bildgrößen beim  Training von \PreDog{} und \PreBig{}}
+
+Wie bereits in \autoref{sec:größe-bilder} beschrieben, wurde für die beiden
+Architekturen, die ein vortrainiertes Netz nutzen, alle Bilder auf 224x224
+reskaliert. Dies erreichte eine Validation Accuracy von ungefähr
+\SI{95}{\percent}. Dadurch werden zwar 1735 Bilder des Datensatzes hochskaliert,
+da aber beim Skalieren auf die minimalen Größen der beiden Datensätze die
+Accuracy z.\,B. bei \PreDog{} auf ungefähr \SI{60}{\percent} (vgl.
+\autoref{fig:loss-acc-kleine-groesse}) sinkt, wird 224x224 als Größe verwendet.
+% Falls die Bilder aber auf 224x224 reskaliert werden, dann steigt die Accuracy
+% auf ungefähr \SI{95}{\percent}. Da im kleinen Datensatz nur maximal 74 Bilder
+% kleiner sind als 224x224, die Validation Accuracy aber deutlich besser ist, wird diese Methode zum Training verwendet.
+% Loss und Accuracy Kurven sind im Anhang zu finden.
+
+\subsection{\PreBig{}}
+
+\begin{wrapfigure}{r}{11.2cm}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/history_epoch.pdf}
+  \caption{Loss und Accuracy Kurven für \PreBig{}.}
+  \label{fig:loss-acc-prebig}
+\end{wrapfigure}
+
+In \autoref{fig:loss-acc-prebig} sind die Loss und Accuracy Kurven für \PreBig{}
+zu sehen. Ungefähr ab Epoche 14 ist leichtes Overtraining zu erkennen. Hier
+wäre eine Anpassung der \texttt{dropout-rate} und der Stärke der \texttt{L2-Regularisierung}
+mögliche Stellschrauben, um das Overtraining zu beseitigen.
+
+Die Confusion-Matrix zeigt eine deutliche Diagonale, was für eine hohe
+Genauigkeit spricht. Allerdings werden einzelne Klassen häufig falsch
+klassifiziert, zum Beispiel ist ein vom Netz als American Staffordshire Terrier
+klassifizierter Hund zu ungefähr \SI{80}{\percent} ein Staffordshire
+Bullterrier. Die Ähnlichkeit der beiden Rassen steckt schon im Namen und wird
+bei genauerer Betrachtung der Bilder deutlich.
+
+Zusammenfassend zeigt die Klassifikation eine hohe Genauigkeit,
+einzelne Klassen wie z.\.B. der African Hunting Dog werden mit fast \SI{100}{\percent}-tiger
+Wahrscheinlichkeit richtig klassifiziert.
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.8]{pics/ergebnisse/PreBigDogNN/confusion_matrix.pdf}
+  \caption{Confusion-Matrix für \PreBig{}.}
+  \label{fig:confusion-prebig}
+\end{figure}
+
+
 \subsection{\PreDog}
 
 \begin{figure}
@@ -143,9 +154,9 @@ Es ist kein Overtraining zu erkennen, was als positiv zu bewerten ist.
 Die Confusion-Matrix in \autoref{fig:confusion-predog} zeigt, dass das Training sehr gut
 verlaufen ist. Beagle, Schipperke und Standard Poodle werden mit \SI{100}{\percent}-tiger
 Wahrscheinlichkeit richtig erkannt; bei African Hunting Dog und Beagle werden teilweise
-noch falsche Klassifizierungen vorgenommen, allerdings nur \SI{3}{\percent} bzw.
+falsche Klassifizierungen vorgenommen, allerdings nur \SI{3}{\percent} bzw.
 \SI{12}{\percent}. Somit lässt sich sagen, dass unter Verwendung des vortrainierten
-Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog{}.
+Netzes die Klassifikation deutlich präziser verläuft als bei \MiniDog{}.
 
 \begin{figure}
   \centering
@@ -154,7 +165,7 @@ Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog{}.
   \label{fig:confusion-predog}
 \end{figure}
 
-\subsection{\RF}
+\subsection{\texttt{Random Forest}}
 
 \begin{figure}
   \centering
@@ -164,19 +175,21 @@ Netzes die Klassifikation deutlich besser verläuft als bei \MiniDog{}.
   \label{fig:loss-acc-rf}
 \end{figure}
 
-In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den Autoencoder
-des Random Forest dargestellt. Dabei wurde der Autoencoder auf 120 Klassen trainiert.
-Aus der Loss-Kurve wird ersichtlich, dass Overtraining vom Start weg gegeben ist.
-Die Accuracy kann das nicht unterstützen. Allerdings ist das Overtraining klein,
-weswegen es in der Accuracy wahrscheinlich nicht sichtbar ist.
+In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den
+Autoencoder des Random Forest dargestellt. Dabei wurde der Autoencoder auf dem
+gesamten Datensatz trainiert. Aus der Loss-Kurve wird ersichtlich, dass
+Overtraining vom Start weg gegeben ist. Es erscheint jedoch stärker als es ist,
+da die Skalierung der y-Achse sehr fein gewählt ist. In der Accuracy ist dieses
+Overtraining aufgrund der gröberen Skalierung nicht sichtbar; dies bestärkt die
+Annahme, dass das Overtraining klein ist.
 
 Die Confusion-Matrizen aus \autoref{fig:confusion-rf} zeigen, dass einerseits
-die Klassifizierung in \autoref{sub:confusion-rf-120} besser funktioniert hat
-als in \autoref{fig:confusion-mini-120}, aber andererseits schlechter als in
-\autoref{fig:confusion-prebig}. Die Confusion-Matrizen für den kleinen Datensatz
+die Klassifizierung für den großen Datensatz in \autoref{sub:confusion-rf-120} besser funktioniert hat
+als bei \MiniDog{} (vgl. \autoref{fig:confusion-mini-120}), aber andererseits schlechter als bei
+\PreBig{} (vgl. \autoref{fig:confusion-prebig}). Die Confusion-Matrizen für den kleinen Datensatz
 sind schwieriger zu vergleichen im Hinblick auf \MiniDog{}, allerdings wird auch
 hier ersichtlich, dass die Klassifikation mit einem vortrainierten Netz deutlich
-besser funktioniert als in \autoref{fig:confusion-mini} und
+besser funktioniert als bei \MiniDog{} (vgl. \autoref{fig:confusion-mini}) und
 \autoref{sub:confusion-rf-5}.
 
 \begin{figure}
