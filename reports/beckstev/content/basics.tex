@@ -1,42 +1,15 @@
-\section{Grundlagen}
-Im den folgenden Abschnitten werden die benötigten Grundlagen gelegt, um die
-im Projekt verwendeten Techniken und Algorithmen zu verstehen. An dieser Stelle
-ist anzumerken, dass für detaliertes Verständnis ein Lehrbuch
-wie zum Beispiel \cite{hands_on_machine_learning} studiert werden sollte.
-
-Die verwendeten Techniken und Algorithmen werden in den Bereich \emph{Machine
-Learning} eingeordnet und umfassen \emph{Neuronale Netzwerke}, \emph{Convolutional Netzwerke},
-\emph{Autoencoder} und \emph{Random Forests}. All diese Techniken sind
-\emph{supervised} Algorithmen also überwachte Lerner. Damit ist gemeint, dass
-den Algorithmen neben den Daten auch die passende Wahrheit in Form von Labels
-mit übergegeben bekommen \cite[S. 8]{hands_on_machine_learning}. Dies ist für die
-Problemstellung der Hunderassenbestimmung nicht unüblich, da es hierbei um ein
-klassiches Klassifizierungsproblem handelt \cite[S. 8]{hands_on_machine_learning}.
-
-\subsection{Neuronale Netzwerke}
-Die Entwicklung von künstliche neuronalen Netzwerke (NN) wurden inspiert von den
-leistungsstarken biologischen neuronale Netzwerken die in ihrer Gesamtheit
-das Gehirn vieler Lebewesen bilden \cite[S. 253-256]{hands_on_machine_learning}.
-Zum jetzigen Zeitpunkt generalisieren NN jedoch noch nicht in der Weise
-wie es ihre biologische Vorbilder tun. Damit
-ist gemeint, dass viele Algorithmen nur spezifische Probleme, die sie gelernt haben,
-lösen könen und bisher kaum Transferleistung erbringen können \cite{transferleistung_netzwerke}.
-
+\section{Techniken \& Modelle}
+Im den folgenden Abschnitten werden die verwendeten Techniken und Modelle
+vorgestellt. All diese Techniken gehöhren zu der Klasse der überwachten
+Lerner.
 \subsection{Datensatz}
-Wie oben angesprochen benötigen überwachte Lernern während des Traningprozesses
-die Labels welche die Wahrheit über die Daten enthalten. In disem Fall wäre die
-benötigte Wahrheit der Name der Hunderasse. Dementsprechen wird ein Datensatz
-benötigt, der die Labels mit enthält. Selbstverständlich könnte ein Datensatz
-selber erstellt und gelabelt werden, dies ist jedoch mit einer hohen Arbeitsaufwand
-verknüpft. Zusätzlich enthält der Datensatz für jedes Bild Koordinaten
-für einen Rahmen (Bounding Box) der den Hund enthält.
-
-Vorteilhafterweise bietet die Internetseite \emph{kaggle} einen gelabelten
-Datensatz \cite{datensatz}. Durch diesen wird maximale Anzahl von $120$
-Hunderassen die klassifiziert werden soll festgelegt. Insgesamt enthält der
-Datensatz $20580$ Bilder die auf die $120$ Rassen aufgeteilt ist. Wie in der
-Abbildung \ref{fig:gleichverteilung_bilder} zu erkennen ist, sind die Bilder
-gleichmäßig auf die einzelnen Klassen aufgeteilt.
+Wie oben erwähnt benötigen überwachte Lerner während des Trainingsprozesses
+die Wahrheit (Labels) über die Klassenzugehörigkeit. Auf der Internetseite \emph{kaggle}
+findet sich einen gelabelten
+Hunderassen Datensatz \cite{datensatz}. Dieser entählt neben den Labeln auch
+Bounding Boxes, welche den Hung im Bild umrahmen.
+Der Datensatz legt die maximale Anzahl klassifizierbaren Hunderassen auf $120$ fest.
+Insgesamt enthält der Datensatz $20580$ Bilder (vgl. Abb. \ref{fig:bilder_cluser}), welche gleichmäßig auf die $120$ Rassen aufgeteilt sind (vgl. Abb. \ref{fig:gleichverteilung_bilder}).
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/general/image_distribution.pdf}
@@ -45,54 +18,40 @@ gleichmäßig auf die einzelnen Klassen aufgeteilt.
          das die Bilder gleichverteilt sind.}
 \label{fig:gleichverteilung_bilder}
 \end{figure}
-Eine zufällig Auswahl von Bildern des Datensatzes sind in der Abbildung \ref{fig:bilder_cluser}
-dargestellt.
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/general/image_cluster.pdf}
 \caption{Zufällig ausgewählte Bilder des Datensatzes.}
 \label{fig:bilder_cluser}
 \end{figure}
-Es ist deutlich zuerkennen, dass einzelne Bilder schwieriger zu klassifizieren sind,
-da Menschen, Hindernisse oder andere Hunde im Bild enthalten sind. Außerdem
-fältt auf, dass die Auflösung der Bilder nicht homogen ist.
-
+In der Abbildung \ref{fig:bilder_cluser} ist deutlich zuerkennen,
+dass einzelne Bilder schwieriger zu klassifizieren sind,
+da Menschen, Hindernisse oder andere Hunde im Bild mit enthalten sind. Außerdem
+zeigt sich, dass die Auflösung der Bilder nicht homogen ist.
 Ein Teil der NN werden auch auf einem kleineren Datensatz mit lediglich $5$ Hunderassen
-getestet, um Verarbeitungszeiten zu reduzieren. Dies ist insbesondere bei
-der Hyperparamteroptimierung von \textsc{MiniDogNN} wichtig.
+getestet, um Verarbeitungszeiten zu reduzieren.
 
 \subsubsection{Verarbeitung der Daten}
-Um den Datensatz für das tranieren der verschiedenen Algorithmen zu verwenden,
-muss er zunächst in einen Tranings-, Validierungs- und Testdatensatz aufgeteilt
-werden. Die gewählten Anteile sind $0.6-0.2-0.2$ verwendet und entspricht damit
+Um den Datensatz für das Trainieren der verschiedenen Algorithmen zu verwenden,
+muss er zunächst in einen Trainings-, Validierungs- und Testdatensatz aufgeteilt
+werden. Die gewählten Anteile sind $0.6-0.2-0.2$ verwendet und entsprechen damit
 den in der Literatur \cite[S. 29]{hands_on_machine_learning} empfohlenen Werten.
-
-Während der Tranignsphase werden die Bilder batch-weise geladen und vorprozessiert.
-Der Grund für das batch-weise laden ist, dass damit verhindert wird das $20580$
-aufeinmal in den Arbeitspeicher geladen werden, was die Leistung der späteren
-Traningsphase auf Grund von mangelden Ressourcen beeinträchtigen kann. Die erstellte
-Datenlader (Dataloader) Klasse basiert auf der \textsc{keras.utils.Sequence} Klasse die eine
-automatische Parallesierung des Ladeprozesses und der Vorverarbeitung ermöglicht
-\cite{keras_sequentiel}.
-
-Mit dem Dataloader besitzt die Funktion die Bilder batch-weise auf eine gegebene
-Bildgröße runterzuskalieren. Auf die einzelnen Skalierungsgrößen wird in dem
-Kapitel \ref{sec:NNarchitekturen} eingegangen, da diese nicht für alle Architekturen
-gleich sind. Die batch-weise Reskalierung ist auf Grund der inhomogenität
-der Bildauflösungen notwendig, weil \textsc{numpy.array}
-eine feste Eingangsform (Input shape) voraussetzen, ergo eine homogene Bildauflösung
-innerhalb eines Batches.
+Während der Trainignsphase werden die Bilder batchweise geladen und vorprozessiert.
+Mit der batchweisen Verarbeitung können Leistungslimitierung, auf Grund der
+gleichzeitigen Verarbeitung von $20580$ umgangen werden.
+Zusätzlich können mit dem Dataloader Bilder batchweise auf eine gegebene
+Bildgröße runterzuskalieren, was bedingt durch \textsc{numpy.arrays}
+notwendig ist.
 
 Darüber hinaus werden Techniken der \emph{Data Augementation} angewandt, um
 die Statistik des Datensatz zuvergrößern. Dies ist sinnvoll, da mit durchschnittlich
 $172$ Bildern pro Rassen (vgl. Abbildung \ref{fig:gleichverteilung_bilder})
-bei $120$ Rassen, im Vergleich z.\,B. zu Googles \textsc{Open Image} Datensatz
-\cite{google_open_image}, wenig Bilder für die Anzahl der Rassen enthält.
-Ausdiesem Grund verwenden wir zufällige Rotationen, Translationen und Vergrößerungen
-der Bilder, um die allgemeine Statistik zu erhöhen. Hierbei wird sichergestellt
+vergleichsweise wenig Statisitk pro Rasse zu
+Verfügung steht (vgl. mit Datensatz \cite{google_open_image}).
+Mit zufälligen Rotationen, Translationen und Vergrößerungen
+der Bilder, kann die Statistik erhöht werden. Hierbei wird sichergestellt
 , dass nach einer Translation oder einer Vergrößerung immernoch der ganze Hund
-im Bild zu erkennen ist. Hierfür werden die im Datensatz enthaltenten Bounding
-Boxes verwendet. Beispielhafte Ergebnisse der Transformationen sind in Abbildung
+im Bild zu erkennen ist. Beispielhafte Ergebnisse der Transformationen sind in Abbildung
 \ref{fig:data_augementation} dargestellt.
 \begin{figure}
 \centering
@@ -101,62 +60,51 @@ Boxes verwendet. Beispielhafte Ergebnisse der Transformationen sind in Abbildung
 \label{fig:data_augementation}
 \end{figure}
 
-\section{Verwendete NN Architekturen}\label{sec:NNarchitekturen}
-Der grundsätzliche Aufbau der verwendeten NN ist der Selbe. Um Bilder zu
-klassifizerieren müssen informationsreichen Eigenschaften eines Bildes
-gefunden werden, sogenannte Features. Hierzu werden NN konstruiert die
-Faltungen des Bildes mit einem Filter (Kernel) verwenden. Der Kernel besitzt
-Gewichte die tranierbar sind und somit vom Algorthimus optimiert werden können.
-Eine solche Netzstruktur wird auch als Convolutional Neuronal Network (CNN)
-bezeicht. Die vom CNN generierten Features werden von einem auf Neuronen basierendes
-Netzwerk zur Klassifizierung verwende. Diese auch als Fully Connected Network (FCN)
-bezeichnete Architekture besitzt als tranierbare Parameter die Matrixelemente
-der Neuronenübergangsmatrix. Insbesondere bei FCN ist es wichtig nichtlineare
-Aktivierungsfunktion zuverwenden, da ansonsten das Netzwerk nur auf linearen
-Abbildung basiert. Das wird bei der Optimierung des Netzwerks zum Problem, da
-hier Ableitungen zum Einsatz kommen.
+\subsection{Verwendete NN Architekturen}\label{sec:NNarchitekturen}
+Für eine Bildklassifizierung werden informationsreichen Eigenschaften
+des Bildes benötigt, sogenannte Features. Zur Featuregenerierung werden auf Faltung
+basierende  Convolutional Neuronal Network (CNN) verwendet.
+Die vom CNN generierten Features werden abschließend von einem
+Fully Connected Network (FCN) zu eigentlichen Klassifizierung verwendet.
 
-Abgesehen von der Ausgangslage (Output layer) wird Aktivierungsfunktion
+Abgesehen von der Ausgangslage (Output layer) wird die Aktivierungsfunktion
 \textsc{PReLU} für die CNN und FCN verwendet.
 \begin{equation}
   \label{eq:PReLU}
   \map{PReLU}(x)= \begin{cases} x,      & x \ge 0\\
-                                \alpha, & \mathrm{sonst}
+                                \alpha x, & \mathrm{sonst}
                   \end{cases}
 \end{equation}
 Dabei zeichnet sich \textsc{PReLU} dadurch aus, dass der Parameter $\alpha$ in
-Gleichung \eqref{eq:PReLU} auch tranierbar ist. Wie in dem Paper (Paper) \cite{he_normal_PReLU}
-dargestellt, ermöglicht dies eine schnelleres konvergieren eines Netzwerkes
-bei gleichbleibender Wahrscheinlichkeit überzutranieren (Overtraning).
-Die \textsc{PReLU} Aktivierungsfunktion ist bereits in \textsc{keras}
-implementiert \cite{keras_prelu}. Als Aktivierugnsfunktion für die Ausgnagslage
-des FCN wird die bekannte \textsc{sotmax}-Funktion verwendet.Der Ausgabewert dieser
+Gleichung \eqref{eq:PReLU} auch trainierbar ist. Wie in dem Papier (Paper) \cite{he_normal_PReLU}
+dargestellt, ermöglicht dies eine schnellere Konvergenz eines Modell
+bei einer gleichbleibenden Wahrscheinlichkeit überzutrainieren.
+Als Aktivierungsfunktion für die Ausgangslage
+des FCN wird die \textsc{sotmax}-Funktion verwendet. Der Ausgabewert dieser
 Funktion kann auf Grund der verwendeten Normierung, als Wahrscheinlichkeitsmaß
 für die Zugehörigkeit zu jeweiligen Klassen interpretiert werden \cite[S. 139]{hands_on_machine_learning}.
-Darüberhinaus wurde auch die Gewichtsinitalisierung für die Kernel und
-die Übergangsmatritzen der CNN und FCN angepasst. Hierfür wurde die
-bereits in \textsc{keras} implementierte \textsc{he\_normal} Methode
+Darüber hinaus wird die Gewichtsinitialisierung für die Kernel und
+Übergangsmatritzen der CNN und FCN angepasst. Hierfür wird die
+in \textsc{keras} implementierte \textsc{he\_normal} Methode
 verwendet \cite{keras_he_normal}. Die Vorteile dieser gezielten
-Gewichtisintalisierung werden ebenfalls im Paper \cite{he_normal_PReLU} motiviert.
+Gewichtisintialisierung werden ebenfalls im Paper \cite{he_normal_PReLU} motiviert.
 
 Allgemein ist es möglich bei der Verwendung von CNN eine variable Bildgröße
 zu verwenden. Hierdurch kann der maximale Informationsgehalt eines Bildes
 verwendet werden. Jedoch wird für FCN eine statische Eingangsgröße benötigt,
-um dies zuereichen wird vor der Eingangslage des FCN eine \textsc{GlobalMaxPooling}
-Lage (vgl. \textsc{keras} Dokumentation \cite{keras_max_pooling}) verwendet.
-Diese verwenden jediglich das Maximum von einem Filter einer Convolutional Lage,
-durch die vorab definierte Anzahl an Filtern ist somit auch die Inputgröße eines
+um dies zu erreichen wird vor der Eingangslage des FCN eine \textsc{GlobalMaxPooling}
+Lage verwendet. Diese übergibt lediglich die Maxima der Filter einer Convolutional Lage
+an das FCN.
+Durch die vorab definierte Anzahl an Filtern ist somit auch die Inputgröße eines
 FCN festgelegt.
 Eine beispielhafte Darstellung über die verwendeten Netzwerkachitekturen findet sich
 in Abbildung \ref{fig:beispielhafte_netz_architecture}.
 
  \subsubsection{MiniDogNN}
- Die \textsc{MiniDogNN}-Architektur ist eine einfach gehaltenes Netzwerk, welches
- in Abbildung \ref{fig:MiniDogNN} schmeatisch dargestellt ist. In der Abbildung sind
- die Aktivierungsfunktionen nicht mit eingezeichnet. Die Anzahl der Neuronen
- hängt von der Anzahl der Hunderassen $N\ua{dr}$ ab, die klassifiziert werden sollen.
- Darüberhinaus hängt die Anzahl der tranierbaren Parameter $n\ua{train}$ auch davon ab, ob \textsc{RGB} oder
- Graustufen Bilder verwendet werden sollen:
+ Die \textsc{MiniDogNN}-Architektur ist in Abbildung \ref{fig:MiniDogNN} schematisch dargestellt ist. Die Anzahl der Neuoren des FCNs sind hängen von der
+Hunderassenanzahl $N\ua{dr}$ ab die klassifiziert werden soll. Damit hat $N\ua{dr}$
+direkten Eingluss auf die Anzahl der zu trainierenden Paramter $n\ua{train}$.
+Darüberhinaus hängt die Anzahl der trainierbaren Parameter auch davon ab, ob \textsc{RGB} oder Graustufen Bilder verwendet werden sollen:
  \begin{align}
    \begin{aligned}
      \label{eq: ntrain_MiniDogNN}
@@ -164,51 +112,38 @@ in Abbildung \ref{fig:beispielhafte_netz_architecture}.
    n\ua{train}\left(N\ua{dr}=5, \,\, \mathrm{rgb}\right) &= 21555, & n\ua{train}\left(N\ua{dr}=120, \,\, \mathrm{rgb}\right) & = 58240
    \end{aligned}
  \end{align}
- Zwar ist Variabelenenraum gegeben durch die Bildgröße und nicht durch das Bild, wie
- bei einem FCN, jedoch wird in den Gleichungen \eqref{eq: ntrain_MiniDogNN} deutlich,
- dass es deutlich das eine Regularisierung notwendig. Eine Regularisierung
- erfolgt bei der \textsc{MiniDogNN}-Architektur mit Hilfe eine $l2$-Architektur.
+ Die Gleichungen \eqref{eq: ntrain_MiniDogNN} verdeutlichen,
+ dass die Verwendung einer Regularisierung empfehlenswert ist.
+ Diese erfolgt mit Hilfe eine $l2$-Regularisierung.
  \begin{figure}
  \centering
  \includegraphics[width=\the\textwidth]{../../final_data/general/MiniDogNN.pdf}
- \caption{Schmatische Darstellung der \textsc{MiniDogNN}-Architektur, wobei
+ \caption{Schematische Darstellung der \textsc{MiniDogNN}-Architektur, wobei
           die Aktivierungsfunktionen nicht mit eingezeichnet sind. Das FCN
-          ist schmatisch angedeutet. Erläuterung der Konvention: \emph{\textbf{\#}Filter\textbf{@}Bildbreite \textbf{X} Bildhöhe}.
-          Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
+          ist schematisch angedeutet. Erläuterung der Konvention: \emph{\textbf{\#}Filter\textbf{@}Bildbreite \textbf{X} Bildhöhe}.
+          Die Grafik wurde unter Zuhilfenahme der Internetseite \cite{net_svg_source} erstellt.}
  \label{fig:MiniDogNN}
  \end{figure}
 
-\subsubsection{PreDogNN \& PreBigDogNN}
-Wie im obigen Kapitel angesprochen, ist die Hauptaufgabe eines CNN die Generierung
-von Features aus einem Bild. Jedoch limitiert die Größe des Datensatzes stark
-die maximalen Größe der \textsc{MiniDogNN}-Architektur. Diese Limitation
-kann durch vortrainierte Modelle umgangen werden. Wichtig ist hierbei, dass
-ein Modell verwendet wird, dass auch auf Bildklassifizierung ausgelegt ist.
-Die Idee ist, den FCN-Anteil des vortrainierten Modells zu entfernen und lediglich den CNN-Anteil
-zur Featuregenerierung zu verwenden. Hierbei werden die Paramter des CNN
-festgehalten und sind somit nicht tranierbar. An das vortranierte CNN schließt, dann
-ein tranierbares FCN an.
+\subsubsection{PreBigDogNN}
+Die Bildanzahl des Datensatzes limitiert
+die Tiefe der \textsc{MiniDogNN}-Architektur. Diese Limitation
+kann durch vortrainierte Klassifizierungsmodelle umgangen werden.
+Die Idee ist, den FCN-Anteil des vortrainierten Modells zu entfernen
+und lediglich den CNN-Anteil zur Featuregenerierung zu verwenden.
+Hierbei werden die Paramter des CNN statisch und somit nicht trainierbar.
+An das vortrainierte CNN schließt, dann ein trainierbares FCN an.
 
-Die Modelle \textsc{PreDogNN \& PreBigDogNN} verwenden das CNN der
-\textsc{InceptionResNetV2}-Architektur \cite{InceptionResNetV2}. Das Netzwerk
-ist in \textsc{keras} vorimplementiert und kann mittels eines Funktionsparamters
-in ein CNN umgewandelt werden \cite{keras_InceptionResNetV2}.
-
-Der Unterschied zwischen \textsc{PreDogNN \& PreBigDogNN} liegt in der Anzahl
-an Hunderasssen die klassifiziert werden können -
-$N\ua{dr, PreDogNN}=5,\, N\ua{dr, PreBigDogNN}=120$. Die Klassifizierung von $5$ Hunderassen
-soll an dieser Stelle lediglich mit der Ersparnis an Analysezeit und -hardware
-motiviert werden. Bedingt wird die Anzahl an möglichen Hundereassen druch die
-FCN-Architektur der beiden Netzwerk. Beim \textsc{PreDogNN} besteht das FCN aus
-drei Lagen mit $30-30-5$ Neuronen, im Gegensatz dazu verwendet das \textsc{PreBigDogNN} deutlich
-mehr Neuronen innerhalb seiner drei Lagen: $150-120-120$. Die Reduzierung von
-$150$ auf $120$ Neuronen in der zweiten Lage ist mit der an der zu tranierenden Paramtern
-erklären: Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
+Das Modell \textsc{PreBigDogNN} verwendet das CNN der
+\textsc{InceptionResNetV2}-Architektur \cite{InceptionResNetV2}.
+Das FCN der \textsc{PreBigDogNN} besteht aus drei Lagen die $150-120-120$
+Neuronen besitzen. Die Reduzierung von
+$150$ auf $120$ Neuronen ist Anzahl der trainierbaren Parameter zu erklären.
+Das CNN der \textsc{InceptionResNetV2}-Architektur generiert
 $1536$ Features (\textsc{MiniDogNN} $64$) was zu einer Vielzahl von
-tranierbaren Gewichten innheralb des FCN führt:
+trainierbaren Gewichten innerhalb des FCN führt:
 \begin{equation}
   \label{eq:ntrain_PreDogNN_PreBigDogNN}
-  n\ua{train}(\mathrm{rgb}) = 47255 \quad \mathrm{PreDogNN}, \qquad
   n\ua{train}(\mathrm{rgb}) = 249545 \quad \mathrm{PreBigDogNN}
 \end{equation}
 Aus diesem Grund ist hier Regularisierung entscheidend, hierfür wird neben der
@@ -218,43 +153,38 @@ Die \textsc{keras}-Implementierung von \textsc{InceptionResNetV2} benötigt
 eine vordefinierte Bildgröße \cite{keras_InceptionResNetV2}.
 Aus diesem Grund werden, alle Bilder auf $244\times 244$ skaliert.
 Der komplette Datensatz enthält $1735$ Bilder die hierdurch hochskaliert werden.
-Es wird der Einfachheit halber angenommen, dass das hochskalieren nur einen
+Es wird der Einfachheit halber angenommen, dass das Hochskalieren nur einen
 geringen Einfluss auf die Genauigkeit hat. Würde die minimale
 Bildgröße (vgl. Abb \ref{fig:Bildverteilung_Datensatz} und
  \ref{fig:Bildverteilung_Datensatz_MiniDataset})
 der beiden Datensätze verwendet werden
-würde sich dies negativ auf die Genauigkeit auswirken.
+würde sich dies negativ auf die Genauigkeit auswirken. Diese Tatsache
+wurde mit einer kleineren Architektur festgestellt.
 
 \subsection{Alternative Methode: Autoencoder \& Randomforest}
 Als alternativen Ansatz wird ein \textsc{Randomforest} (RF)
-in Verbindung mit einem Autoencoder verwendet.
-Die hinterliegende Techniken eines RF werden als bekannt vorrausgesetzt und können
-gegebenfalls im Buch \cite[S. 181]{hands_on_machine_learning} nachgelesen werden.
-Die Features werden in Form eines Vektors an den RF übergeben,
-dieser wird mit einem vorab tranierten Autoencoder generiert.
+in Verbindung mit einem Autoencoder verwendet. Hier übernimmt der Autoencoder
+die Aufgabe der Featuregenerierung und der RF vollzieht die Klassifizierung.
+Eine schematische Darstellung des Autoencoders findet sich in Abbildung \ref{fig:Autoencoder}.
 
 Der Autoencoder verwendet \textsc{ReLU}-Aktivierungsfunktionen
-keine spezielle und keine Gewichtsinitalisierung. Alsk Aktivierungsfunktion
-für die Ausgabelage wird eine \textsc{sigmoid}-Funktion verwendet, da diese
-einen Ausgabewert zwischen Null und Eins besitzt. Diese Eigenschaft ist nützlich,
-weil die normierten Pixelwerte in diesem Bereich liegen und das Bild mit dieser
-Lage rekonstuiert sein sollte.
-Im Gegensatz zu den bisher vorgestellten NN, wird hier
-\emph{padding} verwendet. Durch das \emph{padding} bleibt die Bildgröße
-bei Konvolutionallagen erhalten. Eine schematische Darstellung des Autoencoders
-findet sich in Abbildung \ref{fig:Autoencoder}.
-Der Autoencoder basiert somit auf Convolutional-Lagen die in Verbindung mit
-\textsc{MaxPooling}-Lagen das Bild herunterskalieren. Anschließend wird
-mittels \textsc{Flatten} ein Featurevektor generiert der daraufhin durch
+und die standard Gewichtsinitalisierung von \textsc{keras}.
+Lediglich bei der Ausgangslage wird eine \textsc{sigmoid}-Aktivierungsfunktion verwendet, da diese einen Ausgabewert zwischen Null und Eins besitzt. Diese Eigenschaft ist essentiell,
+weil die Pixelwerte der Bilder normiert sind.
+Der Autoencoder basiert auf Convolutional-Lagen die in Verbindung mit
+\textsc{MaxPooling}-Lagen ein Bild herunterskalieren. Anschließend wird
+mittels \textsc{Flatten} ein Featurevektor generiert, der daraufhin durch
 \textsc{Reshape} wieder in eine Matrixform umgewandlert wird. Diese wird dann
-in den Decoder gegeben, welcher aus \textsc{UpSampling}-Lagen verbundene
-Convolutional-Lagen besteht.
+in den Decoderteil des Autoencodersen durch \textsc{UpSampling}- und weitere
+Convolutional-Lagen zum Eingangsbild rekonstruiert. Sowohl Encoder als auch Decoder
+verwenden \emph{padding}, welches bei den Convolutionallage ein erhalt der Bildgröße
+sicherstellt.
 \begin{figure}
 \centering
 \includegraphics[width=\the\textwidth]{../../final_data/general/autoencoder.pdf}
-\caption{Schmatische Darstellung des verwendeten Autoencoders, wobei
+\caption{Schematische Darstellung des verwendeten Autoencoders, wobei
          die Aktivierungsfunktionen nicht mit eingezeichnet sind.Das FCN
-         ist schmatisch angedeutet. Erläuterung der Konvention: \emph{\textbf{\#}Filter\textbf{@}Bildbreite \textbf{X} Bildhöhe}.
-         Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
+         ist schematisch angedeutet. Erläuterung der Konvention: \emph{\textbf{\#}Filter\textbf{@}Bildbreite \textbf{X} Bildhöhe}.
+         Die Grafik wurde unter Zuhilfenahme der Internetseite \cite{net_svg_source} erstellt.}
 \label{fig:Autoencoder}
 \end{figure}
