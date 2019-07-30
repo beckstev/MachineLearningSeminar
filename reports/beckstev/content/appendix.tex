@@ -1,9 +1,14 @@
-\FloatBarrier
-\section{Weiterführende Abbildungen}
-\subsubsection{Umfrageergebnis}
+\section{Weiterführende Abbildungen und Informationen}
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n120/width_heigt_scatter_hist2d.pdf}
+\includegraphics[width=0.8\textwidth]{./survey/answers_plot.pdf}
+\caption{Antwortverteilung der Umfrage unter Physikstudierenden.}
+\label{fig:Antwortverteilung}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{../../final_data/MiniNN_n120/width_heigt_scatter_hist2d.pdf}
 \caption{Oben: Scatter-Plot der Höhen- und Breitenverteilung der Bilder aus dem
 großen Datensatz. Unten: Zweidimensionales Histogramm der Höhen- und Breiten-
 verteilung. Die gelbe Größe entspricht der am häufigsten auftretenden Kombination
@@ -12,41 +17,29 @@ aus Breite und Höhe.}
 \end{figure}
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/width_heigt_scatter_hist2d.pdf}
+\includegraphics[width=0.6\textwidth]{../../final_data/MiniNN_n5/width_heigt_scatter_hist2d.pdf}
 \caption{Oben: Scatter-Plot der Höhen- und Breitenverteilung der Bilder aus dem
 kleinen Datensatz. Unten: Zweidimensionales Histogramm der Höhen- und Breiten-
 verteilung. Die gelbe Größe entspricht der am häufigsten auftretenden Kombination
 aus Breite und Höhe.}
 \label{fig:Bildverteilung_Datensatz_MiniDataset}
 \end{figure}
-\FloatBarrier
-\FloatBarrier
-\subsection{Bildgrößenverteilung}
+
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{./survey/answers_plot.pdf}
-\caption{Antwortverteilung der Umfrage unter Physikstudierenden.}
-\label{fig:Antwortverteilung}
-\end{figure}
-\FloatBarrier
-\subsubsection{Beispielhafte Netzarchitektur}
-\FloatBarrier
-\begin{figure}
-\centering
-\includegraphics[width=\the\textwidth]{../../final_data/general/sample_network.pdf}
+\includegraphics[width=0.8\textwidth]{../../final_data/general/sample_network.pdf}
 \caption{Schmatische Darstellung der verwendeten Architektur, wobei
          die Aktivierungsfunktionen nicht mit eingezeichnet sind. Erläuterung der Konvention: \emph{\textbf{\#}Filter\textbf{@}Bildbreite \textbf{X} Bildhöhe}.
          Die Grafik wurde unter zuhilfe nahme der Internetseite \cite{net_svg_source} erstellt.}
 \label{fig:beispielhafte_netz_architecture}
 \end{figure}
-\FloatBarrier
-\subsubsection{Ergebnisse MiniDogNN für $120$ Hunderassen}
-\FloatBarrier
+
+
 \begin{figure}
 \centering
 \centering
-\includegraphics[width = \textwidth]{../../final_data/MiniNN_n120/08-07-2019_21:08:09_n_120/build/history_loss.pdf}
-\caption{Traningsfortschritt des \textsc{MiniDogNN}.}
+\includegraphics[width = 0.8\textwidth]{../../final_data/MiniNN_n120/08-07-2019_21:08:09_n_120/build/history.pdf}
+\caption{Trainingsfortschritt des \textsc{MiniDogNN}.}
 \label{fig:MiniDogNN_120_Loss_Acc}
 \end{figure}
 \begin{figure}
@@ -55,31 +48,22 @@ aus Breite und Höhe.}
 \caption{Konfusionmatrix des \textsc{MiniDogNN}.}
 \label{fig:MiniDogNN_120_Konfusionmatrix}
 \end{figure}
-\FloatBarrier
-\subsubsection{Genauigkeitverteilung MiniDogNN}
-\FloatBarrier
+
 \begin{figure}
 \centering
-\includegraphics[width=\the\textwidth]{../../final_data/MiniNN_n5/acc_hist.pdf}
-\caption{Genauigkeitverteilung der erfolgreich tranierten Modelle der HPO.}
+\includegraphics[width=0.8\textwidth]{../../final_data/MiniNN_n5/acc_hist.pdf}
+\caption{Genauigkeitverteilung der erfolgreich trainierten Modelle der HPO.}
 \label{fig:Genauigkeitverteilung_MiniDogNN}
 \end{figure}
-\subsubsection{Legende}
-\input{../../final_data/autoencoder_n_120/build/legende.tex}
-\FloatBarrier
-\subsubsection{Traningsdokumentation Autoencoder}
-\FloatBarrier
+
 \begin{figure}
 \centering
 \centering
-\includegraphics[width = \textwidth]{../../final_data/autoencoder_n_120/build/history.pdf}
-\caption{Traningsfortschritt des Autoencoders.}
+\includegraphics[width = 0.8\textwidth]{../../final_data/autoencoder_n_120/build/history.pdf}
+\caption{Trainingsfortschritt des Autoencoders.}
 \label{fig:Autoencoder_loss}
 \end{figure}
-\FloatBarrier
 
-\subsubsection{HPO des Randomforests}
-\FloatBarrier
 Paramterraum für die HPO:
 \begin{align}
   \begin{aligned}
@@ -89,4 +73,5 @@ Paramterraum für die HPO:
     crit &\in \left\{gini,\, entropy\right\} & n\ua{est}&\in\left\{100,\, 400,\, 1000,\, 1500 \right\}
   \end{aligned}
 \end{align}
-\FloatBarrier
+
+\input{../../final_data/autoencoder_n_120/build/legende.tex}
