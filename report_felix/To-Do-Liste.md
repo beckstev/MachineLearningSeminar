@@ -4,6 +4,7 @@
 * Loss und Acc Plot von MiniDogNN anpassen
 * Schnauzenform und Fellfarbe bei visualize_predicitons einbringen?
 * Ausblick mit dictionaries
+* Plots prüfen
 
 # Stevens Anmerkungen
 ## Einleitung
@@ -22,36 +23,36 @@
 <!-- * minimal und maximal weg -->
 
 ## Lösungsansatz
-* Strategie?
-* Absatz?
-* aufgrund der Verwendung von numpy arrays
-* statt resizen reskalieren
-* batchweise statt batchwise
-* Scatter plots in den Anhang
-* technische Schwierigkeiten raus -> einfach schreiben, dass auf 224x224 reresized wurde
+<!-- * Strategie? -->
+<!-- * Absatz? -->
+<!-- * aufgrund der Verwendung von numpy arrays -->
+<!-- * statt resizen reskalieren -->
+<!-- * batchweise statt batchwise -->
+<!-- * Scatter plots in den Anhang -->
+<!-- * technische Schwierigkeiten raus -> einfach schreiben, dass auf 224x224 reresized wurde -->
 * eventuell auf Doku verweisen
-* fällt dies nicht ins Gewicht
-* nebenbei raus und der Bilder auch
-* statt CNN Architekturen
-* da die Bilder... raus
-* Freie Parameter Anzahl ändern
-* um die Anzahl der freien Parameter für das FCN LAyer festzulegen
-* Klammern bei PreBigDog
-* schreiben, dass PreDog für 5 Klassen und PreBigDog für 120 Klassen
-* Dazudichten: Auswirkungen auf Overtraining zu untersuchen
-* PreLU Satz kaputt
-* softmax ist normiert
-* eigener Absatz
-* nicht Anzahl Parameter reduziert, Bilduaflösung reduziert
-* mit reshape wieder als Tensor
-* Bilder sind normiert zwischen 0 und 1, und deswegen sigmoid, weil Output zwischen 0 und 1
-* Hyperparametern weglassen
-* Cross Validation streichen
-* Es wurden drei Hyperparameter optimiert, learning rate und epochen nicht, da early stopping
-* default werte nennen
-* Um den Informationsgehalt zu prüfen, statt wie wichtig
-* einzelne Absätze
-* für den gegebenen Zeitraum
+<!-- * fällt dies nicht ins Gewicht -->
+<!-- * nebenbei raus und der Bilder auch -->
+<!-- * statt CNN Architekturen -->
+<!-- * da die Bilder... raus -->
+<!-- * Freie Parameter Anzahl ändern -->
+<!-- * um die Anzahl der freien Parameter für das FCN LAyer festzulegen -->
+<!-- * Klammern bei PreBigDog -->
+<!-- * schreiben, dass PreDog für 5 Klassen und PreBigDog für 120 Klassen -->
+<!-- * Dazudichten: Auswirkungen auf Overtraining zu untersuchen -->
+<!-- * PreLU Satz kaputt -->
+<!-- * softmax ist normiert -->
+<!-- * eigener Absatz -->
+<!-- * nicht Anzahl Parameter reduziert, Bilduaflösung reduziert -->
+<!-- * mit reshape wieder als Tensor -->
+<!-- * Bilder sind normiert zwischen 0 und 1, und deswegen sigmoid, weil Output zwischen 0 und 1 -->
+<!-- * Hyperparametern weglassen -->
+<!-- * Cross Validation streichen -->
+<!-- * Es wurden dreiSkalierungmeter optimiert, learning rate und epochen nicht, da early stopping -->
+<!-- * default werte nennen -->
+<!-- * Um den Informationsgehalt zu prüfen, statt wie wichtig -->
+<!-- * einzelne Absätze -->
+<!-- * für den gegebenen Zeitraum -->
 * Alternativ-Methode Sklaierung 96x96 verwenden?
 
 ## Ergebnisse

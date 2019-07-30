@@ -22,9 +22,9 @@ von Farbinformationen einen Vorteil in der Klassifikation bringt, mit Ja beantwo
 \subsection{Verschiedene Bildgrößen beim  Training von \PreDog{} und \PreBig{}}
 
 Wie bereits in \autoref{sec:größe-bilder} beschrieben, wurde für die beiden
-Neuronalen Netze, die ein vortrainiertes Netz nutzen, alle Bilder 125x138
-geresized. Dies erreichte eine Validation Accuracy von ungefähr \SI{60}{\percent}.
-Falls die Bilder aber auf 224x224 geresized werden, dann steigt die Accuracy
+Neuronalen Netze, die ein vortrainiertes Netz nutzen, alle Bilder auf 125x138
+reskaliert. Dies erreichte eine Validation Accuracy von ungefähr \SI{60}{\percent}.
+Falls die Bilder aber auf 224x224 reskaliert werden, dann steigt die Accuracy
 auf ungefähr \SI{95}{\percent}. Da im kleinen Datensatz nur maximal 74 Bilder
 kleiner sind als 224x224, die Validation Accuracy aber deutlich besser ist, wird diese Methode zum Training verwendet.
 Loss und Accuracy Kurven sind im Anhang zu finden.
