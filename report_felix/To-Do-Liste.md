@@ -1,5 +1,9 @@
 * Plots der Ergebnisse anpassen bzw. updaten
 * Loss- und Acc von MiniDogNN mit 120 Klassen
+* Tabelle mit RF Hyperparametern in den Anhang, Genauigkeit und so auch?
+* Loss und Acc Plot von MiniDogNN anpassen
+* Schnauzenform und Fellfarbe bei visualize_predicitons einbringen?
+* Ausblick mit dictionaries
 
 # Stevens Anmerkungen
 ## Einleitung
@@ -33,6 +37,7 @@
 * Freie Parameter Anzahl ändern
 * um die Anzahl der freien Parameter für das FCN LAyer festzulegen
 * Klammern bei PreBigDog
+* schreiben, dass PreDog für 5 Klassen und PreBigDog für 120 Klassen
 * Dazudichten: Auswirkungen auf Overtraining zu untersuchen
 * PreLU Satz kaputt
 * softmax ist normiert
@@ -44,9 +49,10 @@
 * Cross Validation streichen
 * Es wurden drei Hyperparameter optimiert, learning rate und epochen nicht, da early stopping
 * default werte nennen
-* Um den Informationsgehalt zu prüfen, stat wie wichtig
+* Um den Informationsgehalt zu prüfen, statt wie wichtig
 * einzelne Absätze
 * für den gegebenen Zeitraum
+* Alternativ-Methode Sklaierung 96x96 verwenden?
 
 ## Ergebnisse
 * Dann erst MiniDogNN
