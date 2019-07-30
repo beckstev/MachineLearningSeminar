@@ -1,8 +1,8 @@
 \section{Zusammenfassung}
 Zusammenfassend lässt sich sagen, dass die Farbinformationen der Bilder die
 Klassifikation verbessern, so wie in \autoref{fig:hyper-param} sichtbar wurde.
-Außerdem zeigte sich, dass die Nutzung von vortrainierten Netzen einen
-deutlichen Performance Boost bringt. Vor allem für den kleinen Datensatz wird
+Außerdem zeigte sich, dass die Nutzung von vortrainierten Netzen eine deutliche
+Verbesserung der Genauigkeit liefert. Vor allem für den kleinen Datensatz wird
 aus \autoref{fig:confusion-predog} ersichtlich, dass die Klassifikation sehr gut
 funktioniert. Die Confusion-Matrizen von \MiniDog{} und \RF{} weisen noch große
 Nebendiagonalelemente auf, die teilweise größer sind als das
@@ -10,22 +10,23 @@ Hauptdiagonalelement.
 
 Weiterhin zeigte sich, dass die Klassifikation für den kleinen Datensatz besser
 funktionierte als für den großen Datensatz. Zwar konnte auch für den großen
-Datensatz ein Performance Boost durch die Verwendung eines vortrainierten Netzes
-nachgewiesen werden, dieser ist allerdings nicht so groß wie beim kleinen
-Datensatz. Allerdings muss bedacht werden, dass bei der Auswahl des kleinen
-Datensatzes bewusst keine Unterarten gewählt wurden bzw. darauf geachtet wurde,
-möglichst unterscheidbare Klassen zu wählen, um die Klassifikation zu
-vereinfachen. Außerdem wurde deutlich, dass sich \MiniDog{} nicht dazu eignet mit
-dem großen Datensatz zu arbeiten, wie \autoref{fig:confusion-mini-120} zeigt.
+Datensatz eine deutliche Verbesserung der Genauigkeit durch die Verwendung eines
+vortrainierten Netzes nachgewiesen werden, dieser ist allerdings nicht so groß
+wie beim kleinen Datensatz. Allerdings muss bedacht werden, dass bei der Auswahl
+des kleinen Datensatzes bewusst keine Unterarten gewählt wurden bzw. darauf
+geachtet wurde, möglichst unterscheidbare Klassen zu wählen, um die
+Klassifikation zu vereinfachen. Außerdem wurde deutlich, dass sich \MiniDog{}
+nicht dazu eignet mit dem großen Datensatz zu arbeiten, wie
+\autoref{fig:confusion-mini-120} zeigt.
 
-Die Alternativ-Methode funktionierte besser als erwartet, allerdings immer noch
-deutlich schlechter als die vortrainierten Netze. Für den großen Datensatz
+Die Alternativ-Methode funktionierte besser als \MiniDog{}, ist aber wegen zu
+wenig Parametern den vortrainierten Netzen unterlegen. Für den großen Datensatz
 eignet sich die Alternativ-Methode besser als \MiniDog{}, was allerdings eher
 darauf zurückzuführen ist, dass sich die Struktur von \MiniDog{} nicht für die
 Klassifikation von so vielen Klassen eignet.
 
-Alles in allem lässt sich feststellen, dass die Verwendung von \CNN{} in
-Sachen Bildklassifikation einen Vorteil hat vor anderen Machine Learning
-Algorithmen, so wie in diesem Fall ein \RF{}. Außerdem bietet es sich an,
-vortrainierte Netze zu nutzen, die beispielsweise auf Objekterkennung trainiert
-wurden, um auf diese Weise einen Performance Boost zu erhalten.
+Zusammenfassend lässt sich vermuten, dass die Verwendung von \texttt{NN} im
+Bereich Bildklassifikation zu präziseren Ergebnissen führt als anderen Machine Learning
+Algorithmen, so wie in diesem Fall im Vergleich zu einem \RF{}. Außerdem bietet es sich an,
+vortrainierte Netze zu nutzen, die auf Bildklassifikation trainiert
+wurden, um auf diese Weise eine präzisere Klassifikation zu erhalten.

@@ -1,4 +1,4 @@
-* Plots der Ergebnisse anpassen bzw. updaten
+<!-- * Plots der Ergebnisse anpassen bzw. updaten -->
 * Loss- und Acc von MiniDogNN mit 120 Klassen
 * Tabelle mit RF Hyperparametern in den Anhang, Genauigkeit und so auch?
 * Loss und Acc Plot von MiniDogNN anpassen
@@ -80,11 +80,11 @@
 <!-- * Architekturen dazu schreiben -->
 
 ## Zusammenfassung
-* Bildklassifikation
-* deutliche Verbesserung der Genauigkeit
-* Alternative Methode: Outperformed MiniDogNN, ist aber wegen zu wenig Parametern
-den vortrainierten Netzen unterlegen
-* Alles in allem
-* in Sachen
-* vermuten, dass besser
+<!-- * Bildklassifikation -->
+<!-- * deutliche Verbesserung der Genauigkeit -->
+<!-- * Alternative Methode: Outperformed MiniDogNN, ist aber wegen zu wenig Parametern -->
+<!-- den vortrainierten Netzen unterlegen -->
+<!-- * Alles in allem -->
+<!-- * in Sachen -->
+<!-- * vermuten, dass besser -->
 * wurden durchsuchen
