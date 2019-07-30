@@ -222,7 +222,8 @@ Netzes die Klassifikation deutlich präziser verläuft als bei \MiniDog{}.
 % \end{figure}
 
 \subsection{\texttt{Random Forest}}
-
+In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den
+Autoencoder des Random Forest dargestellt.
 % \begin{figure}
 %   \centering
 %   \includegraphics[scale=0.8]{pics/ergebnisse/RF/history.pdf}
@@ -230,15 +231,31 @@ Netzes die Klassifikation deutlich präziser verläuft als bei \MiniDog{}.
 %   trainiert auf 120 Klassen.}
 %   \label{fig:loss-acc-rf}
 % \end{figure}
-
-In \autoref{fig:loss-acc-rf} sind die Loss und Accuracy Kurven für den
-Autoencoder des Random Forest dargestellt. Dabei wurde der Autoencoder auf dem
+% \FloatBarrier
+\begin{figure}
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{pics/ergebnisse/RF/confusion_matrix_rf.pdf}
+    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 5 Klassen.}
+    \label{sub:confusion-rf-5}
+  \end{subfigure}
+  \qquad
+  \begin{subfigure}{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{pics/ergebnisse/RF/confusion_matrix_big.pdf}
+    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 120 Klassen.}
+    \label{sub:confusion-rf-120}
+  \end{subfigure}
+  \caption{Darstellung der Confusion-Matrizen für 5 und 120 Klassen.}
+  \label{fig:confusion-rf}
+\end{figure}
+% \FloatBarrier
+Dabei wurde der Autoencoder auf dem
 gesamten Datensatz trainiert. Aus der Loss-Kurve wird ersichtlich, dass
 Overtraining vom Start weg gegeben ist. Es erscheint jedoch stärker als es ist,
 da die Skalierung der y-Achse sehr fein gewählt ist. In der Accuracy ist dieses
 Overtraining aufgrund der gröberen Skalierung nicht sichtbar; dies bestärkt die
 Annahme, dass das Overtraining klein ist.
-
 Die Confusion-Matrizen aus \autoref{fig:confusion-rf} zeigen, dass einerseits
 die Klassifizierung für den großen Datensatz in \autoref{sub:confusion-rf-120} besser funktioniert hat
 als bei \MiniDog{} (vgl. \autoref{fig:confusion-mini-120}), aber andererseits schlechter als bei
@@ -247,21 +264,3 @@ sind schwieriger zu vergleichen im Hinblick auf \MiniDog{}, allerdings wird auch
 hier ersichtlich, dass die Klassifikation mit einem vortrainierten Netz deutlich
 besser funktioniert als bei \MiniDog{} (vgl. \autoref{fig:confusion-mini}) und
 \autoref{sub:confusion-rf-5}.
-
-\begin{figure}
-  \begin{subfigure}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{pics/ergebnisse/RF/confusion_matrix_rf.pdf}
-    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 5 Klassen.}
-    \label{sub:confusion-rf-5}
-  \end{subfigure}
-  \qquad
-  \begin{subfigure}{0.49\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{pics/ergebnisse/RF/confusion_matrix_big.pdf}
-    \caption{Confusion-Matrix für die Klassifizierung des Random Forest auf 120 Klassen.}
-    \label{sub:confusion-rf-120}
-  \end{subfigure}
-  \caption{Darstellung der Confusion-Matrizen für 5 und 120 Klassen.}
-  \label{fig:confusion-rf}
-\end{figure}

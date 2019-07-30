@@ -6,9 +6,7 @@ Verbesserung der Genauigkeit liefert. Vor allem für den kleinen Datensatz wird
 aus \autoref{fig:confusion-predog} ersichtlich, dass die Klassifikation sehr gut
 funktioniert. Die Confusion-Matrizen von \MiniDog{} und \RF{} weisen noch große
 Nebendiagonalelemente auf, die teilweise größer sind als das
-Hauptdiagonalelement.
-
-Weiterhin zeigte sich, dass die Klassifikation für den kleinen Datensatz besser
+Hauptdiagonalelement. Weiterhin zeigte sich, dass die Klassifikation für den kleinen Datensatz besser
 funktionierte als für den großen Datensatz. Zwar konnte auch für den großen
 Datensatz eine deutliche Verbesserung der Genauigkeit durch die Verwendung eines
 vortrainierten Netzes nachgewiesen werden, dieser ist allerdings nicht so groß
@@ -17,15 +15,11 @@ des kleinen Datensatzes bewusst keine Unterarten gewählt wurden bzw. darauf
 geachtet wurde, möglichst unterscheidbare Klassen zu wählen, um die
 Klassifikation zu vereinfachen. Außerdem wurde deutlich, dass sich \MiniDog{}
 nicht dazu eignet mit dem großen Datensatz zu arbeiten, wie
-\autoref{fig:confusion-mini-120} zeigt.
-
-Die Alternativ-Methode funktionierte besser als \MiniDog{}, ist aber wegen zu
+\autoref{fig:confusion-mini-120} zeigt. Die Alternativ-Methode funktionierte besser als \MiniDog{}, ist aber wegen zu
 wenig Parametern den vortrainierten Netzen unterlegen. Für den großen Datensatz
 eignet sich die Alternativ-Methode besser als \MiniDog{}, was allerdings eher
 darauf zurückzuführen ist, dass sich die Struktur von \MiniDog{} nicht für die
-Klassifikation von so vielen Klassen eignet.
-
-Zusammenfassend lässt sich vermuten, dass die Verwendung von \texttt{NN} im
+Klassifikation von so vielen Klassen eignet. Zusammenfassend lässt sich vermuten, dass die Verwendung von \texttt{NN} im
 Bereich Bildklassifikation zu präziseren Ergebnissen führt als anderen Machine Learning
 Algorithmen, so wie in diesem Fall im Vergleich zu einem \RF{}. Außerdem bietet es sich an,
 vortrainierte Netze zu nutzen, die auf Bildklassifikation trainiert
