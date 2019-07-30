@@ -44,3 +44,19 @@
   trainiert auf 120 Klassen.}
   \label{fig:loss-acc-rf}
 \end{figure}
+
+\begin{table}
+  \caption{Optimierte Hyperparameter für den \RF}
+  \label{tab:hyper_rf}
+  \begin{tabular}{c c c c c c}
+    \toprule
+    max\_features & max\_depth & min\_samples\_leaf & min\_samples\_split \\
+    \midrule
+    auto, log2 & None, 10, 100 & 1, 10 31 & 2, 8, 10 \\
+    \toprule
+    criterion & n\_estimators \\
+    \midrule
+    gini, entropy & 100, 400, 1000, 1500 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
