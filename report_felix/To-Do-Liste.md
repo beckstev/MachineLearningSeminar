@@ -18,8 +18,8 @@
 <!-- * letzten teilsatz wegstreichen -->
 
 ## Datensatz
-* Mit Dem Datenstaz
-* minimal und maximal weg
+<!-- * Mit Dem Datenstaz -->
+<!-- * minimal und maximal weg -->
 
 ## Lösungsansatz
 * Strategie?
