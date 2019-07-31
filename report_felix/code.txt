@@ -1,0 +1,3 @@
+Das github-Repository ist unter:
+https://github.com/beckstev/MachineLearningSeminar
+zu finden.
