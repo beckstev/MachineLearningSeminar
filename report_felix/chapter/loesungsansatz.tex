@@ -155,12 +155,14 @@ verwendet und in den angegebenen Räumen variiert. Von diesem 48 möglichen
 Kombinationen konnten nur 43 erfolgreich trainiert werden, da die restlichen
 aufgrund von Grafikspeicherproblemen beendet wurden. Die \texttt{Epochenanzahl}
 und die \texttt{learning rate} wurden nicht variiert, da \texttt{EarlyStopping}
-bzw. \texttt{ReduceLROnPlateau} verwendet wurden; also beide Parameter im
+(siehe \cite{keras_ReduceLROnPlateau}) bzw. \texttt{ReduceLROnPlateau} (siehe
+\cite{keras_ReduceLROnPlateau}) verwendet wurden; also beide Parameter im
 Verlaufe des Trainings dynamisch angepasst wurden.
 Für den \RF{} wurden \texttt{GridSearchCV} mit einer dreifachen Kreuzvalidierung
-genutzt, siehe \autoref{tab:hyper_rf}. Unter anderem wurde die maximale Tiefe oder die Anzahl an Schätzern
-optimiert. Für eine Hyperparameter-Optimierung von \PreBig{} und \PreDog{} in
-der gegebenen Zeit war die Hardware nicht stark genug.
+genutzt, siehe \autoref{tab:hyper_rf}. Unter anderem wurde die maximale Tiefe
+oder die Anzahl an Schätzern optimiert. Für eine Hyperparameter-Optimierung von
+\PreBig{} und \PreDog{} in der gegebenen Zeit war die Hardware nicht stark
+genug.
 % Allerdings wurde im Falle von \MiniDog{}
 % eine selbgeschriebene Funktion verwendet, die aus Zeitgründen auf die
 % \texttt{Cross Validation} verzichtet. Auch werden nur drei Hyperparameter
