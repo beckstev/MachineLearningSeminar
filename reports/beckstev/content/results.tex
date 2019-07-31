@@ -8,13 +8,13 @@ Hierbei erfolgt auch eine Normierung der Pixelwerte.
 Vor dem Beginn eines Trainings werden \emph{Batch-Größe} und
 \emph{Learningrate} festgelegt. Letztere wird jedoch, während des Trainings dynamisch
 ,durch die Funktion \textsc{ReduceLROnPlateau}, angepasst \cite{keras_ReduceLROnPlateau}.
- Die Anzahl der Trainingsepochen ist kein Hyperparamter, da hier eine \emph{EarlyStopper}
+ Die Anzahl der Trainingsepochen ist kein Hyperparameter, da hier eine \emph{EarlyStopper}
 eingestetzt wird \cite{keras_EarlyStopping}.
-Alle Trainingseinheiten werden auf einer Nvidia-Grafikarte
+Alle Trainingseinheiten werden auf einer \textsc{Nvidia}-Grafikkarte
 durchgeführt.
 
 \subsection{MiniDogNN--$5$ Hunderassen}
-Die Hyperparamteroptimerung (HPO) varriert die Einstellung
+Die Hyperparameteroptimierung (HPO) variiert die Einstellung
 für die $l2$-Regularisierung $l2\ua{value}$, die Batchgröße $bs$
 und die Farbinformation $color$ der Bilder:
 \begin{equation}
@@ -29,7 +29,7 @@ zu erkennen.
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{../../final_data/MiniNN_n5/hyper_raum.pdf}
-\caption{Ergebniss der HPO, die $z$-Achse \emph{Use RGB} gibt an, ob Farbinformation
+\caption{Ergebnis der HPO, die $z$-Achse \emph{Use RGB} gibt an, ob Farbinformation
         verwendet wurden.}
 \label{fig:Hyperraum_MiniDogNN}
 \end{figure}
@@ -44,7 +44,6 @@ FCN, sowohl auch für das $120$ Rassen \textsc{MiniDogNN} gültig ist.
 In Abbildung \ref{fig:MiniDogNN_Loss_Acc} findet sich die Trainingsdokumentation,
 des optimierten Modells. In dem Plot \ref{fig:MiniDogNN_Loss_Acc} ist zu erkennen,
 dass die Architektur geringfügig Übertrainiert wurde.
-Bei Betrachtung der Confusionmatrix in Abbildung \ref{fig:MiniDogNN_Confusionmatrix} fällt auf, \textbf{dass}
 \begin{figure}
 \centering
 \begin{subfigure}{0.48\textwidth}
@@ -92,18 +91,18 @@ Tabelle \ref{tab:legende_rf}.}
 \subsection{MiniDogNN -- $120$ Hunderassen}
 Wie in der Abbildung \ref{fig:MiniDogNN} zu erkennen, ändert sich mit der
 Anzahl der Hunderassen die Anzahl der Neuronen im FCN. Die Anzahl der generierten
-Featuers bleibt jedoch konstant. Ein Fakt der sich siginifikant auf die
-Verwendebarkeit der Architektur auswirkt. Bei dem Vergleich mit der Confusionmatrix
+Features bleibt jedoch konstant. Ein Fakt, der sich signifikant auf die
+Verwendbarkeit der Architektur auswirkt. Bei dem Vergleich mit der Confusionmatrix
 (vgl. Abb. \ref{fig:MiniDogNN_120_Confusionmatrix}) und
 der Loss- und Genauigkeitsdokumentation (vgl. Abb. \ref{fig:MiniDogNN_120_Loss_Acc})
-wir deutlich, dass die Architektur kein verwendbare Ergebnisse liefert.
+wir deutlich, dass die Architektur kein verwendbaren Ergebnisse liefert.
 
 \subsection{PreBigDogNN}
 Die enorme Anzahl an Features in Verbindung mit der Regularisierung ($l2\ua{value}=0.01, \, dr=0.2$)
 führen dazu, dass \textsc{PreBigDogNN} eine Genauigkeit deutlich über der Rategenauigkeit
 von $acc\ua{rate}=0.83\%$ erzielt. Hierbei läuft das Modell nur geringfügig in Overtraining,
 wie die Trainingsdokumentation (vgl. Abb. \ref{fig:PreBigDogNN_Loss_Acc}) zeigt.
-Das in der Confusionmatrix eine Diagonle ersichtlich ist, spricht für ein genaues Modell.
+Das in der Confusionmatrix eine Diagonale ersichtlich ist, spricht für ein genaues Modell.
 Jedoch ist die Genauigkeit beschränkt, was sich durch die großen Nebendiagonalelementen
 äußert. Zum Beispiel wird die Rasse \emph{American Staffordshire Terrier}
 in ungefährt 80 \% aller Fälle als \emph{Staffordshire Bullterrier} klassifiziert.
@@ -134,11 +133,11 @@ und eine adaptive Lernrate. Der Autoencoder wird mit einer Batchgröße
 von $bs=16$ und einer anfänglichen Lernrate von $lr=0.001$ trainiert und
 erreicht eine Genauigkeit von $78\%$ (vgl. Abb. \ref{fig:Autoencoder_loss}).
 Der Epochenverlauf der Losskurve (vgl. Abb. \ref{fig:Autoencoder_loss}) deutet auf Overtraining hin, was aber auf ein Skalierungsproblem der Achsen zurückzuführen ist.
-Eine Tatsache die mit der Genauigkeitsverlauf (vgl. Abb. \ref{fig:Autoencoder_loss}) untermauert werden kann.
+Eine Tatsache, die mit der Genauigkeitsverlauf (vgl. Abb. \ref{fig:Autoencoder_loss}) untermauert werden kann.
 
 Die Hyperparameter für den Random Forest (RF) werden zunächst mit
 einer HPO für $5$ Rassen optimiert und anschließend für $120$ Rassen verwendet.
-Die zu optimierenen Paramter
+Die zu optimierenden Parameter
 wurden dem Online-Guide \cite{RF_parameterraum} entnommen. Insgesamt
 wird die maximale Tiefe $max_d$, die Methode zur Bestimmung der Maximalanzahl
 an Bildern die pro Schnitt verwendet werden
@@ -148,7 +147,7 @@ einen neuen Ast zu eröffnen $min\ua{split}$, das Bewertungskriterium $crit$ und
 die Anzahl der Bäume $n\ua{est}$.
 Eine vollständige Auflistung des Parameterraums findet sich in der
 Gleichung \eqref{eq: rf_parameter_raum}.
-Aus der HPO folgt für die optimale Paramterkombination:
+Aus der HPO folgt für die optimale Parameterkombination:
 \begin{equation*}
   max_d = 100,\,\, n\ua{feat}= log2, \,\, min\ua{leaf}= 1,\,\, min\ua{split}=10, \,\,   crit= gini, \,\, n\ua{est}=1000
 \end{equation*}
@@ -164,5 +163,5 @@ Tabelle \ref{tab:legende_rf}.}
 \vspace{-100pt}
 \end{wrapfigure}
 Für die Bestimmung der Genauigkeit des RF wird eine Cossvalidierung mit
-drei Iterationen durchgeführt. Die HPo führt zu einer Steigerung der Genauigkeit von  $acc\ua{default, 5}=43\pm6\%$ auf $acc\ua{opt, 5}=44\pm4\%$.
+drei Iterationen durchgeführt. Die HPO führt zu einer Steigerung der Genauigkeit von  $acc\ua{default, 5}=43\pm6\%$ auf $acc\ua{opt, 5}=44\pm4\%$.
 Die mittlere Genauigkeit für den RF($N\ua{dr}=120$) beträgt $acc\ua{mean,120}=5\pm0.1\% > acc\ua{rate}$. Die dazugehörige Confusionmatrix ist in Abbildung \ref{fig:Confusionmatrix_rf} gezeigt.
