@@ -4,7 +4,7 @@
 <!-- * Loss und Acc Plot von MiniDogNN anpassen -->
 * Schnauzenform und Fellfarbe bei visualize_predicitons einbringen?
 * Ausblick mit dictionaries
-* Plots prüfen
+<!-- * Plots prüfen -->
 
 # Stevens Anmerkungen
 ## Einleitung
@@ -71,7 +71,7 @@
 <!-- * alles in allem -> Zusammenfassend zeigt eine hohe Genauigkeit -->
 <!-- * Prozente African Hunting Dog -->
 <!-- * Nur 64 Feature aus CNN, und damit dann 120 Klassen klassifizieren -->
-* vspace nutzen
+<!-- * vspace nutzen -->
 <!-- * noch raus -->
 <!-- * statt besser verläuft präziser oder so -->
 <!-- * Random Forest ausschreiben -->
