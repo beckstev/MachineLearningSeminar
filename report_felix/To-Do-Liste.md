@@ -1,5 +1,5 @@
 <!-- * Plots der Ergebnisse anpassen bzw. updaten -->
-* Loss- und Acc von MiniDogNN mit 120 Klassen
+<!-- * Loss- und Acc von MiniDogNN mit 120 Klassen -->
 <!-- * Tabelle mit RF Hyperparametern in den Anhang, Genauigkeit und so auch? -->
 <!-- * Loss und Acc Plot von MiniDogNN anpassen -->
 * Schnauzenform und Fellfarbe bei visualize_predicitons einbringen?
